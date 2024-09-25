@@ -9,8 +9,7 @@ diverge from this initial structure. Just keep the files seeded in this repo, an
 
 Orient users to the project here. This is a good place to start with an assumption
 that the user knows very little - so start with the Big Picture and show how this
-project fits into it. It may be good to reference/link the broader architecture in the
-`collaboration` repo or the developer site here.
+project fits into it.
 
 Then maybe a dive into what this project does.
 
