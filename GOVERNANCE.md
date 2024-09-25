@@ -1,4 +1,4 @@
-# TBD Open Source Project Governance
+# Block Open Source Project Governance
 
 <!-- TOC -->
 
@@ -10,7 +10,7 @@
 
 ## Contributors
 
-Anyone may be a contributor to TBD projects. Contribution may take the form of:
+Anyone may be a contributor to Block open source projects. Contribution may take the form of:
 
 * Asking and answering questions on the Discord or GitHub Issues
 * Filing an issue
@@ -47,7 +47,7 @@ See:
 
 ## Governance Committee
 
-The TBD Open Source Governance Committee (GC) has final authority over this project, including:
+The Block Open Source Governance Committee (GC) has final authority over this project, including:
 
 * Technical direction
 * Project governance and process (including this policy)
@@ -58,10 +58,8 @@ The TBD Open Source Governance Committee (GC) has final authority over this proj
 
 The current GC members are:
 
-* Ben Boeser, Technical Partnerships Lead, TBD
-* Angie Jones, Head of Developer Relations, TBD
-* Julie Kim, Head of Legal, TBD
-* Nidhi Nahar, Head of Patents and Open Source, Block
+* Manik Surtani, Head of Open Source Program Office, Block
 * Andrew Lee Rubinger, Head of Open Source, TBD
+* Nidhi Nahar, Head of Patents and Open Source, Block
 
-Members are not to be contacted individually. The GC may be reached through `tbd-open-source-governance@squareup.com` and is an available resource in mediation or for sensitive cases beyond the scope of project maintainers. It operates as a "Self-appointing council or board" as defined by Red Hat: [Open Source Governance Models](https://www.redhat.com/en/blog/understanding-open-source-governance-models).
+Members are not to be contacted individually. The GC may be reached through `TODO Update this` and is an available resource in mediation or for sensitive cases beyond the scope of project maintainers. It operates as a "Self-appointing council or board" as defined by Red Hat: [Open Source Governance Models](https://www.redhat.com/en/blog/understanding-open-source-governance-models).
