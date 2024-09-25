@@ -1,10 +1,9 @@
 
-# TBD Code of Conduct
+# Block Code of Conduct
 
-TBD builds infrastructure for the next wave of innovation in financial services — which we believe will be decentralized, permissionless, and non-custodial. This means opening the global economy to everyone. We extend the same principles of inclusion to our developer ecosystem. We are excited to build with you. So we will ensure our community is truly open, transparent and inclusive. Because of the global nature of our project, diversity and inclusivity is paramount to our success. We not only welcome diverse perspectives, we **need** them!
+Block's mission is Economic Empowerment. This means opening the global economy to everyone. We extend the same principles of inclusion to our developer ecosystem. We are excited to build with you. So we will ensure our community is truly open, transparent and inclusive. Because of the global nature of our project, diversity and inclusivity is paramount to our success. We not only welcome diverse perspectives, we **need** them!
 
 The code of conduct below reflects the expectations for ourselves and for our community.
-
 
 ## Our Pledge
 
@@ -43,7 +42,7 @@ Examples of unacceptable behavior include:
 
 ## Enforcement Responsibilities
 
-The TBD Open Source Governance Committee (GC) is responsible for clarifying and enforcing our standards of
+The Block Open Source Governance Committee (GC) is responsible for clarifying and enforcing our standards of
 acceptable behavior and will take appropriate and fair corrective action in
 response to any behavior that they deem inappropriate, threatening, offensive,
 or harmful.
@@ -60,8 +59,8 @@ This Code of Conduct applies within all project spaces, and it also applies when
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the TBD Open Source Governance Committee (GC) at
-`tbd-open-source-governance@squareup.com`.
+reported to the Block Open Source Governance Committee (GC) at
+`TODO Create Google Group` (Issue #1)
 All complaints will be reviewed and investigated promptly and fairly.
 
 The GC is obligated to respect the privacy and security of the
