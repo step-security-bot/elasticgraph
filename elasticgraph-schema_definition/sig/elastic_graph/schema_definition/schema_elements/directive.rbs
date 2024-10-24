@@ -1,0 +1,19 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      type directiveArg = ::Integer | ::Symbol | ::String | directiveArgHash | Array[directiveArg] | bool
+      type directiveArgHash = ::Hash[::Symbol, directiveArg]
+
+      class DirectiveSupertype
+        def initialize: (::String, directiveArgHash) -> void
+        attr_reader name: ::String
+        attr_reader arguments: directiveArgHash
+      end
+
+      class Directive < DirectiveSupertype
+        def to_sdl: () -> ::String
+        def duplicate_on: (Mixins::HasDirectives) -> void
+      end
+    end
+  end
+end

@@ -1,0 +1,21 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class DeprecatedElement
+        attr_reader schema_def_state: State
+        attr_reader name: ::String
+        attr_reader defined_at: ::Thread::Backtrace::Location
+        attr_reader defined_via: ::String
+
+        def initialize: (
+          schema_def_state: State,
+          name: ::String,
+          defined_at: ::Thread::Backtrace::Location,
+          defined_via: ::String
+        ) -> void
+
+        def description: () -> ::String
+      end
+    end
+  end
+end

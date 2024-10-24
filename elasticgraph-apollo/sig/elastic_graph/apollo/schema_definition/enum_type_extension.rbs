@@ -1,0 +1,13 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module EnumTypeExtension: ElasticGraph::SchemaDefinition::SchemaElements::EnumType
+        include ApolloDirectives::Authenticated
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::Policy
+        include ApolloDirectives::RequiresScopes
+        include ApolloDirectives::Tag
+      end
+    end
+  end
+end

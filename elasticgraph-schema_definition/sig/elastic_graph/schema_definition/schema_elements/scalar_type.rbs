@@ -1,0 +1,51 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class ScalarTypeSuperClass
+        attr_accessor schema_def_state: State
+        attr_accessor type_ref: TypeReference
+        attr_accessor mapping_type: ::String
+        attr_accessor runtime_metadata: SchemaArtifacts::RuntimeMetadata::ScalarType
+        attr_accessor aggregated_values_customizations: (^(ObjectType) -> void)?
+
+        def initialize: (State, TypeReference) -> void
+      end
+
+      class ScalarType < ScalarTypeSuperClass
+        include _Type
+        include Mixins::CanBeGraphQLOnly
+        include Mixins::HasTypeInfo
+        include Mixins::HasDocumentation
+        include Mixins::HasDirectives
+        include Mixins::HasDerivedGraphQLTypeCustomizations
+
+        def initialize: (State, ::String) { (ScalarType) -> void } -> void
+        def aggregated_values_type: () -> TypeReference
+        def coerce_with: (::String, defined_at: ::String) -> void
+        def prepare_for_indexing_with: (::String, defined_at: ::String) -> void
+        def customize_aggregated_values_type: () { (ObjectType) -> void } -> void
+
+        def runtime_metadata: () -> SchemaArtifacts::RuntimeMetadata::ScalarType
+        def mapping_options: () -> Mixins::HasTypeInfo::optionsHash
+        def json_schema_options: () -> Mixins::HasTypeInfo::optionsHash
+
+        private
+
+        EQUAL_TO_ANY_OF_DOC: ::String
+        GT_DOC: ::String
+        GTE_DOC: ::String
+        LT_DOC: ::String
+        LTE_DOC: ::String
+
+        def to_input_filters: () -> ::Array[SchemaElements::InputType]
+        def to_aggregated_values_type: () -> SchemaElements::ObjectType?
+
+        NUMERIC_TYPES: ::Set[::String]
+        DATE_TYPES: ::Set[::String]
+        COMPARABLE_TYPES: ::Set[::String]
+
+        def mapping_type_efficiently_comparable?: () -> bool
+      end
+    end
+  end
+end

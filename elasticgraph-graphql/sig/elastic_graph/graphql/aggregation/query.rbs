@@ -1,0 +1,89 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      type groupingAdapter = singleton(NonCompositeGroupingAdapter) | singleton(CompositeGroupingAdapter)
+
+      class QueryValueClass
+        attr_reader name: ::String
+        attr_reader needs_doc_count: bool
+        attr_reader needs_doc_count_error: bool
+        attr_reader filter: ::Hash[::String, untyped]?
+        attr_reader paginator: DatastoreQuery::Paginator[Resolvers::Node]
+        attr_reader sub_aggregations: ::Hash[::String, NestedSubAggregation]
+        attr_reader computations: ::Set[Computation]
+        attr_reader groupings: ::Set[grouping]
+        attr_reader grouping_adapter: groupingAdapter
+
+        def initialize: (
+          name: ::String,
+          needs_doc_count: bool,
+          needs_doc_count_error: bool,
+          filter: ::Hash[::String, untyped]?,
+          paginator: DatastoreQuery::Paginator[Resolvers::Node],
+          sub_aggregations: ::Hash[::String, NestedSubAggregation],
+          computations: ::Set[Computation],
+          groupings: ::Set[grouping],
+          grouping_adapter: groupingAdapter
+        ) -> void
+
+        def with: (
+          ?name: ::String,
+          ?needs_doc_count: bool,
+          ?needs_doc_count_error: bool,
+          ?filter: ::Hash[::String, untyped]?,
+          ?paginator: DatastoreQuery::Paginator[Resolvers::Node],
+          ?sub_aggregations: ::Hash[::String, NestedSubAggregation],
+          ?computations: ::Set[Computation],
+          ?groupings: ::Set[grouping],
+          ?grouping_adapter: groupingAdapter
+        ) -> Query
+      end
+
+      class Query < QueryValueClass
+        def needs_total_doc_count?: () -> bool
+        def build_agg_hash: (Filtering::FilterInterpreter) -> ::Hash[::String, untyped]
+
+        def build_agg_detail: (
+          Filtering::FilterInterpreter,
+          field_path: ::Array[PathSegment],
+          parent_queries: ::Array[Query]
+        ) -> AggregationDetail?
+
+        private
+
+        def filter_detail: (
+          Filtering::FilterInterpreter,
+          ::Array[PathSegment]
+        ) { () -> AggregationDetail } -> AggregationDetail
+
+        def computations_detail: () -> ::Hash[::String, untyped]
+
+        def sub_aggregation_detail: (
+          Filtering::FilterInterpreter,
+          ::Array[Query]
+        ) -> ::Hash[::String, untyped]
+
+        def build_inner_aggregation_detail: [E] (
+          ::Enumerable[E]
+        ) { (E) -> ::Hash[::String, untyped] } -> ::Hash[::String, untyped]
+      end
+
+      class AggregationDetail
+        attr_reader clauses: ::Hash[::String, untyped]?
+        attr_reader meta: ::Hash[::String, untyped]
+
+        def initialize: (
+          ::Hash[::String, untyped]?,
+          ::Hash[::String, untyped]
+        ) -> void
+
+        def with: (
+          ?clauses: ::Hash[::String, untyped]?,
+          ?meta: ::Hash[::String, untyped]
+        ) -> instance
+
+        def wrap_with_grouping: (grouping, query: Query) -> AggregationDetail
+      end
+    end
+  end
+end

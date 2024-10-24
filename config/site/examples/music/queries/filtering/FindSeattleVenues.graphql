@@ -1,0 +1,15 @@
+query FindSeattleVenues {
+  venues(filter: {
+    location: {near: {
+      latitude: 47.621
+      longitude: -122.349
+      maxDistance: 10
+      unit: MILE
+    }}
+  }) {
+    nodes {
+      name
+      capacity
+    }
+  }
+}

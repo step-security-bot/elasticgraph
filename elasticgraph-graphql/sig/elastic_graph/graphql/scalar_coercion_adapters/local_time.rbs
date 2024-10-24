@@ -1,0 +1,11 @@
+module ElasticGraph
+  class GraphQL
+    module ScalarCoercionAdapters
+      class LocalTime
+        extend SchemaArtifacts::_ScalarCoercionAdapter[::String, ::String]
+
+        def self.validated_value: (untyped) -> ::String?
+      end
+    end
+  end
+end

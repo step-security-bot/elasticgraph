@@ -1,0 +1,57 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      interface _DerivedField
+        def source_field: () -> ::String
+        def destination_field: () -> ::String
+        def apply_operation_returning_update_status: () -> ::String
+        def function_definitions: () -> ::Array[::String]
+        def setup_statements: () -> ::Array[::String]
+      end
+
+      class DerivedIndexedTypeStruct
+        attr_reader source_type: SchemaElements::ObjectType
+        attr_reader destination_type_ref: SchemaElements::TypeReference
+        attr_reader id_source: ::String
+        attr_reader routing_value_source: ::String?
+        attr_reader rollover_timestamp_value_source: ::String?
+        attr_reader fields: ::Array[_DerivedField]
+
+        def initialize: (
+          source_type: SchemaElements::ObjectType,
+          destination_type_ref: SchemaElements::TypeReference,
+          id_source: ::String,
+          routing_value_source: ::String?,
+          rollover_timestamp_value_source: ::String?,
+          fields: ::Array[_DerivedField]
+        ) -> void
+      end
+
+      class DerivedIndexedType < DerivedIndexedTypeStruct
+        def initialize: (
+          source_type: SchemaElements::ObjectType,
+          destination_type_ref: SchemaElements::TypeReference,
+          id_source: ::String,
+          routing_value_source: ::String?,
+          rollover_timestamp_value_source: ::String?,
+        ) { (self) -> void } -> void
+
+        def append_only_set: (::String, from: ::String) -> void
+        def min_value: (::String, from: ::String) -> void
+        def max_value: (::String, from: ::String) -> void
+        def immutable_value: (::String, from: ::String, ?nullable: bool, ?can_change_from_null: bool) -> void
+        def painless_script: () -> Scripting::Script
+        def runtime_metadata_for_source_type: () -> SchemaArtifacts::RuntimeMetadata::UpdateTarget
+
+        private
+
+        def generate_script: () -> ::String
+        def apply_update_statement: (_DerivedField) -> ::String
+        def was_noop_variable: (_DerivedField) -> ::String
+
+        SCRIPT_ERRORS_VAR: ::String
+        STATIC_SETUP_STATEMENTS: ::String
+      end
+    end
+  end
+end

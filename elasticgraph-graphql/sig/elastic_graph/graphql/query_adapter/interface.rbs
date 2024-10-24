@@ -1,0 +1,13 @@
+module ElasticGraph
+  class GraphQL
+    interface _QueryAdapter
+      def call: (
+        query: DatastoreQuery,
+        field: Schema::Field,
+        args: ::Hash[::String, untyped],
+        lookahead: ::GraphQL::Execution::Lookahead,
+        context: ::GraphQL::Query::Context
+      ) -> DatastoreQuery
+    end
+  end
+end

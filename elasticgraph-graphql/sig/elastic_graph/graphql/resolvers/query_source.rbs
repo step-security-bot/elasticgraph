@@ -1,0 +1,22 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      class QuerySource < ::GraphQL::Dataloader::Source
+        def initialize: (DatastoreSearchRouter, QueryDetailsTracker) -> void
+        @datastore_router: DatastoreSearchRouter
+        @query_tracker: QueryDetailsTracker
+        def fetch: (::Array[DatastoreQuery]) -> ::Array[DatastoreResponse::SearchResponse]
+
+        def self.execute_many: (
+          ::Array[DatastoreQuery],
+          for_context: ::GraphQL::Query::Context
+        ) -> ::Hash[DatastoreQuery, DatastoreResponse::SearchResponse]
+
+        def self.execute_one: (
+          DatastoreQuery,
+          for_context: ::GraphQL::Query::Context
+        ) -> DatastoreResponse::SearchResponse
+      end
+    end
+  end
+end

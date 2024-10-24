@@ -1,0 +1,15 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      module DerivedFields
+        class MinOrMaxValue
+          include _DerivedField
+          attr_reader min_or_max: :min | :max
+          def self.new: (::String, ::String, :min | :max) -> instance
+
+          def self.function_def: (:min | :max) -> ::String
+        end
+      end
+    end
+  end
+end

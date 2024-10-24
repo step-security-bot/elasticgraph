@@ -1,0 +1,9 @@
+module ElasticGraph
+  class Indexer
+    module IndexingPreparers
+      class Untyped
+        extend SchemaArtifacts::_IndexingPreparer[untyped, ::String?]
+      end
+    end
+  end
+end

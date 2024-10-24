@@ -1,0 +1,33 @@
+module ElasticGraph
+  class DatastoreCore
+    module IndexDefinition
+      class RolloverIndexTemplate
+        include IndexDefinition::Base
+        include _IndexDefinition
+
+        def initialize: (**untyped) -> void
+
+        attr_reader timestamp_field_path: ::String
+        attr_reader frequency: ::Symbol
+        attr_reader index_args: ::Hash[::Symbol, untyped]
+
+        def related_rollover_index_for_timestamp: (::String, ?::Hash[::String, untyped]) -> RolloverIndex?
+
+        private
+
+        @rollover_indices_to_pre_create: ::Array[RolloverIndex]?
+        def rollover_indices_to_pre_create: () -> ::Array[RolloverIndex]
+        def setting_overrides_by_timestamp: () -> ::Hash[::String, indexSettingsHash]
+        def custom_timestamp_ranges: () -> ::Array[Configuration::IndexDefinition::CustomTimestampRange]
+        def index_name_with_suffix: (::String) -> ::String
+        def rollover_index_suffix_for_record: (::Hash[::String, untyped], timestamp_field_path: ::String) -> ::String
+        def concrete_rollover_index_for: (::String, indexSettingsHash, ?Support::TimeSet?) -> RolloverIndex?
+        def infer_time_set_from_index_name: (::String) -> Support::TimeSet?
+
+        ROLLOVER_SUFFIX_FORMATS_BY_FREQUENCY: ::Hash[::Symbol, ::String]
+        ROLLOVER_TIME_ELEMENT_COUNTS_BY_FREQUENCY: ::Hash[::Symbol, ::Integer]
+        TIME_UNIT_BY_FREQUENCY: ::Hash[::Symbol, Support::TimeUtil::advancementUnit]
+      end
+    end
+  end
+end

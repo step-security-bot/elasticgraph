@@ -1,0 +1,25 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module APIExtension: ElasticGraph::SchemaDefinition::API
+        def tag_built_in_types_with: (::String, ?except: ::Array[::String]) -> void
+        def target_apollo_federation_version: (::String) -> void
+
+        def state: () -> (ElasticGraph::SchemaDefinition::State & StateExtension)
+
+        private
+
+        DIRECTIVE_DEFINITIONS_BY_FEDERATION_VERSION: ::Hash[::String, ::Array[::String]]
+
+        def define_apollo_schema_elements: () -> void
+        def apollo_object_type: (::String) { (ElasticGraph::SchemaDefinition::SchemaElements::ObjectType) -> void } -> void
+        def apollo_union_type: (::String) { (ElasticGraph::SchemaDefinition::SchemaElements::UnionType) -> void } -> void
+        def apollo_scalar_type: (::String) { (ElasticGraph::SchemaDefinition::SchemaElements::ScalarType) -> void } -> void
+        def apollo_enum_type: (::String) { (ElasticGraph::SchemaDefinition::SchemaElements::EnumType) -> void } -> void
+        def validate_entity_types_can_all_be_resolved: (::Array[ElasticGraph::SchemaDefinition::indexableType]) -> void
+
+        def self.extended: (ElasticGraph::SchemaDefinition::API & APIExtension) -> void
+      end
+    end
+  end
+end

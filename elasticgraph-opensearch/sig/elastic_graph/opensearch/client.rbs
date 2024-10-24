@@ -1,0 +1,23 @@
+module ElasticGraph
+  module OpenSearch
+    class Client
+      include DatastoreCore::_Client
+      extend DatastoreCore::_ClientClass
+
+      def initialize: (
+        ::String,
+        url: ::String,
+        ?faraday_adapter: ::Symbol?,
+        ?retry_on_failure: ::Integer,
+        ?logger: ::Logger?
+      ) ?{ (::Faraday::RackBuilder) -> void } -> void
+
+      private
+
+      @cluster_name: ::String
+      @raw_client: ::OpenSearch::Client
+
+      def transform_errors: [T] () { (::OpenSearch::Client) -> T } -> T
+    end
+  end
+end

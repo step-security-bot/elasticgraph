@@ -1,0 +1,9 @@
+module Faraday
+  class Request
+    attr_accessor timeout: ::Numeric
+  end
+
+  interface _App
+    def call: (Env) -> Env
+  end
+end

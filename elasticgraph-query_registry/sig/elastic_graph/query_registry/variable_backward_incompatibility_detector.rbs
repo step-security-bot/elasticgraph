@@ -1,0 +1,52 @@
+module ElasticGraph
+  module QueryRegistry
+    class VariableBackwardIncompatibilityDetector
+      def detect: (
+        old_op_vars: ::Hash[::String, VariableDumper::typeInfo],
+        new_op_vars: ::Hash[::String, VariableDumper::typeInfo]
+      ) -> ::Array[Incompatibility]
+
+      private
+
+      def detect_incompatibilities: (
+        ::Hash[::String, VariableDumper::typeInfo],
+        ::Hash[::String, VariableDumper::typeInfo],
+        ::String,
+        ::String
+      ) -> ::Array[Incompatibility]
+
+      def incompatibilities_for: (
+        ::String,
+        ::Hash[::String, untyped],
+        ::Hash[::String, untyped]
+      ) -> ::Array[Incompatibility]
+
+      def type_incompatibilities: (
+        ::String,
+        ::String,
+        ::String
+      ) -> ::Array[Incompatibility]
+
+      def enum_value_incompatibilities: (
+        ::String,
+        ::Array[::String]?,
+        ::Array[::String]?,
+      ) -> ::Array[Incompatibility]
+
+      def object_field_incompatibilities: (
+        ::String,
+        ::Hash[::String, VariableDumper::typeInfo]?,
+        ::Hash[::String, VariableDumper::typeInfo]?
+      ) -> ::Array[Incompatibility]
+
+      def normalize_type_info: (VariableDumper::typeInfo) -> ::Hash[::String, untyped]
+
+      class Incompatibility
+        attr_reader path: ::String
+        attr_reader explanation: ::String
+        def initialize: (::String, ::String) -> void
+        def description: () -> ::String
+      end
+    end
+  end
+end

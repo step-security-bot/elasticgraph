@@ -1,0 +1,29 @@
+query TourAttendanceByHour {
+  artistAggregations {
+    nodes {
+      subAggregations {
+        tours {
+          nodes {
+            subAggregations {
+              shows {
+                nodes {
+                  groupedBy {
+                    startedAt {
+                      asDateTime(truncationUnit: HOUR)
+                    }
+                  }
+
+                  aggregatedValues {
+                    attendance {
+                      exactSum
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

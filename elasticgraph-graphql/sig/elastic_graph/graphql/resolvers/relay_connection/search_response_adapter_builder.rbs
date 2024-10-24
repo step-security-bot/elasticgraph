@@ -1,0 +1,15 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      module RelayConnection
+        class SearchResponseAdapterBuilder
+          def self.build_from: (
+            query: DatastoreQuery,
+            search_response: DatastoreResponse::SearchResponse,
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+          ) -> GraphQL::Resolvers::RelayConnection::GenericAdapter[DatastoreResponse::Document]
+        end
+      end
+    end
+  end
+end

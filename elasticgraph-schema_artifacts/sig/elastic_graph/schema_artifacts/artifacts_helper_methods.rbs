@@ -1,0 +1,12 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module ArtifactsHelperMethods: _SchemaArtifacts
+      def datastore_scripts: () -> datastoreScriptsByIdHash
+      def index_templates: () -> ::Hash[::String, untyped]
+      def indices: () -> ::Hash[::String, untyped]
+
+      @index_mappings_by_index_def_name: ::Hash[::String, untyped]?
+      def index_mappings_by_index_def_name: () -> ::Hash[::String, untyped]
+    end
+  end
+end

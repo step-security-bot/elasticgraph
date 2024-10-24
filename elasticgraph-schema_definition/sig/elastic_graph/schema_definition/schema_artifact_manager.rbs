@@ -1,0 +1,85 @@
+module ElasticGraph
+  module SchemaDefinition
+    class SchemaArtifactManager
+      attr_reader schema_definition_results: Results
+
+      def initialize: (
+        schema_definition_results: Results,
+        schema_artifacts_directory: ::String,
+        enforce_json_schema_version: bool,
+        output: io,
+        ?max_diff_lines: ::Integer
+      ) -> void
+
+      def dump_artifacts: () -> void
+      def check_artifacts: () -> void
+
+      private
+
+      @schema_definition_results: Results
+      @schema_artifacts_directory: ::String
+      @enforce_json_schema_version: bool
+      @output: io
+      @max_diff_lines: ::Integer
+      @artifacts: ::Array[SchemaArtifact[untyped]]
+      @json_schemas_artifact: SchemaArtifact[untyped]
+
+      def notify_about_unused_type_name_overrides: () -> void
+      def notify_about_unused_enum_value_overrides: () -> void
+      def build_desired_versioned_json_schemas: (::Hash[::String, untyped]) -> ::Hash[::Integer, ::Hash[::String, untyped]]
+      def report_json_schema_merge_errors: (::Array[Indexing::JSONSchemaWithMetadata]) -> void
+      def report_json_schema_merge_warnings: () -> void
+      def format_deprecated_elements: (::Enumerable[SchemaElements::DeprecatedElement]) -> ::String
+      def missing_field_error_for: (::String, ::Array[::Integer]) -> ::String
+      def missing_type_error_for: (::String, ::Array[::Integer]) -> ::String
+      def missing_necessary_field_error_for: (Indexing::JSONSchemaWithMetadata::MissingNecessaryField, ::Array[::Integer]) -> ::String
+      def describe_json_schema_versions: (::Array[::Integer], ::String) -> ::String
+      def old_versions: (::Array[::Integer]) -> ::String
+      def files_noun_phrase: (::Array[::Integer]) -> ::String
+      def artifacts_out_of_date_error: (::Array[SchemaArtifact[untyped]]) -> ::String
+      def truncate_diff: (::String, ::Integer) -> [::String, ::String]
+
+      def new_yaml_artifact: (
+        ::String,
+        ::Hash[::String, untyped],
+        ?extra_comment_lines: ::Array[::String]
+      ) -> SchemaArtifact[::Hash[::String, untyped]]
+
+      def new_versioned_json_schema_artifact: (::Hash[::String, untyped]) -> SchemaArtifact[::Hash[::String, untyped]]
+      def new_raw_artifact: (::String, ::String) -> SchemaArtifact[::String]
+      def check_if_needs_json_schema_version_bump: () { (::Integer) -> void } -> void
+      def pruned_runtime_metadata: (::String) -> SchemaArtifacts::RuntimeMetadata::Schema
+    end
+
+    class SchemaArtifactSupertype[T]
+      attr_reader file_name: ::String
+      attr_reader desired_contents: T
+      attr_reader dumper: ^(T) -> ::String
+      attr_reader loader: ^(::String) -> T
+      attr_reader extra_comment_lines: ::Array[::String]
+
+      def initialize: (
+        ::String,
+        T,
+        ^(T) -> ::String,
+        ^(::String) -> T,
+        ::Array[::String]) -> void
+    end
+
+    class SchemaArtifact[T] < SchemaArtifactSupertype[T]
+      def dump: (io) -> void
+      def out_of_date?: () -> bool
+      def existing_dumped_contents: () -> T?
+      def diff: (color: bool) -> ::String?
+
+      private
+
+      @exists: bool?
+      def exists?: () -> bool
+
+      @dumped_contents: ::String?
+      def dumped_contents: () -> ::String
+      def comment_preamble: () -> ::String
+    end
+  end
+end

@@ -1,0 +1,17 @@
+module ElasticGraph
+  class Indexer
+    type eventIDString = ::String
+
+    class EventID
+      attr_reader type: ::String
+      attr_reader id: ::String
+      attr_reader version: ::Integer
+
+      def initialize: (type: ::String, id: ::String, version: ::Integer) -> void
+      def self.new:
+        (type: ::String, id: ::String, version: ::Integer) -> EventID
+        | (::String, ::String, ::Integer) -> EventID
+      def self.from_event: (event) -> EventID
+    end
+  end
+end

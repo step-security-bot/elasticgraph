@@ -1,0 +1,6 @@
+module YAML
+  def self.dump: (untyped) -> ::String
+  def self.safe_load: (::String, ?aliases: bool) -> untyped
+  def self.load_file: (::String) -> untyped
+  def self.safe_load_file: (::String, ?aliases: bool) -> untyped
+end

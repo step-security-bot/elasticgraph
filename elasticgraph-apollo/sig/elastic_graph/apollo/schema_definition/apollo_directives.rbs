@@ -1,0 +1,59 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module ApolloDirectives
+        module Authenticated: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_authenticated: -> void
+        end
+
+        module Extends: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_extends: -> void
+        end
+
+        module External: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_external: -> void
+        end
+
+        module Inaccessible: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_inaccessible: -> void
+        end
+
+        module InterfaceObject: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_interface_object: -> void
+        end
+
+        module Key: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_key: (fields: String, ?resolvable: bool) -> void
+        end
+
+        module Override: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_override: (from: String) -> void
+        end
+
+        module Policy: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_policy: (policies: ::Array[::Array[String]]) -> void
+        end
+
+        module Provides: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_provides: (fields: String) -> void
+        end
+
+        module Requires: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_requires: (fields: String) -> void
+        end
+
+        module RequiresScopes: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_requires_scopes: (scopes: ::Array[::Array[String]]) -> void
+        end
+
+        module Shareable: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_shareable: -> void
+        end
+
+        module Tag: ElasticGraph::SchemaDefinition::Mixins::HasDirectives
+          def apollo_tag: (name: String) -> void
+        end
+      end
+    end
+  end
+end

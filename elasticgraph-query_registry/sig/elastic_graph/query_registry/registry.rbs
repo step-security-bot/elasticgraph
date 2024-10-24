@@ -1,0 +1,34 @@
+module ElasticGraph
+  module QueryRegistry
+    class Registry
+
+      def self.build_from_directory: (
+        GraphQL::Schema,
+        ::String,
+        allow_unregistered_clients: bool,
+        allow_any_query_for_clients: ::Array[::String]
+      ) -> Registry
+
+      def initialize: (
+        GraphQL::Schema,
+        client_names: ::Array[::String],
+        allow_unregistered_clients: bool,
+        allow_any_query_for_clients: ::Array[::String]
+      ) { (String) -> ::Array[::String] } -> void
+
+      def build_and_validate_query: (
+        ::String?,
+        client: GraphQL::Client,
+        ?variables: ::Hash[::String, untyped],
+        ?operation_name: ::String?,
+        ?context: ::Hash[::Symbol, untyped]
+      ) -> [::GraphQL::Query, ::Array[::String]]
+
+      private
+
+      @graphql_schema: ::GraphQL::Schema
+      @registered_client_validator: QueryValidators::ForRegisteredClient
+      @unregistered_client_validator: QueryValidators::ForUnregisteredClient
+    end
+  end
+end

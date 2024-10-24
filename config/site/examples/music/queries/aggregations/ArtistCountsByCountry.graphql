@@ -1,0 +1,11 @@
+query ArtistCountsByCountry {
+  artistAggregations {
+    nodes {
+      groupedBy {
+        bio { homeCountry }
+      }
+
+      count
+    }
+  }
+}

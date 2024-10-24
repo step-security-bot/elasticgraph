@@ -1,0 +1,20 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class InterfaceTypeSupertype < TypeWithSubfields
+        def initialize: (TypeWithSubfields) -> void
+        attr_reader __getobj__: TypeWithSubfields
+      end
+
+      # Technically, InterfaceType isn't a subclass of TypeWithSubfields (we use `DelegateClass` instead),
+      # but that's an implementation detail. In the type system, it is a subtype in terms of it having
+      # the same interface as `TypeWithSubfields` plus some additional methods.
+      class InterfaceType < InterfaceTypeSupertype
+        include Mixins::ImplementsInterfaces
+
+        def initialize: (State, ::String) { (InterfaceType) -> void } -> void
+        def interface_fields_by_name: () -> ::Hash[::String, Field]
+      end
+    end
+  end
+end

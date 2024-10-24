@@ -1,0 +1,139 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      class QueryAdapterSupertype
+        attr_reader schema: Schema
+        attr_reader config: Config
+        attr_reader filter_args_translator: Filtering::FilterArgsTranslator
+        attr_reader runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema
+        attr_reader sub_aggregation_grouping_adapter: groupingAdapter
+
+        def initialize: (
+          schema: Schema,
+          config: Config,
+          filter_args_translator: Filtering::FilterArgsTranslator,
+          runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema,
+          sub_aggregation_grouping_adapter: groupingAdapter
+        ) -> void
+
+        def with: (
+          ?schema: Schema,
+          ?config: Config,
+          ?filter_args_translator: Filtering::FilterArgsTranslator,
+          ?runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema,
+          ?sub_aggregation_grouping_adapter: groupingAdapter
+        ) -> QueryAdapter
+      end
+
+      class QueryAdapter < QueryAdapterSupertype
+        include _QueryAdapter
+        attr_reader element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+        private
+
+        def extract_aggregation_node: (
+          ::GraphQL::Execution::Lookahead,
+          Schema::Field,
+          ::GraphQL::Query
+        ) -> ::GraphQL::Execution::Lookahead?
+
+        def build_aggregation_query_for: (
+          ::GraphQL::Execution::Lookahead,
+          field: Schema::Field,
+          grouping_adapter: groupingAdapter,
+          ?nested_path: ::Array[PathSegment],
+          ?unfiltered: bool
+        ) -> Query
+
+        def selection_above_grouping_fields: (
+          ::GraphQL::Execution::Lookahead,
+          ::String,
+          ::String
+        ) -> ::GraphQL::Execution::Lookahead
+
+        def build_clauses_from: [A] (
+          ::GraphQL::Execution::Lookahead
+        ) { (
+          ::GraphQL::Execution::Lookahead,
+          Schema::Field,
+          ::Array[PathSegment]
+        ) -> ::Array[A]? } -> ::Set[A]
+
+        def get_children_nodes: (
+          ::GraphQL::Execution::Lookahead
+        ) -> ::Array[::GraphQL::Execution::Lookahead]
+
+        def transform_node_to_clauses: [A] (
+          ::GraphQL::Execution::Lookahead,
+          ?parent_path: ::Array[PathSegment]
+        ) { (
+          ::GraphQL::Execution::Lookahead,
+          Schema::Field,
+          ::Array[PathSegment]
+        ) -> ::Array[A]? } -> ::Array[A]
+
+        def build_computations_from: (
+          ::GraphQL::Execution::Lookahead,
+          ?from_field_path: ::Array[PathSegment]
+        ) -> ::Set[Computation]
+
+        def build_groupings_from: (
+          ::GraphQL::Execution::Lookahead,
+          ::String,
+          ?from_field_path: ::Array[PathSegment]
+        ) -> ::Set[grouping]
+
+        def field_from_node: (
+          ::GraphQL::Execution::Lookahead
+        ) -> Schema::Field
+
+        def date_time_groupings_from: (
+          field_path: ::Array[PathSegment],
+          node: ::GraphQL::Execution::Lookahead,
+        ) -> ::Array[DateHistogramGrouping | ScriptTermGrouping]
+
+        def legacy_date_histogram_groupings_from: (
+          field_path: ::Array[PathSegment],
+          node: ::GraphQL::Execution::Lookahead,
+          get_time_zone: ^(::Hash[::String, untyped]) -> ::String?,
+          get_offset: ^(::Hash[::String, untyped]) -> ::String?
+        ) -> ::Array[DateHistogramGrouping]
+
+        def interval_from: (
+          ::GraphQL::Execution::Lookahead,
+          ::Hash[::String, untyped],
+          interval_unit_key: ::String
+        ) -> timeGroupingInterval
+
+        def datetime_offset_from: (
+          ::GraphQL::Execution::Lookahead,
+          ::Hash[::String, untyped]
+        ) -> ::String?
+
+        def datetime_offset_as_ms_from: (
+          ::GraphQL::Execution::Lookahead,
+          ::Hash[::String, untyped]
+        ) -> ::Integer
+
+        def enum_value_from_offset: (
+          ::GraphQL::Execution::Lookahead,
+          ::String
+        ) -> Schema::EnumValue
+
+        def name_of: (::GraphQL::Language::Nodes::Field) -> ::String
+
+        def build_sub_aggregations_from: (
+          ::GraphQL::Execution::Lookahead,
+          ?parent_nested_path: ::Array[PathSegment]
+        ) -> ::Hash[::String, NestedSubAggregation]
+
+        def build_paginator_for: [I] (::GraphQL::Execution::Lookahead) -> DatastoreQuery::Paginator[I]
+
+        def raise_conflicting_grouping_requirement_selections: (
+          ::String,
+          ::Array[::String]
+        ) -> bot
+      end
+    end
+  end
+end

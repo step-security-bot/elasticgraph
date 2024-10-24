@@ -1,0 +1,27 @@
+module ElasticGraph
+  class GraphQL
+    # Note: this is a partial signature definition (`query.rb` is ignored in `Steepfile`)
+    class DatastoreQuery
+      attr_reader search_index_definitions: ::Array[DatastoreCore::_IndexDefinition]
+      attr_reader aggregations: ::Hash[::String, Aggregation::Query]
+      attr_reader document_paginator: DocumentPaginator
+
+      def shard_routing_values: () -> ::Array[::String]?
+      def merge_with: (**untyped) -> DatastoreQuery
+      def search_index_expression: () -> ::String
+      def with: (**untyped) -> DatastoreQuery
+
+      def to_datastore_msearch_header_and_body: () -> [::Hash[::String, untyped], ::Hash[::String, untyped]]
+
+      class Builder
+        def self.with: (
+          runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema,
+          logger: ::Logger,
+          **untyped
+        ) -> Builder
+
+        def new_query: (**untyped) -> DatastoreQuery
+      end
+    end
+  end
+end

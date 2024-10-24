@@ -1,0 +1,38 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module Key
+        DELIMITER: ::String
+
+        class AggregatedValueSupertype
+          attr_reader aggregation_name: ::String
+          attr_reader encoded_field_path: ::String
+          attr_reader function_name: ::String
+
+          def initialize: (
+            aggregation_name: ::String,
+            encoded_field_path: ::String,
+            function_name: ::String
+          ) -> void
+        end
+
+        class AggregatedValue < AggregatedValueSupertype
+          def initialize: (
+            aggregation_name: ::String,
+            ?encoded_field_path: ::String,
+            ?field_path: ::Array[::String],
+            function_name: ::String
+          ) -> void
+
+          def encode: () -> ::String
+          def field_path: () -> ::Array[::String]
+        end
+
+        def self.missing_value_bucket_key: (::String) -> ::String
+        def self.extract_aggregation_name_from: (::String) -> ::String
+        def self.encode: (::Array[::String]) -> ::String
+        def self.verify_no_delimiter_in: (*::String) -> void
+      end
+    end
+  end
+end

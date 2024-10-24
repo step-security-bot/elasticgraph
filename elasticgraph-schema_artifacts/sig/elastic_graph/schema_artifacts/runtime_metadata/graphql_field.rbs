@@ -1,0 +1,42 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class GraphQLFieldSupertype
+        attr_reader name_in_index: ::String?
+        attr_reader relation: Relation?
+        attr_reader computation_detail: ComputationDetail?
+
+        def initialize: (
+          name_in_index: ::String?,
+          relation: Relation?,
+          computation_detail: ComputationDetail?
+        ) -> void
+
+        def with: (
+          ?name_in_index: ::String?,
+          ?relation: Relation?,
+          ?computation_detail: ComputationDetail?
+        ) -> instance
+
+        def self.new:
+          (name_in_index: ::String?, relation: Relation?, computation_detail: ComputationDetail?) -> instance
+          | (::String?, Relation?, ::Symbol?) -> instance
+      end
+
+      class GraphQLField < GraphQLFieldSupertype
+        EMPTY: GraphQLField
+        NAME_IN_INDEX: "name_in_index"
+        RELATION: "relation"
+        AGGREGATION_DETAIL: "computation_detail"
+        def self.from_hash: (::Hash[::String, untyped]) -> GraphQLField
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+        def needed?: (::String) -> bool
+
+        def with_computation_detail: (
+          empty_bucket_value: ::Numeric?,
+          function: ::Symbol
+        ) -> GraphQLField
+      end
+    end
+  end
+end

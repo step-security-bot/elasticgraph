@@ -1,0 +1,148 @@
+module ElasticGraph
+  module Apollo
+    module GraphQL
+      class EntitiesFieldResolver
+        include ::ElasticGraph::GraphQL::Resolvers::_Resolver
+
+        def initialize: (
+          datastore_query_builder: ::ElasticGraph::GraphQL::DatastoreQuery::Builder,
+          schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+        ) -> void
+
+        private
+
+        @datastore_query_builder: ::ElasticGraph::GraphQL::DatastoreQuery::Builder
+        @schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+        def build_query: (
+          _Adapter[_Representation, untyped],
+          ::Array[representation],
+          ::Hash[::Symbol, untyped]
+        ) -> ::ElasticGraph::GraphQL::DatastoreQuery?
+
+        def try_parse_representation: (
+          ::Hash[::String, untyped],
+          ElasticGraph::GraphQL::Schema
+        ) { (::String) -> void } -> representation?
+
+        def translate_field_names: (
+          ::Hash[::String, untyped],
+          ElasticGraph::GraphQL::Schema::Type
+        ) -> ::Hash[::String, untyped]
+
+        interface _Representation
+        end
+
+        interface _Adapter[R < _Representation, I]
+          def type: () -> ElasticGraph::GraphQL::Schema::Type
+
+          def customize_query: (
+            ElasticGraph::GraphQL::DatastoreQuery,
+            ::Array[R]
+          ) -> ElasticGraph::GraphQL::DatastoreQuery?
+
+          def index_search_hits: (
+            ElasticGraph::GraphQL::DatastoreResponse::SearchResponse
+          ) -> I
+
+          def identify_matching_hit: (
+            I,
+            R,
+            context: ::GraphQL::Query::Context,
+            index: ::Integer
+          ) -> (ElasticGraph::GraphQL::DatastoreResponse::Document | ::Hash[::String, untyped])?
+
+          def indexed? : -> boolish
+        end
+
+        class RepresentationWithIdSupertype
+          attr_reader type: ElasticGraph::GraphQL::Schema::Type
+          attr_reader id: ::String
+          attr_reader other_fields: ::Hash[::String, untyped]
+          attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+          attr_reader adapter: RepresentationWithId::Adapter
+
+          def initialize: (
+            type: ElasticGraph::GraphQL::Schema::Type,
+            id: ::String,
+            other_fields: ::Hash[::String, untyped],
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            adapter: RepresentationWithId::Adapter
+          ) -> void
+        end
+
+        class RepresentationWithId < RepresentationWithIdSupertype
+          def initialize: (
+            type: ElasticGraph::GraphQL::Schema::Type,
+            id: ::String,
+            other_fields: ::Hash[::String, untyped],
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+          ) -> void
+
+          class Adapter
+            include _Adapter[RepresentationWithId, ::Hash[::String, ElasticGraph::GraphQL::DatastoreResponse::Document]]
+            attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+            def initialize: (
+              type: ElasticGraph::GraphQL::Schema::Type,
+              schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+            ) -> void
+
+            def self.new: (
+              type: ElasticGraph::GraphQL::Schema::Type,
+              schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+            ) -> instance | (
+              ElasticGraph::GraphQL::Schema::Type,
+              SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+            ) -> instance
+
+            private
+
+            def additional_requested_fields_for: (::Array[RepresentationWithId]) -> ::Array[::String]
+            def fields_in: (::Hash[::String, untyped]) -> ::Array[::String]
+            def match?: (::Hash[::String, untyped], ::Hash[::String, untyped]) -> bool
+          end
+        end
+
+        class RepresentationWithoutIdSupertype
+          attr_reader type: ElasticGraph::GraphQL::Schema::Type
+          attr_reader fields: ::Hash[::String, untyped]
+          attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+          def initialize: (
+            type: ElasticGraph::GraphQL::Schema::Type,
+            fields: ::Hash[::String, untyped],
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+          ) -> void
+        end
+
+        class RepresentationWithoutId < RepresentationWithoutIdSupertype
+          include _Adapter[RepresentationWithoutId, ::Hash[::String, ::Array[ElasticGraph::GraphQL::DatastoreResponse::Document]]]
+          def adapter: () -> self
+
+          private
+
+          def build_filter_for_hash: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+        end
+
+        class RepresentationWithoutIndexSupertype
+          attr_reader type: ElasticGraph::GraphQL::Schema::Type
+          attr_reader representation_hash: Hash[::String, untyped]
+
+          def initialize: (
+              type: ElasticGraph::GraphQL::Schema::Type,
+              representation_hash: Hash[::String, untyped]
+            ) -> void
+        end
+
+        class RepresentationWithoutIndex < RepresentationWithoutIndexSupertype
+          include _Adapter[RepresentationWithoutIndex, ::Hash[::String, untyped]?]
+          def adapter: () -> self
+
+        end
+
+        type representation = RepresentationWithId | RepresentationWithoutId | RepresentationWithoutIndex
+      end
+    end
+  end
+end

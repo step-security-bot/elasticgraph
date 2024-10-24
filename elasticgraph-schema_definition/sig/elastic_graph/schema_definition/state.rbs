@@ -1,0 +1,101 @@
+module ElasticGraph
+  module SchemaDefinition
+    class StateSupertype
+      attr_reader api: API
+      attr_reader schema_elements: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+      attr_reader index_document_sizes: bool
+      attr_reader types_by_name: SchemaElements::typesByNameHash
+      attr_reader object_types_by_name: ::Hash[::String, indexableType]
+      attr_reader scalar_types_by_name: ::Hash[::String, SchemaElements::ScalarType]
+      attr_reader enum_types_by_name: ::Hash[::String, SchemaElements::EnumType]
+      attr_reader implementations_by_interface_ref: ::Hash[SchemaElements::TypeReference, ::Set[SchemaElements::TypeWithSubfields]]
+      attr_reader sdl_parts: ::Array[::String]
+      attr_reader paginated_collection_element_types: ::Set[::String]
+      attr_reader user_defined_fields: ::Set[SchemaElements::Field]
+      attr_reader renamed_types_by_old_name: ::Hash[::String, SchemaElements::DeprecatedElement]
+      attr_reader deleted_types_by_old_name: ::Hash[::String, SchemaElements::DeprecatedElement]
+      attr_reader renamed_fields_by_type_name_and_old_field_name: ::Hash[::String, ::Hash[::String, SchemaElements::DeprecatedElement]]
+      attr_reader deleted_fields_by_type_name_and_old_field_name: ::Hash[::String, ::Hash[::String, SchemaElements::DeprecatedElement]]
+      attr_accessor json_schema_version: ::Integer?
+      attr_accessor json_schema_version_setter_location: ::Thread::Backtrace::Location?
+      attr_reader graphql_extension_modules: ::Array[SchemaArtifacts::RuntimeMetadata::Extension]
+      attr_accessor initially_registered_built_in_types: ::Set[::String]
+      attr_accessor built_in_types_customization_blocks: ::Array[^(SchemaElements::graphQLType) -> void]
+      attr_accessor user_definition_complete: bool
+      attr_accessor sub_aggregation_paths_by_type: ::Hash[Mixins::SupportsFilteringAndAggregation, ::Array[SchemaElements::SubAggregationPath]]
+      attr_accessor type_refs_by_name: ::Hash[::String, SchemaElements::TypeReference]
+      attr_reader type_namer: SchemaElements::TypeNamer
+      attr_reader enum_value_namer: SchemaElements::EnumValueNamer
+      attr_accessor output: io
+
+      def initialize: (
+        api: API,
+        schema_elements: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+        index_document_sizes: bool,
+        types_by_name: SchemaElements::typesByNameHash,
+        object_types_by_name: ::Hash[::String, indexableType],
+        scalar_types_by_name: ::Hash[::String, SchemaElements::ScalarType],
+        enum_types_by_name: ::Hash[::String, SchemaElements::EnumType],
+        implementations_by_interface_ref: ::Hash[SchemaElements::TypeReference, ::Set[SchemaElements::TypeWithSubfields]],
+        sdl_parts: ::Array[::String],
+        paginated_collection_element_types: ::Set[::String],
+        user_defined_fields: ::Set[SchemaElements::Field],
+        renamed_types_by_old_name: ::Hash[::String, SchemaElements::DeprecatedElement],
+        deleted_types_by_old_name: ::Hash[::String, SchemaElements::DeprecatedElement],
+        renamed_fields_by_type_name_and_old_field_name: ::Hash[::String, ::Hash[::String, SchemaElements::DeprecatedElement]],
+        deleted_fields_by_type_name_and_old_field_name: ::Hash[::String, ::Hash[::String, SchemaElements::DeprecatedElement]],
+        json_schema_version: Integer?,
+        json_schema_version_setter_location: ::Thread::Backtrace::Location?,
+        graphql_extension_modules: ::Array[SchemaArtifacts::RuntimeMetadata::Extension],
+        initially_registered_built_in_types: ::Set[::String],
+        built_in_types_customization_blocks: ::Array[^(SchemaElements::graphQLType) -> void],
+        user_definition_complete: bool,
+        sub_aggregation_paths_by_type: ::Hash[Mixins::SupportsFilteringAndAggregation, ::Array[SchemaElements::SubAggregationPath]],
+        type_refs_by_name: ::Hash[::String, SchemaElements::TypeReference],
+        type_namer: SchemaElements::TypeNamer,
+        enum_value_namer: SchemaElements::EnumValueNamer,
+        output: io
+      ) -> void
+    end
+
+    class State < StateSupertype
+      def self.with: (
+        api: API,
+        schema_elements: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+        index_document_sizes: bool,
+        derived_type_name_formats: ::Hash[::Symbol, ::String],
+        type_name_overrides: ::Hash[::String, ::String] | ::Hash[::Symbol, ::String],
+        enum_value_overrides_by_type: ::Hash[::String | ::Symbol, ::Hash[::String | ::Symbol, ::String]],
+        ?output: io
+      ) -> State
+
+      def index_document_sizes?: () -> bool
+      def type_ref: (::String) -> SchemaElements::TypeReference
+
+      def register_object_interface_or_union_type: (SchemaElements::ObjectType | SchemaElements::InterfaceType | SchemaElements::UnionType) -> void
+      def register_enum_type: (SchemaElements::EnumType) -> void
+      def register_scalar_type: (SchemaElements::ScalarType) -> void
+      def register_input_type: (SchemaElements::InputType) -> void
+      def register_renamed_type: (::String, from: ::String, defined_at: ::Thread::Backtrace::Location?, defined_via: ::String) -> void
+      def register_deleted_type: (::String, defined_at: ::Thread::Backtrace::Location?, defined_via: ::String) -> void
+      def register_renamed_field: (::String, from: ::String, to: ::String, defined_at: ::Thread::Backtrace::Location?, defined_via: ::String) -> void
+      def register_deleted_field: (::String, ::String, defined_at: ::Thread::Backtrace::Location?, defined_via: ::String) -> void
+      def register_user_defined_field: (SchemaElements::Field) -> void
+
+      @factory: Factory?
+      def factory: () -> Factory
+
+      @enums_for_indexed_types: SchemaElements::EnumsForIndexedTypes?
+      def enums_for_indexed_types: () -> SchemaElements::EnumsForIndexedTypes
+
+      def sub_aggregation_paths_for: (Mixins::SupportsFilteringAndAggregation) -> ::Array[SchemaElements::SubAggregationPath]
+
+      @user_defined_field_references_by_type_name: ::Hash[::String, ::Array[SchemaElements::Field]]?
+      def user_defined_field_references_by_type_name: () -> ::Hash[::String, ::Array[SchemaElements::Field]]
+      private
+
+      RESERVED_TYPE_NAMES: ::Set[::String]
+      def register_type: [T] (T & SchemaElements::graphQLType, ?::Hash[::String, T]?) -> T
+    end
+  end
+end

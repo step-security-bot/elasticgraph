@@ -1,0 +1,34 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module Resolvers
+        class GroupedBySupertype
+          attr_reader bucket: ::Hash[::String, untyped]
+          attr_reader field_path: ::Array[PathSegment]
+
+          def initialize: (
+            bucket: ::Hash[::String, untyped],
+            field_path: ::Array[PathSegment]
+          ) -> void
+
+          def self.new: (
+            bucket: ::Hash[::String, untyped],
+            field_path: ::Array[PathSegment]
+          ) -> instance | (
+            ::Hash[::String, untyped],
+            ::Array[PathSegment]
+          ) -> instance
+
+          def with: (
+            ?bucket: ::Hash[::String, untyped],
+            ?field_path: ::Array[PathSegment]
+          ) -> instance
+        end
+
+        class GroupedBy < GroupedBySupertype
+          include GraphQL::Resolvers::_Resolver
+        end
+      end
+    end
+  end
+end

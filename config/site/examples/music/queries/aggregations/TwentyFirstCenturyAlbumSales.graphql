@@ -1,0 +1,19 @@
+query TwentyFirstCenturyAlbumSales {
+  artistAggregations {
+    nodes {
+      subAggregations {
+        albums(filter: {
+          releasedOn: {gte: "2000-01-01"}
+        }) {
+          nodes {
+            aggregatedValues {
+              soldUnits {
+                exactSum
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

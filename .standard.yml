@@ -1,0 +1,20 @@
+ruby_version: 3.2
+format: progress
+ignore:
+  - adr/**/*
+  - bin/**/*
+  - bundle/**/*
+  - .bundle/**/*
+  - log/**/*
+  - tmp/**/*
+  - "*/vendor/**/*"
+  - "**/*.rb":
+    # This cop forces syntax that steep does not yet support. (e.g. `def foo(**); bar(**); end`)
+    # Once steep supports that, we can stop ignoring this one.
+    - Style/ArgumentsForwarding
+    # This cop forces syntax that steep does not yet support. (e.g. bare `super` which implicitly forwards args)
+    # Once steep supports that, we can stop ignoring this one.
+    - Style/SuperArguments
+
+extend_config:
+  - config/linting/custom.yaml

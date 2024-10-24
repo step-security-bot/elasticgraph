@@ -1,0 +1,1 @@
+# ElasticGraph::IndexerAutoscalerLambda

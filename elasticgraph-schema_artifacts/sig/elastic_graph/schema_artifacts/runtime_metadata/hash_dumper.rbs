@@ -1,0 +1,9 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      module HashDumper
+        def self.dump_hash: (::Hash[::String, untyped]) { (untyped) -> untyped } -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

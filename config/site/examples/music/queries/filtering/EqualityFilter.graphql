@@ -1,0 +1,12 @@
+query EqualityFilter {
+  artists(filter: {
+    name: {equalToAnyOf: ["U2", "Radiohead"]}
+  }) {
+    nodes {
+      name
+      bio {
+        yearFormed
+      }
+    }
+  }
+}

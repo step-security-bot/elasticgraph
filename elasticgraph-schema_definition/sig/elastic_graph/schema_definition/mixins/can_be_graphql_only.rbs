@@ -1,0 +1,11 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      module CanBeGraphQLOnly
+        @graphql_only: bool?
+        def graphql_only: (bool) -> void
+        def graphql_only?: () -> bool
+      end
+    end
+  end
+end

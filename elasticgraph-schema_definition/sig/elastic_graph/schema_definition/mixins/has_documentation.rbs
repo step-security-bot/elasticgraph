@@ -1,0 +1,13 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      module HasDocumentation
+        attr_accessor doc_comment: ::String?
+        def documentation: (::String?) -> void
+        def append_to_documentation: (::String) -> void
+        def formatted_documentation: () -> ::String?
+        def derived_documentation: (::String, ?::String?) -> ::String
+      end
+    end
+  end
+end

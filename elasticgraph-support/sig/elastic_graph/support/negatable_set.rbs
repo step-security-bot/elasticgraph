@@ -1,0 +1,10 @@
+module ElasticGraph
+  module Support
+    # A minimal set interface that also offers a `negate` operation.
+    interface _NegatableSet[S]
+      def union: (S) -> S
+      def intersection: (S) -> S
+      def negate: () -> S
+    end
+  end
+end

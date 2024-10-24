@@ -1,0 +1,23 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class ArgumentSuperType
+        attr_reader schema_def_state: State
+        attr_reader parent_field: Field
+        attr_reader name: ::String
+        attr_reader original_value_type: TypeReference
+
+        def initialize: (State, Field, ::String, TypeReference) -> void
+      end
+
+      class Argument < ArgumentSuperType
+        include Mixins::VerifiesGraphQLName
+        include Mixins::SupportsDefaultValue
+        include Mixins::HasDocumentation
+        include Mixins::HasDirectives
+
+        def value_type: () -> TypeReference
+      end
+    end
+  end
+end

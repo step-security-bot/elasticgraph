@@ -1,0 +1,21 @@
+module ElasticGraph
+  module Local
+    class IndexingCoordinator
+      PARALLELISM: ::Integer
+
+      @fake_data_batch_generator: fakeDataBatchGenerator
+      @publish_batch: ^(::Array[::Hash[::String, untyped]]) -> void
+      @output: io
+
+      def initialize: (fakeDataBatchGenerator, ?output: io) {
+        (::Array[::Hash[::String, untyped]]) -> void
+      } -> void
+
+      def index_fake_data: (::Integer) -> void
+
+      private
+
+      def new_publishing_thread: (::Thread::Queue) -> ::Thread
+    end
+  end
+end

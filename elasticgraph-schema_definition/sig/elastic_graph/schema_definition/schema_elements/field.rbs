@@ -1,0 +1,101 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      # Note: this is a partial signature definition (`field.rb` is ignored in `Steepfile`)
+      class Field
+        include Mixins::HasDocumentation
+        include Mixins::HasDirectives
+        include Mixins::HasTypeInfo
+
+        type argument = untyped
+        type mapping = untyped
+        type jsonSchema = untyped
+        type accuracyConfidence = :high | :medium | :low
+
+        attr_reader name: ::String
+        attr_reader name_in_index: ::String
+        attr_reader original_type: TypeReference
+        attr_reader original_type_for_derived_types: TypeReference
+        attr_reader parent_type: indexableType
+        attr_reader schema_def_state: State
+        attr_reader accuracy_confidence: accuracyConfidence
+        attr_accessor computation_detail: SchemaArtifacts::RuntimeMetadata::ComputationDetail
+        attr_reader filter_customizations: ::Array[^(Field) -> void]
+        attr_reader sort_order_enum_value_customizations: ::Array[^(SortOrderEnumValue) -> void]
+        attr_reader non_nullable_in_json_schema: bool
+        attr_reader source: FieldSource?
+        attr_accessor relationship: Relationship?
+        attr_reader singular_name: ::String?
+        attr_reader as_input: bool
+
+        def initialize: (
+          name: ::String,
+          type: ::String,
+          schema_def_state: State,
+          ?filter_type: ::String?,
+          ?name_in_index: ::String,
+          ?accuracy_confidence: SchemaElements::Field::accuracyConfidence,
+          ?sortable: bool?,
+          ?filterable: bool?,
+          ?aggregatable: bool?,
+          ?groupable: bool?,
+          ?graphql_only: bool?,
+          ?singular: ::String?,
+          ?as_input: bool
+        ) ?{ (Field) -> void } -> void
+
+        def runtime_script: (::String?) -> void
+        def type: () -> TypeReference
+        def type_for_derived_types: () -> TypeReference
+        def customize_filter_field: () { (Field) -> void } -> void
+        def customize_sort_order_enum_values: () { (SortOrderEnumValue) -> void } -> void
+        def customize_grouped_by_field: () { (Field) -> void } -> void
+        def customize_sub_aggregations_field: () { (Field) -> void } -> void
+        def customize_aggregated_values_field: () { (Field) -> void } -> void
+        def on_each_generated_schema_element: () { (Field | SortOrderEnumValue) -> void } -> void
+        def renamed_from: (::String) -> void
+        def argument: (::String, ::String) ?{ (Argument) -> void } -> void
+        def define_relay_pagination_arguments!: () -> void
+        def filterable?: () -> bool
+        def groupable?: () -> bool
+        def list_field_groupable_by_single_values?: () -> bool
+        def aggregatable?: () -> bool
+        def sub_aggregatable?: () -> bool
+        def define_aggregated_values_field: (ObjectType) -> void
+        def define_grouped_by_field: (ObjectType) -> void
+        def define_sub_aggregations_field: (parent_type: ObjectType, type: ::String) ?{ (Field) -> void } -> void
+        def define_old_aggregation_fields: (ObjectType) -> void
+        def to_indexing_field_reference: () -> Indexing::FieldReference?
+        def to_indexing_field: () -> Indexing::Field?
+        def resolve_mapping: () -> ::Hash[::String, untyped]?
+        def mapping_type: () -> ::String?
+        def grouped_by_field_name: () -> ::String
+        def to_filter_field: (parent_type: anyObjectType, ?for_single_value: bool) -> Field
+        def to_sdl: (?type_structure_only: bool, ?default_value_sdl: ::String?) ?{ (argument) -> boolish } -> ::String
+        def sourced_from: (::String, ::String) -> void
+        def paths_to_lists_for_count_indexing: (?has_list_ancestor: bool) -> ::Array[::String]
+        def index_leaf?: () -> bool
+
+        ACCURACY_SCORES: ::Hash[accuracyConfidence, ::Integer]
+
+        def self.pick_most_accurate_from: (
+          Field,
+          Field,
+          ?to_comparable: ^(Field) -> Object?
+        ) { () -> void } -> Field
+
+        def nested?: () -> bool
+
+        def runtime_metadata_computation_detail: (empty_bucket_value: ::Numeric?, function: ::Symbol) -> void
+        def runtime_metadata_graphql_field: () -> SchemaArtifacts::RuntimeMetadata::GraphQLField
+
+        private
+
+        def text?: () -> bool
+        def args_sdl: (joiner: ::String, ?after_opening_paren: ::String) ?{ (argument) -> boolish } -> ::String
+        def list_field_grouped_by_doc_note: (::String) -> ::String
+        def filter_field_suffix: (bool) -> ::String
+      end
+    end
+  end
+end

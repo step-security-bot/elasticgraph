@@ -1,0 +1,46 @@
+module ElasticGraph
+  class GraphQL
+    class QueryAdapter
+      class RequestedFields
+        include _QueryAdapter
+        def initialize: (Schema) -> void
+
+        def query_attributes_for: (
+          field: Schema::Field,
+          lookahead: ::GraphQL::Execution::Lookahead) -> ::Hash[::Symbol, untyped]
+
+        private
+
+        @schema: Schema
+
+        def requested_fields_under: (
+          ::GraphQL::Execution::Lookahead,
+          ?path_prefix: ::String
+        ) -> ::Array[::String]
+
+        def requested_fields_for: (
+          ::GraphQL::Execution::Lookahead,
+          path_prefix: ::String
+        ) -> ::Array[::String]
+
+        def field_for: (::GraphQL::Schema::Field?) -> Schema::Field?
+
+        def pagination_fields_need_individual_docs?: (
+          ::GraphQL::Execution::Lookahead
+        ) -> bool
+
+        def relay_connection_node_from: (
+          ::GraphQL::Execution::Lookahead
+        ) -> ::GraphQL::Execution::Lookahead
+
+        def query_needs_total_document_count?: (
+          ::GraphQL::Execution::Lookahead
+        ) -> bool
+
+        def graphql_dynamic_field?: (
+          ::GraphQL::Execution::Lookahead
+        ) -> bool
+      end
+    end
+  end
+end

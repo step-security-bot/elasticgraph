@@ -1,0 +1,10 @@
+module ElasticGraph
+  module AdminLambda
+    class LambdaFunction
+      include LambdaSupport::LambdaFunction[::Hash[::String, untyped]]
+      include LambdaSupport::_LambdaFunctionClass[::Hash[::String, untyped]]
+    end
+  end
+end
+
+HandleAdminRequest: ElasticGraph::AdminLambda::LambdaFunction

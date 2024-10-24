@@ -1,0 +1,18 @@
+include:
+  - ../../elasticgraph-local/lib/elastic_graph/local/elasticsearch/docker-compose.yaml
+services:
+  products:
+    build:
+      context: ../..
+      dockerfile: elasticgraph-apollo/apollo_tests_implementation/Dockerfile
+      args:
+        TARGET_APOLLO_FEDERATION_VERSION: ${TARGET_APOLLO_FEDERATION_VERSION}
+        RUBY_VERSION: ${RUBY_VERSION}
+    ports:
+      - 4001:4001
+    depends_on:
+      - elasticsearch
+    command: ["./wait_for_datastore.sh", "elasticsearch:9200", "bundle", "exec", "rackup", "--host", "0.0.0.0", "--port", "4001"]
+volumes:
+  data01:
+    driver: local

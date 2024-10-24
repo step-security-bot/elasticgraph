@@ -1,0 +1,32 @@
+query TourAttendanceByYear {
+  artistAggregations {
+    nodes {
+      subAggregations {
+        tours {
+          nodes {
+            subAggregations {
+              shows {
+                nodes {
+                  groupedBy {
+                    startedAt {
+                      asDate(
+                        truncationUnit: YEAR
+                        timeZone: "America/Los_Angeles"
+                      )
+                    }
+                  }
+
+                  aggregatedValues {
+                    attendance {
+                      exactSum
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

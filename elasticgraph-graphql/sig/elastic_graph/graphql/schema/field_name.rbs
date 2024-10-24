@@ -1,0 +1,12 @@
+module ElasticGraph
+  class GraphQL
+    class Schema
+      class FieldName
+        attr_reader name_in_graphql: ::String
+        attr_reader name_in_index: ::String
+
+        def initialize: (::String, ::String) -> void
+      end
+    end
+  end
+end

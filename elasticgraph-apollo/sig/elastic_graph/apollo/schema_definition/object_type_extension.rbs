@@ -1,0 +1,18 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module ObjectTypeExtension: ElasticGraph::SchemaDefinition::SchemaElements::ObjectType
+        include ApolloDirectives::Authenticated
+        include ApolloDirectives::Extends
+        include ApolloDirectives::External
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::InterfaceObject
+        include ApolloDirectives::Key
+        include ApolloDirectives::Policy
+        include ApolloDirectives::RequiresScopes
+        include ApolloDirectives::Shareable
+        include ApolloDirectives::Tag
+      end
+    end
+  end
+end

@@ -1,0 +1,15 @@
+query FindArtistsFormedIn90s {
+  artists(filter: {
+    bio: {yearFormed: {gte: 1990, lt: 2000}}
+  }) {
+    nodes {
+      name
+      bio {
+        yearFormed
+      }
+      albums {
+        name
+      }
+    }
+  }
+}

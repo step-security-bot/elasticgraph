@@ -1,0 +1,54 @@
+module ElasticGraph
+  module QueryRegistry
+    module QueryValidators
+      class ForRegisteredClientSupertype
+        attr_reader schema: GraphQL::Schema
+        attr_reader graphql_schema: ::GraphQL::Schema
+        attr_reader allow_any_query_for_clients: ::Set[::String]
+        attr_reader client_cache_mutex: ::Thread::Mutex
+        attr_reader provide_query_strings_for_client: ^(::String) -> ::Array[::String]
+        attr_reader client_data_by_client_name: ::Hash[::String, ClientData?]
+
+        def initialize: (
+          schema: GraphQL::Schema,
+          graphql_schema: ::GraphQL::Schema,
+          allow_any_query_for_clients: ::Set[::String],
+          client_cache_mutex: ::Thread::Mutex,
+          provide_query_strings_for_client: ^(::String) -> ::Array[::String],
+          client_data_by_client_name: ::Hash[::String, ClientData?]
+        ) -> void
+      end
+
+      class ForRegisteredClient < ForRegisteredClientSupertype
+        def initialize: (
+          schema: GraphQL::Schema,
+          client_names: ::Array[::String],
+          allow_any_query_for_clients: ::Set[::String],
+          provide_query_strings_for_client: ^(String) -> ::Array[::String]
+        ) -> void
+
+        def applies_to?: (GraphQL::Client) -> bool
+
+        def build_and_validate_query: (
+          ::String?,
+          client: GraphQL::Client,
+          ?variables: ::Hash[::String, untyped],
+          ?operation_name: ::String?,
+          ?context: ::Hash[::Symbol, untyped]
+        ) { () -> ::GraphQL::Query } -> [::GraphQL::Query, ::Array[::String]]
+
+        private
+
+        def client_data_for: (::String) -> ClientData
+        def atomically_update_cached_client_data_for: (::String) { (ClientData?) -> ClientData } -> ClientData
+
+        def prepare_query_for_execution: (
+          ::GraphQL::Query,
+          variables: ::Hash[::String, untyped],
+          operation_name: ::String?,
+          context: ::Hash[::Symbol, untyped]
+        ) -> ::GraphQL::Query
+      end
+    end
+  end
+end

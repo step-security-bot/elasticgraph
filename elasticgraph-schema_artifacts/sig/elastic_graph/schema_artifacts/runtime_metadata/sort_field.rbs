@@ -1,0 +1,24 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class SortFieldSuperType
+        attr_reader field_path: ::String
+        attr_reader direction: SortField::direction
+
+        def initialize: (
+          field_path: ::String,
+          direction: SortField::direction) -> void
+      end
+
+      class SortField < SortFieldSuperType
+        type direction = :asc | :desc
+
+        FIELD_PATH: "field_path"
+        DIRECTION: "direction"
+        def self.from_hash: (::Hash[::String, untyped]) -> SortField
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+        def to_query_clause: () -> ::Hash[::String, {"order" => ::String}]
+      end
+    end
+  end
+end

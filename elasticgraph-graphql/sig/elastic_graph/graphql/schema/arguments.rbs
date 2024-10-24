@@ -1,0 +1,12 @@
+module ElasticGraph
+  class GraphQL
+    class Schema
+      module Arguments
+        def self.to_schema_form: (
+          ::Hash[::String, untyped],
+          untyped
+        ) -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

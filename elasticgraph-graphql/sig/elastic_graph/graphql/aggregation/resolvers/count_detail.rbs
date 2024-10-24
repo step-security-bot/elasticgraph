@@ -1,0 +1,35 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module Resolvers
+        class CountDetailSupertype < GraphQL::Resolvers::ResolvableValueClass
+          attr_reader bucket: ::Hash[::String, untyped]
+
+          def initialize: (
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            bucket: ::Hash[::String, untyped]
+          ) -> void
+
+          def self.new: (
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            bucket: ::Hash[::String, untyped]
+          ) -> instance | (
+            SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            ::Hash[::String, untyped]
+          ) -> instance
+
+          def with: (
+            ?schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            ?bucket: ::Hash[::String, untyped]
+          ) -> instance
+        end
+
+        class CountDetail < CountDetailSupertype
+          attr_reader approximate_value: ::Integer
+          attr_reader exact_value: ::Integer?
+          attr_reader upper_bound: ::Integer
+        end
+      end
+    end
+  end
+end

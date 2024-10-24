@@ -1,0 +1,25 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module TermGrouping: _TermGroupingSubtype
+        attr_reader key: ::String
+        attr_reader encoded_index_field_path: ::String
+
+        def composite_clause: (?grouping_options: ::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+        def non_composite_clause_for: (Query) -> ::Hash[::String, untyped]
+        def inner_meta: () -> ::Hash[::String, untyped]
+
+        INNER_META: ::Hash[::String, untyped]
+
+        private
+
+        def work_around_elasticsearch_bug: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+      end
+
+      interface _TermGroupingSubtype
+        def field_path: () -> fieldPath
+        def terms_subclause: () -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

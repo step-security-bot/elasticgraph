@@ -1,0 +1,5 @@
+module Rake
+  module DSL
+    def task: (*untyped) ?{ (untyped, untyped) -> void } -> void | ...
+  end
+end

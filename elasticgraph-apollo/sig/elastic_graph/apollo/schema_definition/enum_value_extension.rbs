@@ -1,0 +1,10 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module EnumValueExtension: ElasticGraph::SchemaDefinition::SchemaElements::EnumValue
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::Tag
+      end
+    end
+  end
+end

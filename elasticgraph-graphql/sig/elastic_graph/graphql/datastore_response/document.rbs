@@ -1,0 +1,43 @@
+module ElasticGraph
+  class GraphQL
+    module DatastoreResponse
+      class Document
+        extend Forwardable
+
+        attr_reader raw_data: ::Hash[::String, untyped]
+        attr_reader payload: ::Hash[::String, untyped]
+        attr_reader decoded_cursor_factory: DecodedCursor::_Factory
+
+        def initialize: (
+          raw_data: ::Hash[::String, untyped],
+          payload: ::Hash[::String, untyped],
+          decoded_cursor_factory: DecodedCursor::_Factory
+        ) -> void
+
+        def with: (
+          ?raw_data: ::Hash[::String, untyped],
+          ?payload: ::Hash[::String, untyped],
+          ?decoded_cursor_factory: DecodedCursor::_Factory
+        ) -> Document
+
+        def self.build: (
+          ::Hash[::String, untyped],
+          ?decoded_cursor_factory: DecodedCursor::_Factory
+        ) -> Document
+
+        def []: (::String) -> untyped
+        def fetch: (::String) -> untyped
+        def index_name: () -> ::String
+        def index_definition_name: () -> ::String
+        def id: () -> ::String
+        def sort: () -> ::Array[untyped]
+        def version: () -> ::Integer
+
+        @cursor: DecodedCursor?
+        def cursor: () -> DecodedCursor
+
+        def datastore_path: () -> ::String
+      end
+    end
+  end
+end

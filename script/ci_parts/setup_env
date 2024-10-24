@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+# Abort script at first error, when a command exits with non-zero status.
+# Verbose form of `set -e`.
+set -o errexit
+
+# Attempt to use undefined variable outputs error message, and forces an exit
+# Verbose form of `set -u`.
+set -o nounset
+
+# If set, the return value of a pipeline is the value of the last (rightmost)
+# command to exit with a non-zero status, or zero if all commands in the
+# pipeline exit successfully.
+set -o pipefail
+
+# Print a trace of simple commands.
+# Verbose form of `set -x`.
+set -o xtrace
+
+export CI=true
+
+# We want to leverage frozen string literals for faster perf.
+# This will enforce it on CI.
+export RUBYOPT=--enable-frozen-string-literal
+
+# We use the VCR gem as a local "test accelerator" which caches datastore requests/responses for us.
+# But in our CI build we don't want to use it at all, so we disable it here, for all RSpec runs.
+export NO_VCR=1
+
+# track test coverage for all specs
+export COVERAGE=1
+
+export bundler_version=$(cat Gemfile.lock | grep "BUNDLED WITH" -A 2 | grep "[0-9]" | xargs)
+export all_gems=$(script/list_eg_gems.rb)
+
+# elasticgraph-local contains the rake tasks that manage our datastores. Running the acceptance tests for it can
+# tend to run into conflicts if the datastore is already running--for example, on GitHub Actions we've observed
+# that there are not sufficient resources to run those acceptance tests while the original datastore daemon
+# is still running. Therefore, we want to run its tests after halting the datastore daemon.
+export gems_to_build_with_datastore_halted=(elasticgraph-local)
+# Array subtraction technique taken from: https://stackoverflow.com/a/28161520
+export gems_to_build_with_datastore_booted=$(echo ${all_gems[@]} ${gems_to_build_with_datastore_halted[@]} | tr ' ' '\n' | sort | uniq -u)
+
+# The ci_parts scripts are designed primarily for use on CI, where we need the datastore booted as an initial step.
+# However, locally we want to be able to run the ci_parts scripts while already having the datastore booted (we commonly
+# leave it running in the background). Here we boot the datastore if the script arg was passed, and otherwise print a
+# message and skip.
+if [ "$#" -lt 2 ]; then
+  echo "No datastore argument specified; will assume the datastore is already running."
+  echo "If you need want the ci_parts script to boot the datastore, specify the datastore as the first argument, like:"
+  echo "script/ci_parts/run_each_gem_spec elasticsearch:8.13.0"
+
+  function halt_datastore_daemon() {
+    echo "Skipping the halt of a datastore daemon since the 'setup_env' script didn't boot the daemon."
+  }
+else
+  boot_env=$1
+  datastore=$2
+  sleep_after_boot=${3:-0}
+  datastore_backend=$(echo "${datastore}" | cut -d ":" -f 1)
+  datastore_version=$(echo "${datastore}" | cut -d ":" -f 2)
+
+  function halt_datastore_daemon() {
+    bundle _$bundler_version\_ exec rake ${datastore_backend}:${boot_env}:${datastore_version}:halt
+  }
+
+  bundle _$bundler_version\_ exec rake ${datastore_backend}:${boot_env}:${datastore_version}:daemon
+
+  # Occasionally, we've see transient "Partial shards failure (N shards unavailable)" errors from
+  # Elasticsearch/OpenSearch on CI from the first tests that run after booting it. Locally that
+  # never happens--likely because we do not immediately run tests after booting Elasticsearch/OpenSearch.
+  #
+  # Here we sleep a specified amount of time (defaulting to 0 to not slow down locally) to try to avoid this issue.
+  sleep $sleep_after_boot
+fi

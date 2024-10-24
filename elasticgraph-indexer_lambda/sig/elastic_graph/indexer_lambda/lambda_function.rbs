@@ -1,0 +1,11 @@
+module ElasticGraph
+  module IndexerLambda
+    class LambdaFunction
+      include LambdaSupport::LambdaFunction[void]
+      include LambdaSupport::_LambdaFunctionClass[void]
+      @sqs_processor: SqsProcessor
+    end
+  end
+end
+
+ProcessEventStreamEvent: ElasticGraph::IndexerLambda::LambdaFunction

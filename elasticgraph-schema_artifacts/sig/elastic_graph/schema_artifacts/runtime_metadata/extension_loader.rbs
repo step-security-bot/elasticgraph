@@ -1,0 +1,26 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class ExtensionLoader
+        def initialize: (extensionClass) -> void
+
+        def load: (::String, from: ::String, config: ::Hash[::Symbol, untyped]) -> Extension
+
+        private
+
+        @interface_def: extensionClass
+        @loaded_by_name: ::Hash[::String, Extension]
+
+        type method = ::Method | ::UnboundMethod
+        type methodFetcher = ^(::Module, ::Symbol) -> method
+
+        def load_extension: (::String, ::String) -> Extension
+        def verify_interface: (::String, extensionClass) -> void
+        def verify_methods: (::String, extensionClass, extensionClass) -> ::Array[::String]
+        def list_instance_interface_methods: (extensionClass) -> ::Array[::Symbol]
+        def parameters_match?: (extensionClass, extensionClass, ::Symbol) -> bool
+        def signature_code_for: (extensionClass, ::Symbol) -> ::String
+      end
+    end
+  end
+end

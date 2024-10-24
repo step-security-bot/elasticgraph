@@ -1,0 +1,8 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module EntityTypeExtension: ::ElasticGraph::SchemaDefinition::SchemaElements::UnionType
+      end
+    end
+  end
+end

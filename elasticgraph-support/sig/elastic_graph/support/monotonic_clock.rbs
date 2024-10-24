@@ -1,0 +1,7 @@
+module ElasticGraph
+  module Support
+    class MonotonicClock
+      def now_in_ms: () -> ::Integer
+    end
+  end
+end

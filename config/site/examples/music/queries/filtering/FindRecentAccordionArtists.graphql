@@ -1,0 +1,16 @@
+query FindRecentAccordionArtists {
+  artists(filter: {
+    bio: {
+      yearFormed: {gt: 2000}
+      description: {matchesQuery: {query: "accordion"}}
+    }
+  }) {
+    nodes {
+      name
+      bio {
+        yearFormed
+        description
+      }
+    }
+  }
+}

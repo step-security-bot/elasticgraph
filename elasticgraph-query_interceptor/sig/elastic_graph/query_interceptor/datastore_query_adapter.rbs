@@ -1,0 +1,10 @@
+module ElasticGraph
+  module QueryInterceptor
+    class DatastoreQueryAdapter
+      include GraphQL::_QueryAdapter
+
+      attr_reader interceptors: ::Array[_Interceptor]
+      def initialize: (::Array[_Interceptor]) -> void
+    end
+  end
+end

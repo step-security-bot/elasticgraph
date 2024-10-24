@@ -1,0 +1,20 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module FieldExtension: ElasticGraph::SchemaDefinition::SchemaElements::Field
+        include ApolloDirectives::Authenticated
+        include ApolloDirectives::External
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::Override
+        include ApolloDirectives::Policy
+        include ApolloDirectives::Provides
+        include ApolloDirectives::Requires
+        include ApolloDirectives::RequiresScopes
+        include ApolloDirectives::Shareable
+        include ApolloDirectives::Tag
+        def tag_with: (::String) -> void
+        def self.tagged_with?: (ElasticGraph::SchemaDefinition::Mixins::HasDirectives, ::String) -> bool
+      end
+    end
+  end
+end

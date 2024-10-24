@@ -1,0 +1,5 @@
+module ApolloFederation
+  class Tracing
+    def self.should_add_traces: (::Hash[::String, ::String]) -> bool
+  end
+end

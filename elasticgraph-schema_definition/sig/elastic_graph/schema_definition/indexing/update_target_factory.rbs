@@ -1,0 +1,22 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      module UpdateTargetFactory
+        def self.new_normal_indexing_update_target: (
+          type: ::String,
+          relationship: ::String,
+          id_source: ::String,
+          data_params: SchemaArtifacts::RuntimeMetadata::paramsHash,
+          routing_value_source: ::String?,
+          rollover_timestamp_value_source: ::String?
+        ) -> SchemaArtifacts::RuntimeMetadata::UpdateTarget
+
+        private
+
+        self.@standard_metadata_params: SchemaArtifacts::RuntimeMetadata::paramsHash?
+        def self.standard_metadata_params: () -> SchemaArtifacts::RuntimeMetadata::paramsHash
+        def self.single_value_param_from: (::String) -> SchemaArtifacts::RuntimeMetadata::_Param
+      end
+    end
+  end
+end

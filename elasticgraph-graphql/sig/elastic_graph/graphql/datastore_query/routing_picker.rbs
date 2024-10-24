@@ -1,0 +1,65 @@
+module ElasticGraph
+  class GraphQL
+    class DatastoreQuery
+      class RoutingPicker
+        def initialize: (schema_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames) -> void
+        def extract_eligible_routing_values: (
+          ::Array[::Hash[::String, untyped]],
+          ::Array[::String]
+        ) -> ::Array[routingValue]?
+
+        private
+
+        @filter_value_set_extractor: Filtering::FilterValueSetExtractor[_RoutingValueSet]
+      end
+
+      type routingValue = untyped
+
+      interface _RoutingValueSet
+        include Support::_NegatableSet[_RoutingValueSet]
+        def to_return_value: () -> ::Array[routingValue]?
+        def ==: (untyped) -> bool
+      end
+
+      type routingValueSetType = :inclusive | :exclusive
+
+      class RoutingValueSetSupertype
+        attr_reader type: routingValueSetType
+        attr_reader routing_values: ::Set[routingValue]
+
+        def initialize: (routingValueSetType, ::Set[routingValue]) -> void
+        def self.with: (
+          type: routingValueSetType,
+          routing_values: ::Set[routingValue]
+        ) -> RoutingValueSet
+
+        def with: (
+          ?type: routingValueSetType,
+          ?routing_values: ::Set[routingValue]
+        ) -> RoutingValueSet
+      end
+
+      class RoutingValueSet < RoutingValueSetSupertype
+        include _RoutingValueSet
+        def self.of: (::Enumerable[routingValue]) -> RoutingValueSet
+        def self.of_all_except: (::Enumerable[routingValue]) -> RoutingValueSet
+
+        ALL: RoutingValueSet
+        INVERTED_TYPES: ::Hash[routingValueSetType, routingValueSetType]
+
+        def inclusive?: () -> bool
+        def exclusive?: () -> bool
+
+        private
+
+        def get_included_and_excluded_values: (
+          RoutingValueSet
+        ) -> [::Set[routingValue], ::Set[routingValue]]
+
+        module UnboundedWithExclusions
+          extend _RoutingValueSet
+        end
+      end
+    end
+  end
+end

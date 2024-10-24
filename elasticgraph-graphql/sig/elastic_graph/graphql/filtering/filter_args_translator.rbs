@@ -1,0 +1,22 @@
+module ElasticGraph
+  class GraphQL
+    module Filtering
+      class FilterArgsTranslatorSupertype
+        attr_reader filter_arg_name: ::String
+        def initialize: (filter_arg_name: ::String) -> void
+      end
+
+      class FilterArgsTranslator < FilterArgsTranslatorSupertype
+        def initialize: (schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames) -> void
+        def translate_filter_args: (field: Schema::Field, args: ::Hash[::String, untyped]) -> ::Hash[::String, untyped]?
+
+        private
+
+        def convert:
+          (Schema::Type, ::Hash[::String, untyped]) -> ::Hash[::String, untyped]?
+          | [E] (Schema::Type, ::Array[E]) -> ::Array[E]
+          | (Schema::Type, untyped) -> untyped
+      end
+    end
+  end
+end

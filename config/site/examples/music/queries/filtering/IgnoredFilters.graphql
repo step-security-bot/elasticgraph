@@ -1,0 +1,13 @@
+query IgnoredFilters {
+  artists(filter: {
+    name: {equalToAnyOf: null}
+    bio: {yearFormed: {}}
+  }) {
+    nodes {
+      name
+      bio {
+        yearFormed
+      }
+    }
+  }
+}

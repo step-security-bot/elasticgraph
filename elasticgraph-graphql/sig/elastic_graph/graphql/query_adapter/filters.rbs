@@ -1,0 +1,58 @@
+module ElasticGraph
+  class GraphQL
+    class QueryAdapter
+      class FiltersSupertype
+        attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+        attr_reader filter_args_translator: Filtering::FilterArgsTranslator
+        attr_reader filter_node_interpreter: Filtering::FilterNodeInterpreter
+
+        def initialize: (
+          schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+          filter_args_translator: Filtering::FilterArgsTranslator,
+          filter_node_interpreter: Filtering::FilterNodeInterpreter
+        ) -> void
+      end
+
+      class Filters < FiltersSupertype
+        include _QueryAdapter
+
+        private
+
+        def build_automatic_filter: (filter_from_args: ::Hash[::String, untyped]?, query: DatastoreQuery) -> ::Hash[::String, untyped]?
+        def exclude_incomplete_docs_filter: () -> ::Hash[::String, untyped]
+        def search_could_hit_incomplete_docs?: (DatastoreCore::_IndexDefinition, ::Hash[::String, untyped]) -> bool
+
+        def determine_paths_to_check: (
+          ::Object,
+          ::Hash[::String, SchemaArtifacts::RuntimeMetadata::IndexField],
+          ?parent_path: ::String?
+        ) -> ::Array[::String]
+
+        def can_match_nil_values_at?: (::String, ::Hash[::String, untyped]) -> bool
+
+        @filter_value_set_extractor: Filtering::FilterValueSetExtractor[_NilFocusedSet]?
+        def filter_value_set_extractor: () -> Filtering::FilterValueSetExtractor[_NilFocusedSet]
+
+        interface _NilFocusedSet
+          include Support::_NegatableSet[_NilFocusedSet]
+          def includes_nil?: () -> bool
+        end
+
+        module NilFocusedSet: _NilFocusedSet
+          def union: (_NilFocusedSet) -> _NilFocusedSet
+          def intersection: (_NilFocusedSet) -> _NilFocusedSet
+        end
+
+        module IncludesNilSet
+          extend _NilFocusedSet
+          extend NilFocusedSet
+        end
+
+        module ExcludesNilSet
+          extend _NilFocusedSet
+          extend NilFocusedSet
+        end
+      end
+    end
+  end
+end

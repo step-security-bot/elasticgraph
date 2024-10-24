@@ -1,0 +1,12 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      module SupportsDefaultValue
+        NO_DEFAULT_PROVIDED: Module
+        @default_value: untyped
+        def default: (untyped) -> void
+        def default_value_sdl: () -> ::String?
+      end
+    end
+  end
+end

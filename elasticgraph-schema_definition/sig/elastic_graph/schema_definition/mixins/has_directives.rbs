@@ -1,0 +1,11 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      module HasDirectives: _HasSchemaDefState
+        def directive: (::String, ?SchemaElements::directiveArgHash) -> void
+        def directives_sdl: (?suffix_with: ::String, ?prefix_with: ::String) -> ::String
+        attr_reader directives: ::Array[SchemaElements::Directive]
+      end
+    end
+  end
+end

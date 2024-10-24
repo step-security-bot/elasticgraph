@@ -1,0 +1,30 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class RelationSupertype
+        attr_reader foreign_key: ::String
+        attr_reader direction: Relation::direction
+        attr_reader additional_filter: ::Hash[::String, untyped]
+        attr_reader foreign_key_nested_paths: ::Array[::String]
+
+        def initialize: (
+          foreign_key: ::String,
+          direction: Relation::direction,
+          additional_filter: ::Hash[::String, untyped],
+          foreign_key_nested_paths: ::Array[::String]
+        ) -> void
+      end
+
+      class Relation < RelationSupertype
+        type direction = :in | :out
+
+        FOREIGN_KEY: "foreign_key"
+        DIRECTION: "direction"
+        ADDITIONAL_FILTER: "additional_filter"
+        FOREIGN_KEY_NESTED_PATHS: "foreign_key_nested_paths"
+        def self.from_hash: (::Hash[::String, untyped]) -> Relation
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

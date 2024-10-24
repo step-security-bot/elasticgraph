@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# This script runs each gem's test suite individually. This is slower than running the entire suite
+# in one pass but is useful as a way to verify that each individual gem's test suite passes on its
+# own. In particular, this can surface dependencies that are not correctly declared in the gem's
+# `gemspec` file. When a gem depends on a specific gem, but fails to declare the dependency, it can
+# still pass when run with all the other gem test suites so long as one of the other gems declares
+# that dependency (due to the global nature of Ruby's `require`). However, it will fail when we run
+# the gem's test suite in isolation, so this serves as a good way to surface missing dependency
+# declarations.
+
+source "script/ci_parts/setup_env" "test" $1 $2
+
+# Note: In our CI build, we want our coverage thresholds to be met by the test suite of each individual gem.
+# For example, we don't want a gem to have 100% test coverage only because of some coverage provided by a
+# test from another gem. Running the test suite from each gem independently (as we do here) ensures that
+# SimpleCov doesn't count this kind of "cross" coverage.
+for gem in $gems_to_build_with_datastore_booted; do
+  script/run_gem_specs $gem
+done
+
+halt_datastore_daemon
+
+for gem in $gems_to_build_with_datastore_halted; do
+  script/run_gem_specs $gem
+done

@@ -1,0 +1,47 @@
+module ElasticGraph
+  module Support
+    class HashUtil
+      type primitive = ::String | ::Integer | bool
+      type key = ::String | ::Symbol
+      type value = ::Hash[key, value] | ::Array[value] | primitive?
+      type nonNullableValue = ::Hash[key, nonNullableValue] | ::Array[nonNullableValue] | primitive
+
+      def self.verbose_fetch: [V] (::Hash[::String | ::Symbol, V], ::String | ::Symbol) -> V
+
+      def self.strict_to_h: [K, V] (::Array[[K, V]] | ::Set[[K, V]]) -> ::Hash[K, V]
+
+      def self.disjoint_merge: [K, V] (::Hash[K, V], ::Hash[K, V]) -> ::Hash[K, V]
+
+      def self.stringify_keys:
+        [V] (::Hash[::String, V]) -> ::Hash[::String, V] |
+        [V] (::Hash[::Symbol, V]) -> ::Hash[::String, V] |
+        [V] (::Hash[::String | ::Symbol, V]) -> ::Hash[::String, V]
+
+      def self.symbolize_keys:
+        [V] (::Hash[::String, V]) -> ::Hash[::Symbol, V] |
+        [V] (::Hash[::Symbol, V]) -> ::Hash[::Symbol, V] |
+        [V] (::Hash[::String | ::Symbol, V]) -> ::Hash[::Symbol, V]
+
+      def self.recursively_prune_nils_from:
+        [V] (::Hash[::Symbol, V?]) ?{ (::String) -> void } -> ::Hash[::Symbol, V] |
+        [V] (::Hash[::String, V?]) ?{ (::String) -> void } -> ::Hash[::String, V]
+
+      def self.recursively_prune_nils_and_empties_from:
+        [V] (::Hash[::Symbol, V?]) ?{ (::String) -> void } -> ::Hash[::Symbol, V] |
+        [V] (::Hash[::String, V?]) ?{ (::String) -> void } -> ::Hash[::String, V]
+
+      def self.flatten_and_stringify_keys: [K] (::Hash[K, untyped], ?prefix: ::String?) -> ::Hash[::String, untyped]
+      def self.deep_merge: [K, V] (::Hash[K, V], ::Hash[K, V]) -> ::Hash[K, V]
+      def self.fetch_leaf_values_at_path: (::Hash[::String, untyped], ::String) ?{ (String) -> untyped } -> ::Array[untyped]
+      def self.fetch_value_at_path: (::Hash[::String, untyped], ::String) ?{ (String) -> untyped } -> untyped
+
+      private
+
+      # Fully expressing the types here without using `untyped` is quite hard! So for now we use `untyped`.
+      def self.recursively_prune_if: (::Hash[untyped, untyped], (^(::String) -> void)?) { (untyped) -> bool } -> ::Hash[untyped, untyped]
+      def self.recursively_transform: (untyped, ?::String?) { (key, value, ::Hash[key, value], ::String) -> void } -> untyped
+      def self.populate_flat_hash: [K] (::Hash[K, untyped], ::String, ::Hash[::String, untyped]) -> void
+      def self.do_fetch_leaf_values_at_path: (untyped, ::Array[::String], ::Integer) ?{ (String) -> untyped } -> ::Array[untyped]
+    end
+  end
+end

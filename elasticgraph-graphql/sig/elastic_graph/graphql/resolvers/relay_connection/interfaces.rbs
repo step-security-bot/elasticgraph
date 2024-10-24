@@ -1,0 +1,25 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      module RelayConnection
+        interface _RelayConnection[N]
+          def page_info: () -> _RelayPageInfo
+          def edges: () -> ::Array[_RelayEdge[N]]
+          def nodes: () -> ::Array[N]
+        end
+
+        interface _RelayPageInfo
+          def start_cursor: () -> String?
+          def end_cursor: () -> String?
+          def has_previous_page: () -> bool
+          def has_next_page: () -> bool
+        end
+
+        interface _RelayEdge[N]
+          def node: () -> N
+          def cursor: () -> String
+        end
+      end
+    end
+  end
+end

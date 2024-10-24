@@ -1,0 +1,21 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      module ResolvableValue
+        def self.new: (*Symbol) ?{ () [self: self] -> void } -> ResolvableValueClass
+
+        include _Resolver
+        attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+        private
+
+        def args_to_canonical_form: (fieldArgs) -> ::Hash[::Symbol, untyped]
+        def canonical_name_for: (::String | ::Symbol, ::String) -> ::Symbol
+      end
+
+      class ResolvableValueClass
+        include ResolvableValue
+      end
+    end
+  end
+end

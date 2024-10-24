@@ -1,0 +1,34 @@
+module ElasticGraph
+  module HealthCheck
+    module EnvoyExtension
+      class GraphQLHTTPEndpointDecoratorSupertype < GraphQL::HTTPEndpoint
+        def initialize: (GraphQL::HTTPEndpoint) -> void
+      end
+
+      class GraphQLHTTPEndpointDecorator < GraphQLHTTPEndpointDecoratorSupertype
+        def initialize: (
+          GraphQL::HTTPEndpoint,
+          health_check_http_path_segment: ::String,
+          health_checker: HealthChecker,
+          logger: ::Logger
+        ) -> void
+
+        @health_check_http_path_segment: ::String
+        @health_checker: HealthChecker
+        @logger: ::Logger
+
+        # def process: (GraphQL::HTTPRequest, **untyped) -> GraphQL::HTTPResponse
+
+        private
+
+        RESPONSES_BY_HEALTH_STATUS_CATEGORY: ::Hash[HealthCheck::HealthStatus::category, [
+          ::Integer,
+          ::String,
+          ::Hash[::String, ::String]
+        ]]
+
+        def perform_health_check: () -> GraphQL::HTTPResponse
+      end
+    end
+  end
+end

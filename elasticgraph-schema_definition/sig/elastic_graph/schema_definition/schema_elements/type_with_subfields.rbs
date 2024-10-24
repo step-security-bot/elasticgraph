@@ -1,0 +1,113 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      type schemaKind = :type | :input | :interface
+      type typesByNameHash = ::Hash[::String, graphQLType]
+      type foreignKeyDirection = :in | :out
+
+      class TypeWithSubfieldsSuperType
+        def initialize: (
+          schemaKind,
+          State,
+          TypeReference,
+          ::Set[::String],
+          ::Hash[String, Field],
+          ::Hash[String, Field],
+          ::Method,
+          anyObjectType,
+          bool
+        ) ?{ (TypeWithSubfields) -> void } -> void
+
+        attr_accessor schema_kind: schemaKind
+        attr_accessor type_ref: TypeReference
+        attr_accessor schema_def_state: State
+        attr_accessor reserved_field_names: ::Set[::String]
+        attr_accessor graphql_fields_by_name: ::Hash[::String, Field]
+        attr_accessor indexing_fields_by_name_in_index: ::Hash[::String, Field]
+        attr_accessor field_factory: ::Method
+        attr_accessor wrapping_type: anyObjectType
+        attr_accessor relay_pagination_type: bool
+      end
+
+      class TypeWithSubfields < TypeWithSubfieldsSuperType
+        include Mixins::CanBeGraphQLOnly
+        include Mixins::HasDirectives
+        include Mixins::HasDocumentation
+        include _Type
+        include Mixins::HasDerivedGraphQLTypeCustomizations
+        include Mixins::HasTypeInfo
+
+        def initialize: (
+          schemaKind,
+          State,
+          ::String,
+          wrapping_type: anyObjectType,
+          field_factory: ::Method
+        ) ?{ (TypeWithSubfields) -> void } -> void
+
+        def field: (
+          ::String,
+          ::String,
+          ?graphql_only: bool,
+          ?indexing_only: bool,
+          **untyped
+          # ?name_in_index: ::String,
+          # ?mapping: SchemaElements::Field::mapping,
+          # ?json_schema: SchemaElements::Field::jsonSchema,
+          # ?sortable: bool?,
+          # ?filterable: bool?,
+          # ?aggregatable: bool?,
+          # ?groupable: bool?
+        ) ?{ (Field) -> void } -> Field
+
+        def aggregated_values_type: () -> TypeReference
+        def deleted_field: (::String) -> void
+        def renamed_from: (::String) -> void
+
+        def paginated_collection_field: (
+          ::String,
+          ::String,
+          ?name_in_index: ::String,
+          ?singular: ::String?
+        ) ?{ (Field) -> void } -> Field
+
+        def relates_to_one: (::String, ::String, via: ::String, dir: foreignKeyDirection) ?{ (Field) -> void } -> void
+        def relates_to_many: (::String, ::String, via: ::String, dir: foreignKeyDirection, singular: ::String) ?{ (Field) -> void } -> void
+
+        def generate_sdl: (name_section: ::String) ?{ (Field::argument) -> boolish } -> String
+        def current_sources: () -> ::Array[::String]
+        def index_field_runtime_metadata_tuples: (
+          ?path_prefix: ::String,
+          ?parent_source: ::String,
+          ?list_counts_state: ListCountsState
+        ) -> ::Array[[::String, SchemaArtifacts::RuntimeMetadata::IndexField]]
+
+        private
+
+        def fields_sdl: () ?{ (Field::argument) -> boolish } -> String
+
+        def register_field: (
+          ::String,
+          Field,
+          ::Hash[::String, Field],
+          ::String,
+          ::Symbol
+        ) ?{ (Field) -> Object? } -> void
+
+        def relates_to: (
+          ::String,
+          ::String,
+          via: ::String,
+          dir: foreignKeyDirection,
+          foreign_key_type: ::String,
+          cardinality: Relationship::cardinality,
+          related_type: ::String) ?{ (Field) -> void } -> void
+
+        def register_inferred_foreign_key_fields: (
+          from_type: [::String, ::String],
+          to_other: [::String, ::String],
+          related_type: TypeReference) -> void
+      end
+    end
+  end
+end

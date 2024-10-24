@@ -1,0 +1,16 @@
+module ElasticGraph
+  module Support
+    module MemoizableData
+      def self.define: [KLASS < _MemoizableDataClass] (*Symbol) ?{ () -> void } -> KLASS
+
+      module InstanceMethods
+      end
+
+      module ClassMethods
+      end
+    end
+
+    interface _MemoizableDataClass
+    end
+  end
+end

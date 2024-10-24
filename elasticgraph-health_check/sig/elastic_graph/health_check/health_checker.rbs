@@ -1,0 +1,46 @@
+module ElasticGraph
+  module HealthCheck
+    class HealthChecker
+      def self.build_from: (GraphQL) -> HealthChecker
+
+      def initialize: (
+        schema: GraphQL::Schema,
+        config: Config,
+        datastore_search_router: GraphQL::DatastoreSearchRouter,
+        datastore_query_builder: GraphQL::DatastoreQuery::Builder,
+        datastore_clients_by_name: ::Hash[::String, DatastoreCore::_Client],
+        clock: singleton(::Time),
+        logger: ::Logger
+      ) -> void
+
+      def check_health: () -> HealthStatus
+
+      private
+
+      @schema: GraphQL::Schema
+      @datastore_search_router: GraphQL::DatastoreSearchRouter
+      @datastore_query_builder: GraphQL::DatastoreQuery::Builder
+      @datastore_clients_by_name: ::Hash[::String, DatastoreCore::_Client]
+      @clock: singleton(::Time)
+      @logger: ::Logger
+      @indexed_document_types_by_name: ::Hash[::String, GraphQL::Schema::Type]
+      @config: Config
+
+      def build_recency_query_for: (::String, Config::DataRecencyCheck) -> GraphQL::DatastoreQuery
+      def build_index_optimization_filter_for: (Config::DataRecencyCheck) -> ::Hash[::String, untyped]?
+      def execute_in_parallel: (*::Proc) -> ::Array[untyped]
+
+      def build_cluster_health_by_name: (
+        ::Hash[::String, ::Hash[::String, untyped]]) -> ::Hash[::String, HealthStatus::ClusterHealth]
+
+      def build_latest_record_by_type: (
+        ::Hash[GraphQL::DatastoreQuery, GraphQL::DatastoreResponse::SearchResponse],
+        ::Hash[::String, GraphQL::DatastoreQuery]) -> ::Hash[::String, HealthStatus::LatestRecord?]
+
+      @all_known_clusters: ::Array[::String]?
+      def all_known_clusters: () -> ::Array[::String]
+
+      def validate_and_normalize_config: (Config) -> Config
+    end
+  end
+end

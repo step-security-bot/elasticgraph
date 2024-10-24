@@ -1,0 +1,2 @@
+ARG VERSION=latest
+FROM opensearchproject/opensearch-dashboards:${VERSION}

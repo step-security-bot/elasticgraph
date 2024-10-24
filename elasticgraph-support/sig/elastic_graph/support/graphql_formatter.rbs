@@ -1,0 +1,8 @@
+module ElasticGraph
+  module Support
+    module GraphQLFormatter
+      def self.format_args: (**untyped) -> ::String
+      def self.serialize: (untyped, ?wrap_hash_with_braces: bool) -> ::String
+    end
+  end
+end

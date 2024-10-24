@@ -1,0 +1,20 @@
+query SkaArtistHomeCountries {
+  artistAggregations(
+    filter: {bio: {description: {matchesQuery: {query: "ska"}}}}
+  ) {
+    nodes {
+      groupedBy {
+        bio { yearFormed }
+      }
+
+      aggregatedValues {
+        bio {
+          homeCountry {
+            approximateDistinctValueCount
+          }
+        }
+      }
+    }
+  }
+}
+

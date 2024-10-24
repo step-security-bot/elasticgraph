@@ -1,0 +1,15 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      module DerivedFields
+        module FieldInitializerSupport
+          EMPTY_PAINLESS_LIST: ::String
+          EMPTY_PAINLESS_MAP: ::String
+
+          def self.build_empty_value_initializers: (::String, leaf_value: ::String | :leave_unset) -> ::Array[::String]
+          def self.default_source_field_to_empty: (::String, ::String) -> ::String
+        end
+      end
+    end
+  end
+end

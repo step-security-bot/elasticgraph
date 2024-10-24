@@ -1,0 +1,8 @@
+module ElasticGraph
+  module Apollo
+    module GraphQL
+      module HTTPEndpointExtension: ElasticGraph::GraphQL::HTTPEndpoint
+      end
+    end
+  end
+end

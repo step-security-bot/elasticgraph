@@ -1,0 +1,10 @@
+module ElasticGraph
+  class GraphQL
+    module ScalarCoercionAdapters
+      class TimeZone
+        SUGGESTER: ::DidYouMean::SpellChecker
+        extend SchemaArtifacts::_ScalarCoercionAdapter[::String, ::String]
+      end
+    end
+  end
+end

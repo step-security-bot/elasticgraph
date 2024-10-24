@@ -1,0 +1,17 @@
+query AlbumCount {
+  artistAggregations {
+    nodes {
+      subAggregations {
+        albums {
+          nodes {
+            countDetail {
+              approximateValue
+              exactValue
+              upperBound
+            }
+          }
+        }
+      }
+    }
+  }
+}

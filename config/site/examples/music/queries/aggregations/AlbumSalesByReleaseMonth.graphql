@@ -1,0 +1,23 @@
+query AlbumSalesByReleaseMonth {
+  artistAggregations {
+    nodes {
+      subAggregations {
+        albums(first: 100) {
+          nodes {
+            groupedBy {
+              releasedOn {
+                asDate(truncationUnit: MONTH)
+              }
+            }
+
+            aggregatedValues {
+              soldUnits {
+                exactSum
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

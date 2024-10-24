@@ -1,0 +1,38 @@
+datastore:
+  client_faraday_adapter:
+    name: httpx
+    require: httpx/adapters/faraday
+  clusters:
+    main:
+      url: http://localhost:9334
+      backend: elasticsearch
+      settings: {}
+  index_definitions:
+    addresses: &main_index_settings
+      query_cluster: "main"
+      index_into_clusters: ["main"]
+      ignore_routing_values: []
+      custom_timestamp_ranges: []
+      setting_overrides:
+        number_of_shards: 1
+      setting_overrides_by_timestamp: {}
+    components: *main_index_settings
+    electrical_parts: *main_index_settings
+    manufacturers: *main_index_settings
+    mechanical_parts: *main_index_settings
+    teams: *main_index_settings
+    widget_currencies: *main_index_settings
+    widgets: *main_index_settings
+    widget_workspaces: *main_index_settings
+    sponsors: *main_index_settings
+  max_client_retries: 3
+graphql:
+  default_page_size: 50
+  max_page_size: 500
+logger:
+  device: log/development.log
+indexer:
+  latency_slo_thresholds_by_timestamp_in_ms: {}
+schema_artifacts:
+  # Note: this is the only difference between development.yaml and development_with_apollo.yaml
+  directory: config/schema/artifacts_with_apollo

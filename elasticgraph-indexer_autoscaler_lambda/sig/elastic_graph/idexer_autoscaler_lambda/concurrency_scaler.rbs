@@ -1,0 +1,37 @@
+module ElasticGraph
+  class IndexerAutoscalerLambda
+    class ConcurrencyScaler
+      def initialize: (
+        datastore_core: DatastoreCore,
+        sqs_client: Aws::SQS::Client,
+        lambda_client: Aws::Lambda::Client
+      ) -> void
+
+      MAXIMUM_CONCURRENCY: ::Integer
+      MINIMUM_CONCURRENCY: ::Integer
+
+      def tune_indexer_concurrency: (
+        queue_urls: ::Array[::String],
+        min_cpu_target: ::Integer,
+        max_cpu_target: ::Integer,
+        event_source_mapping_uuids: ::Array[::String]
+      ) -> void
+
+      private
+
+      @logger: ::Logger
+      @datastore_core: DatastoreCore
+      @sqs_client: Aws::SQS::Client
+      @lambda_client: Aws::Lambda::Client
+
+      def get_max_cpu_utilization: () -> ::Float
+      def get_queue_attributes: (::Array[::String]) -> { total_messages: ::Integer, queue_arns: ::Array[::String] }
+      def get_total_concurrency: (::Array[::String]) -> ::Integer?
+
+      def update_event_source_mapping: (
+        concurrency: ::Integer,
+        event_source_mapping_uuids: ::Array[::String]
+      ) -> void
+    end
+  end
+end

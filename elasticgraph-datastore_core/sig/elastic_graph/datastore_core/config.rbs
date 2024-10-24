@@ -1,0 +1,34 @@
+module ElasticGraph
+  class DatastoreCore
+    class ConfigSupertype
+      attr_reader client_faraday_adapter: Configuration::ClientFaradayAdapter
+      attr_reader clusters: ::Hash[::String, Configuration::ClusterDefinition]
+      attr_reader index_definitions: ::Hash[::String, Configuration::IndexDefinition]
+      attr_reader log_traffic: bool
+      attr_reader max_client_retries: ::Integer
+
+      def initialize: (
+        client_faraday_adapter: Configuration::ClientFaradayAdapter,
+        clusters: ::Hash[::String, Configuration::ClusterDefinition],
+        index_definitions: ::Hash[::String, Configuration::IndexDefinition],
+        log_traffic: bool,
+        max_client_retries: ::Integer
+      ) -> void
+
+      def with: (
+        ?client_faraday_adapter: Configuration::ClientFaradayAdapter,
+        ?clusters: ::Hash[::String, Configuration::ClusterDefinition],
+        ?index_definitions: ::Hash[::String, Configuration::IndexDefinition],
+        ?log_traffic: bool,
+        ?max_client_retries: ::Integer
+      ) -> Config
+
+      def self.members: () -> ::Array[::Symbol]
+    end
+
+    class Config < ConfigSupertype
+      extend _BuildableFromParsedYaml[Config]
+      EXPECTED_KEYS: ::Array[::String]
+    end
+  end
+end

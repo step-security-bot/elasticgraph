@@ -1,0 +1,22 @@
+# Copyright 2024 Block, Inc.
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
+# frozen_string_literal: true
+
+require "elastic_graph/schema_definition/rake_tasks"
+require "elastic_graph/apollo/schema_definition/api_extension"
+require "pathname"
+
+project_root = Pathname.new(__dir__)
+
+ElasticGraph::SchemaDefinition::RakeTasks.new(
+  schema_element_name_form: :camelCase,
+  index_document_sizes: false,
+  path_to_schema: project_root / "config/products_schema.rb",
+  schema_artifacts_directory: project_root / "config/schema/artifacts",
+  extension_modules: [ElasticGraph::Apollo::SchemaDefinition::APIExtension],
+  enforce_json_schema_version: false
+)

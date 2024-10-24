@@ -1,0 +1,11 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      # Note: this is a partial signature definition (`built_in_types.rb` is ignored in `Steepfile`)
+      class BuiltInTypes
+        def initialize: (API, State) -> void
+        def register_built_in_types: () -> void
+      end
+    end
+  end
+end

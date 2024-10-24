@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+function install_codespell() {
+  case $(uname) in
+  "Darwin")
+    echo "Installing codespell in MacOS environment"
+    brew install codespell
+    ;;
+  "Linux")
+    echo "Installing codespell in Linux environment"
+    python3 -m venv tmp/codespell
+    source tmp/codespell/bin/activate
+    pip install codespell==2.3.0
+    ;;
+  *)
+    echo "Unsupported platform: $(uname)"
+    exit 1
+    ;;
+  esac
+}
+
+if ! command -v codespell &> /dev/null; then
+  install_codespell
+fi
+
+echo "Checking spelling with codespell..."
+
+codespell `git ls-files` "$@" --ignore-words-list "upto,reenable,nome,rouge,socio-economic"

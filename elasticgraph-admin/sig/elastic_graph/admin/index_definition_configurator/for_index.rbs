@@ -1,0 +1,70 @@
+module ElasticGraph
+  class Admin
+    module IndexDefinitionConfigurator
+      class ForIndex
+        attr_reader index: DatastoreCore::IndexDefinition::Index
+
+        def initialize: (
+          DatastoreCore::_Client,
+          DatastoreCore::IndexDefinition::Index,
+          ::Hash[::String, untyped],
+          io
+        ) -> void
+
+        def configure!: () -> void
+        def validate: () -> ::Array[::String]
+
+        private
+
+        @datastore_client: DatastoreCore::_Client
+        @index: DatastoreCore::IndexDefinition::Index
+        @env_agnostic_index_config: ::Hash[::String, untyped]
+        @reporter: ClusterConfigurator::ActionReporter
+        @output: io
+
+        def create_new_index: () -> void
+        def update_mapping: () -> void
+        def update_settings: () -> void
+        def cannot_modify_mapping_field_type_error: () -> ::String
+        def index_exists?: () -> bool
+
+        @mapping_removals: ::Array[::String]?
+        def mapping_removals: () -> ::Array[::String]
+
+        @mapping_type_changes: ::Array[::String]?
+        def mapping_type_changes: () -> ::Array[::String]
+
+        def has_mapping_updates?: () -> bool
+
+        @settings_updates: DatastoreCore::indexSettingsHash?
+        def settings_updates: () -> DatastoreCore::indexSettingsHash
+
+        def mapping_fields_from: (DatastoreCore::indexMappingHash, ?::String) -> ::Array[::String]
+
+        def desired_mapping: () -> DatastoreCore::indexMappingHash
+
+        @desired_settings: DatastoreCore::indexSettingsHash?
+        def desired_settings: () -> DatastoreCore::indexSettingsHash
+
+        @desired_config: DatastoreCore::indexConfigHash?
+        def desired_config: () -> DatastoreCore::indexConfigHash
+
+        def current_mapping: () -> DatastoreCore::indexMappingHash
+
+        @current_settings: DatastoreCore::indexSettingsHash?
+        def current_settings: () -> DatastoreCore::indexSettingsHash
+
+        @current_config: DatastoreCore::indexConfigHash?
+        def current_config: () -> DatastoreCore::indexConfigHash
+
+        @mapping_diff: ::String?
+        def mapping_diff: () -> ::String
+
+        @settings_diff: ::String?
+        def settings_diff: () -> ::String
+
+        def report_action: (::String) -> void
+      end
+    end
+  end
+end

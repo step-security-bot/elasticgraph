@@ -1,0 +1,9 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      class HasReadableToSAndInspect < ::Module
+        def initialize: () ?{ (untyped) -> ::String } -> void
+      end
+    end
+  end
+end

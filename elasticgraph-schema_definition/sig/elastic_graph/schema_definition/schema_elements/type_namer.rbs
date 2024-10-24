@@ -1,0 +1,54 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class TypeNamerSupertype
+        attr_reader name_overrides: ::Hash[::String, ::String]
+        attr_reader reverse_overrides: ::Hash[::String, ::String]
+        attr_reader formats: TypeNamer::formatHash
+        attr_reader regexes: ::Hash[::Symbol, ::Regexp]
+
+        def initialize: (
+          name_overrides: ::Hash[::String, ::String],
+          reverse_overrides: ::Hash[::String, ::String],
+          formats: TypeNamer::formatHash,
+          regexes: ::Hash[::Symbol, ::Regexp]
+        ) -> void
+      end
+
+      class TypeNamer < TypeNamerSupertype
+        type formatHash = ::Hash[::Symbol, ::String]
+
+        def initialize: (
+          ?format_overrides: ::Hash[::Symbol, ::String],
+          ?name_overrides: ::Hash[::String, ::String] | ::Hash[::Symbol, ::String],
+        ) -> void
+
+        def name_for: (::Symbol | ::String) -> ::String
+        def revert_override_for: (::String) -> ::String
+        def generate_name_for: (::Symbol, **::String) -> ::String
+        def extract_base_from: (::String, format: ::Symbol) -> ::String?
+        def matches_format?: (::String, ::Symbol) -> bool
+        def unused_name_overrides: () -> ::Hash[::String, ::String]
+        def used_names: () -> ::Set[::String]
+        def self.placeholders_in: (::String) -> ::Array[::String]
+
+        private
+
+        @used_names: ::Array[::String]
+
+        PLACEHOLDER_REGEX: ::Regexp
+        DEFAULT_FORMATS: formatHash
+        REQUIRED_PLACEHOLDERS: ::Hash[::Symbol, ::Array[::String]]
+        FORMAT_SUGGESTER: ::DidYouMean::SpellChecker
+        DEFINITE_ENUM_FORMATS: ::Set[::Symbol]
+        DEFINITE_OBJECT_FORMATS: ::Set[::Symbol]
+        TYPES_THAT_CANNOT_BE_OVERRIDDEN: ::Set[::String]
+
+        def validate_format_overrides: (::Hash[::Symbol, ::String]) -> void
+        def validate_format: (::Symbol, ::String) -> ::Array[::String]
+        def validate_name_overrides: (::Hash[::String, ::String]) -> void
+        def notify_problems: (::Array[::String], ::String) -> void
+      end
+    end
+  end
+end

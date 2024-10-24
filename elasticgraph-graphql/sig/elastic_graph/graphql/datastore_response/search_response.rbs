@@ -1,0 +1,18 @@
+module ElasticGraph
+  class GraphQL
+    module DatastoreResponse
+      # Note: this is a partial signature definition (`search_response.rb` is ignored in `Steepfile`)
+      class SearchResponse
+        include ::Enumerable[Document]
+        attr_reader raw_data: ::Hash[::String, untyped]
+        attr_reader total_document_count: ::Integer
+        attr_reader documents: Array[Document]
+        attr_reader docs_description: ::String
+        attr_reader size: ::Integer
+
+        def each: () { (Document) -> void } -> void | () -> Enumerator[Document, void]
+      end
+    end
+  end
+end
+

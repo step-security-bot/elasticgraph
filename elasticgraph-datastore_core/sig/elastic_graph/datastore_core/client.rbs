@@ -1,0 +1,48 @@
+module ElasticGraph
+  class DatastoreCore
+    type indexMappingHash = ::Hash[::String, untyped]
+    type indexSettingsHash = ::Hash[::String, untyped]
+    type indexConfigHash = ::Hash[::String, untyped]
+
+    interface _Client
+      def cluster_name: () -> ::String
+
+      def get_cluster_health: () -> ::Hash[::String, untyped]
+      def get_node_os_stats: () -> ::Hash[::String, untyped]
+      def get_flat_cluster_settings: () -> ::Hash[::String, untyped]
+      def put_persistent_cluster_settings: (::Hash[::Symbol | ::String, untyped]) -> void
+
+      def get_script: (id: ::String) -> ::Hash[::String, untyped]?
+      def put_script: (id: ::String, body: ::Hash[::Symbol, untyped], context: ::String) -> void
+      def delete_script: (id: ::String) -> void
+
+      def get_index_template: (::String) -> DatastoreCore::indexConfigHash
+      def put_index_template: (name: ::String, body: DatastoreCore::indexConfigHash) -> void
+      def delete_index_template: (::String) -> void
+
+      def get_index: (::String) -> DatastoreCore::indexConfigHash
+      def list_indices_matching: (::String) -> ::Array[::String]
+      def create_index: (index: ::String, body: ::Hash[::String, untyped]) -> void
+      def put_index_mapping: (index: ::String, body: ::Hash[::String, untyped]) -> void
+      def put_index_settings: (index: ::String, body: ::Hash[::String, untyped]) -> void
+      def delete_indices: (*::String) -> void
+
+      def msearch: (body: ::Array[::Hash[::String | ::Symbol, untyped]], ?headers: ::Hash[::String, untyped]?) -> ::Hash[::String, untyped]
+      def bulk: (
+        body: ::Array[::Hash[::String | ::Symbol, untyped]],
+        ?refresh: bool
+      ) -> ::Hash[::String, untyped]
+      def delete_all_documents: (?index: ::String) -> void
+    end
+
+    interface _ClientClass
+      def new: (
+        ::String,
+        url: ::String,
+        ?faraday_adapter: ::Symbol?,
+        ?retry_on_failure: ::Integer,
+        ?logger: ::Logger?
+      ) ?{ (::Faraday::RackBuilder) -> void } -> _Client
+    end
+  end
+end

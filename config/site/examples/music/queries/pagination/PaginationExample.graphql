@@ -1,0 +1,16 @@
+query PaginationExample($cursor: Cursor) {
+  artists(first: 10, after: $cursor) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        name
+        albums {
+          name
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+module ElasticGraph
+  module Local
+    class LocalIndexer
+      @local_indexer: Indexer
+      @indexing_coordinator: IndexingCoordinator
+      def initialize: (::String, fakeDataBatchGenerator, output: io) -> void
+      def index_fake_data: (::Integer) -> void
+    end
+  end
+end

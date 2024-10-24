@@ -1,0 +1,3 @@
+module ElasticGraph
+  VERSION: ::String
+end

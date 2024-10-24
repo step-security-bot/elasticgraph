@@ -1,0 +1,55 @@
+module ElasticGraph
+  class DatastoreCore
+    # Defines methods of the _IndexDefinition interface that have a common implementation
+    # provided by the `IndexDefinition::Base` module.
+    interface _IndexDefinitionCommonMethods
+      def flattened_env_setting_overrides: () -> ::Hash[::String, untyped]
+      def use_updates_for_indexing?: () -> bool
+      def routing_value_for_prepared_record: (::Hash[::String, untyped], ?route_with_path: ::String?, ?id_path: ::String) -> ::String?
+      def has_custom_routing?: () -> bool
+      def searches_could_hit_incomplete_docs?: () -> bool
+      def cluster_to_query: () -> ::String
+      def clusters_to_index_into: () -> ::Array[::String]
+      def ignored_values_for_routing: () -> ::Set[::String]
+      def all_accessible_cluster_names: () -> ::Array[::String]
+      def accessible_cluster_names_to_index_into: () -> ::Array[::String]
+      def accessible_from_queries?: () -> bool
+      def known_related_query_rollover_indices: () -> ::Array[IndexDefinition::RolloverIndex]
+      def list_counts_field_paths_for_source: (::String) -> ::Set[::String]
+    end
+
+    # Defines methods of the _IndexDefinition interface that each specific implementation must provide.
+    interface _IndexDefinitionImplementationMethods
+      def name: () -> ::String
+      def route_with: () -> ::String
+      def default_sort_clauses: () -> ::Array[::Hash[::String, ::String]]
+      def current_sources: () -> ::Set[::String]
+      def fields_by_path: () -> ::Hash[::String, SchemaArtifacts::RuntimeMetadata::IndexField]
+      def env_index_config: () -> Configuration::IndexDefinition
+      def defined_clusters: () -> ::Set[::String]
+      def datastore_clients_by_name: () -> ::Hash[::String, DatastoreCore::_Client]
+      def rollover_index_template?: () -> bool
+      def index_expression_for_search: () -> ::String
+      def index_name_for_writes: (::Hash[::String, untyped], ?timestamp_field_path: ::String?) -> ::String
+      def mappings_in_datastore: (DatastoreCore::_Client) -> ::Hash[::String, untyped]
+      def related_rollover_indices: (DatastoreCore::_Client, ?only_if_exists: bool) -> ::Array[IndexDefinition::RolloverIndex]
+    end
+
+    # Defines the full `_IndexDefinition` interface.
+    interface _IndexDefinition
+      include _IndexDefinitionImplementationMethods
+      include _IndexDefinitionCommonMethods
+    end
+
+    type indexDefinition = _IndexDefinition & (IndexDefinition::Index | IndexDefinition::RolloverIndexTemplate)
+
+    module IndexDefinition
+      def self.with: (
+        name: ::String,
+        runtime_metadata: SchemaArtifacts::RuntimeMetadata::IndexDefinition,
+        config: DatastoreCore::Config,
+        datastore_clients_by_name: ::Hash[::String, DatastoreCore::_Client]
+      ) -> indexDefinition
+    end
+  end
+end

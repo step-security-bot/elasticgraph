@@ -1,0 +1,40 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      module RelayConnection
+        class ArrayAdapter[N]
+          extend Forwardable
+          include _RelayConnection[N]
+          include _RelayPageInfo
+          attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+          attr_reader graphql_impl: ::GraphQL::Pagination::ArrayConnection[N]
+
+          def initialize: (SchemaArtifacts::RuntimeMetadata::SchemaElementNames, ::GraphQL::Pagination::ArrayConnection[N]) -> void
+
+          def self.build: [N] (::Array[N], ::Hash[::String, untyped], SchemaArtifacts::RuntimeMetadata::SchemaElementNames, ::GraphQL::Query::Context) -> ArrayAdapter[N]
+          def total_edge_count: () -> ::Integer
+
+          @edges: ::Array[_RelayEdge[N]]?
+          @nodes: ::Array[N]?
+
+          class Edge[N]
+            include _RelayEdge[N]
+            attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+            attr_reader graphql_impl: ::GraphQL::Pagination::ArrayConnection[N]
+            def initialize: (SchemaArtifacts::RuntimeMetadata::SchemaElementNames, ::GraphQL::Pagination::ArrayConnection[N], N) -> void
+          end
+        end
+      end
+    end
+  end
+end
+
+module GraphQL
+  module Pagination
+    class ArrayConnection[N]
+      def initialize: (::Array[N], context: ::GraphQL::Query::Context, **untyped) -> void
+      attr_reader nodes: ::Array[N]
+      def cursor_for: (N) -> ::String
+    end
+  end
+end

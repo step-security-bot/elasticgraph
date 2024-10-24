@@ -1,0 +1,48 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      class RelationshipResolver
+        def initialize: (
+          schema_def_state: State,
+          object_type: indexableType,
+          relationship_name: ::String,
+          sourced_fields: ::Array[SchemaElements::Field],
+          field_path_resolver: SchemaElements::FieldPath::Resolver
+        ) -> void
+
+        def resolve: () -> untyped
+
+        private
+
+        attr_reader schema_def_state: State
+        attr_reader object_type: indexableType
+        attr_reader relationship_name: ::String
+        attr_reader sourced_fields: ::Array[SchemaElements::Field]
+        attr_reader field_path_resolver: SchemaElements::FieldPath::Resolver
+
+        def relationship_error_prefix: () -> ::String
+        def validate_foreign_key: (
+          indexableType,
+          SchemaArtifacts::RuntimeMetadata::Relation
+        ) -> ::String?
+        def relationship_description: () -> ::String
+      end
+
+      class ResolvedRelationship
+        attr_reader relationship_name: ::String
+        attr_reader relationship_field: SchemaElements::Field
+        attr_reader relationship: SchemaElements::Relationship
+        attr_reader related_type: indexableType
+        attr_reader relation_metadata: SchemaArtifacts::RuntimeMetadata::Relation
+
+        def initialize: (
+          ::String,
+          SchemaElements::Field,
+          SchemaElements::Relationship,
+          indexableType,
+          SchemaArtifacts::RuntimeMetadata::Relation
+        ) -> void
+      end
+    end
+  end
+end

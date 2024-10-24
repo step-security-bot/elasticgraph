@@ -1,0 +1,14 @@
+module ElasticGraph
+  # Parsed YAML settings are expected to be nested hash. The outer hash has
+  # keys which identify the part of ElasticGraph the settings relate to; the
+  # inner hash is settings for that part of ElasticGraph.
+  type parsedYamlSettings = ::Hash[::String, ::Hash[::String, untyped]]
+
+  # Defines a simple factory interface that should be adopted by any class that is
+  # intended to be buildable from YAML config. The class should define a class method
+  # with this signature and then `extend _BuildableFromParsedYaml[TheClass]` in its RBS
+  # signatures.
+  interface _BuildableFromParsedYaml[T]
+    def from_parsed_yaml: (parsedYamlSettings) ?{ (untyped) -> void } -> T
+  end
+end

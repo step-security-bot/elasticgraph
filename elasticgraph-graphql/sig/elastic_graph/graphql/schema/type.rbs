@@ -1,0 +1,24 @@
+module ElasticGraph
+  class GraphQL
+    class Schema
+      # Note: this is a partial signature definition (`type.rb` is ignored in `Steepfile`)
+      class Type
+        attr_reader name: ::Symbol
+        attr_reader fields_by_name: ::Hash[::String, Field]
+        attr_reader elasticgraph_category: SchemaArtifacts::RuntimeMetadata::elasticGraphCategory?
+        attr_reader graphql_type: ::GraphQL::Schema::_Type
+        def search_index_definitions: () -> ::Array[DatastoreCore::_IndexDefinition]
+        def unwrap_fully: () -> Type
+        def field_named: (::String | ::Symbol) -> Field
+        def object?: () -> bool
+        def relay_connection?: () -> bool
+        def abstract?: () -> bool
+        def enum?: () -> bool
+        def embedded_object?: () -> bool
+        def indexed_document?: () -> bool
+        def indexed_aggregation?: () -> bool
+        def enum_value_named: (::String | ::Symbol) -> EnumValue
+      end
+    end
+  end
+end

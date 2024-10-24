@@ -1,0 +1,55 @@
+module ElasticGraph
+  type datastoreScriptContext = ::String
+  type datastoreScriptLanguage = "painless" | "expression" | "mustache" | "java"
+  type datastoreScriptScriptHash = {"lang" => datastoreScriptLanguage, "source" => ::String}
+  type datastoreScriptPayloadHash = {"context" => datastoreScriptContext, "script" => datastoreScriptScriptHash}
+  type datastoreScriptsByIdHash = ::Hash[::String, datastoreScriptPayloadHash]
+  type schemaArtifacts = _SchemaArtifacts & SchemaArtifacts::ArtifactsHelperMethods
+
+  interface _SchemaArtifacts
+    def graphql_schema_string: () -> ::String
+    def datastore_config: () -> ::Hash[::String, untyped]
+    def runtime_metadata: () -> SchemaArtifacts::RuntimeMetadata::Schema
+    def json_schemas_for: (::Integer) -> ::Hash[::String, untyped]
+    def available_json_schema_versions: () -> ::Set[::Integer]
+    def latest_json_schema_version: () -> ::Integer
+  end
+
+  module SchemaArtifacts
+    def self.from_parsed_yaml: (
+      parsedYamlSettings,
+      for_context: context
+    ) ?{ (untyped) -> void } -> FromDisk
+
+    class FromDiskSupertype
+      attr_reader artifacts_dir: ::String
+      attr_reader context: context
+      def initialize: (artifacs_dir: ::String, context: context) -> void
+    end
+
+    class FromDisk < FromDiskSupertype
+      include _SchemaArtifacts
+      include ArtifactsHelperMethods
+
+      def self.new:
+        (artifacs_dir: ::String, context: context) -> instance
+      | (::String, context) -> instance
+
+      private
+
+      @graphql_schema_string: ::String?
+      @datastore_config: ::Hash[::String, untyped]?
+      @runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema?
+      @available_json_schema_versions: ::Set[::Integer]?
+      @latest_json_schema_version: ::Integer?
+
+      def read_artifact: (::String) -> ::String
+      def parsed_yaml_from: (::String) -> ::Hash[::String, untyped]
+
+      @json_schemas_by_version: ::Hash[::Integer, ::Hash[::String, untyped]]
+      def json_schemas_by_version: () -> ::Hash[::Integer, ::Hash[::String, untyped]]
+
+      def load_json_schema: (::Integer) -> ::Hash[::String, untyped]
+    end
+  end
+end

@@ -1,0 +1,38 @@
+module ElasticGraph
+  module QueryRegistry
+    class RakeTasks < ::Rake::TaskLib
+      def self.from_yaml_file: (
+        ::String | ::Pathname,
+        ::String | ::Pathname,
+        ?require_eg_latency_slo_directive: bool,
+        ?output: io
+      ) -> RakeTasks
+
+      def initialize: (
+        ::String | ::Pathname,
+        ?require_eg_latency_slo_directive: bool,
+        ?output: io
+      ) { () -> GraphQL } -> void
+
+      private
+
+      @load_graphql: ^() -> GraphQL
+      @graphql: GraphQL?
+      @registered_queries_by_client_dir: ::Pathname
+      @require_eg_latency_slo_directive: bool
+      @output: io
+
+      def define_tasks: () -> void
+      def dump_variables: (::String) -> void
+      def variable_file_name_for: (::String) -> ::String
+      def variable_file_docs: (::String) -> ::String
+      def perform_query_validation: () -> void
+      def validate_client_queries: (QueryValidator, ::Pathname) -> ::Array[::GraphQL::validationErrorHash]
+      def previously_dumped_variables_for: (::String) -> ::Hash[::String, ::Hash[::String, VariableDumper::typeInfo]]?
+      def conflicting_operation_name_error: (::Pathname, ::String?, ::Pathname) -> ::GraphQL::validationErrorHash
+      def format_error: (::Pathname, ::Integer, ::GraphQL::validationErrorHash) -> ::String
+      def count_description: (::Array[untyped] | ::Hash[untyped, untyped], ::String) -> ::String
+      def graphql: () -> GraphQL
+    end
+  end
+end

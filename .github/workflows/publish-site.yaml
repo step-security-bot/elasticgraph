@@ -1,0 +1,47 @@
+name: Publish Site
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-docs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    concurrency:
+      # Ensures only one job per workflow and branch runs at a time
+      group: ${{ github.workflow }}-${{ github.ref }}
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.3"
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: "23.x"
+
+    - name: Build YARD docs and Jekyll site
+      run: bundle exec rake site:build
+
+    - name: Deploy to GitHub Pages
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        # The GitHub Actions runner automatically creates this `GITHUB_TOKEN` secret
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        # The output directory for Jekyll
+        publish_dir: config/site/_site
+        # The branch to push to for GitHub Pages
+        publish_branch: gh-pages
+        enable_jekyll: true

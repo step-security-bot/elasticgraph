@@ -1,0 +1,46 @@
+module ElasticGraph
+  module QueryRegistry
+    class ClientData
+      attr_reader queries_by_original_string: ::Hash[::String, ::GraphQL::Query]
+      attr_reader queries_by_last_string: ::Hash[::String, ::GraphQL::Query]
+      attr_reader canonical_query_strings: ::Set[::String]
+      attr_reader operation_names: ::Set[::String]
+      attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+      def self.from: (
+        GraphQL::Schema,
+        ::Array[::String]
+      ) -> ClientData
+
+      def self.new: (
+        queries_by_original_string: ::Hash[::String, ::GraphQL::Query],
+        queries_by_last_string: ::Hash[::String, ::GraphQL::Query],
+        canonical_query_strings: ::Set[::String],
+        operation_names: ::Set[::String],
+        schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+      ) -> ClientData
+
+      def with: (
+        ?queries_by_original_string: ::Hash[::String, ::GraphQL::Query],
+        ?queries_by_last_string: ::Hash[::String, ::GraphQL::Query],
+        ?canonical_query_strings: ::Set[::String],
+        ?operation_names: ::Set[::String],
+        ?schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+      ) -> ClientData
+
+      def cached_query_for: (::String) -> ::GraphQL::Query?
+      def with_updated_last_query: (::String, ::GraphQL::Query) -> ClientData
+      def unregistered_query_error_for: (::GraphQL::Query, GraphQL::Client) -> ::String
+
+      private
+
+      def fingerprint_for: (::GraphQL::Query) -> ::String
+      def canonical_query_string_from: (::GraphQL::Query) -> ::String
+
+      def self.canonical_query_string_from: (
+        ::GraphQL::Query,
+        schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+      ) -> ::String
+    end
+  end
+end

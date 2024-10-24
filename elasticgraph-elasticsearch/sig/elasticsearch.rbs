@@ -1,0 +1,80 @@
+module Elasticsearch
+  type stringOrSymbolHash = ::Hash[(::String | ::Symbol), untyped]
+
+  module API
+    module Cat
+      class CatClient
+        def indices: (?index: ::String, ?format: ::String, ?h: ::Array[::String]) -> ::Array[::Hash[::String, untyped]]
+      end
+    end
+
+    module Cluster
+      class ClusterClient
+        def health: () -> Response
+        def get_settings: (?flat_settings: bool) -> Response
+        def put_settings: (body: stringOrSymbolHash) -> Response
+      end
+    end
+
+    module Indices
+      class IndicesClient
+        def get_index_template: (name: ::String, ?flat_settings: bool) -> Response
+        def put_index_template: (name: ::String, body: stringOrSymbolHash) -> Response
+        def delete_index_template: (name: ::Array[::String], ?ignore: [::Integer]) -> Response
+        def get: (index: ::String, ?ignore_unavailable: bool, ?flat_settings: bool) -> Response
+        def create: (index: ::String, body: stringOrSymbolHash) -> Response
+        def put_mapping: (index: ::String, body: stringOrSymbolHash) -> Response
+        def put_settings: (index: ::String, body: stringOrSymbolHash) -> Response
+        def delete: (index: ::Array[::String], ?ignore_unavailable: bool, ?allow_no_indices: bool) -> Response
+      end
+    end
+
+    module Nodes
+      class NodesClient
+        def stats: (metric: ::String) -> Response
+      end
+    end
+
+    class Response
+      attr_reader body: ::Hash[::String, untyped]
+      def []: (::String) -> untyped
+      def fetch: (::String) -> untyped
+    end
+  end
+
+  class Client
+    def initialize: (
+      url: ::String,
+      ?retry_on_failure: ::Integer,
+      ?adapter: ::Symbol?,
+      ?logger: ::Logger?,
+      ?tracer: ::Logger?
+    ) { (::Faraday::RackBuilder) -> void } -> void
+
+    def transport: () -> untyped
+    def get_script: (id: ::String) -> API::Response
+    def put_script: (id: ::String, body: stringOrSymbolHash, ?context: (::Symbol | ::String)) -> API::Response
+    def delete_script: (id: ::String) -> API::Response
+    def msearch: (body: ::Array[stringOrSymbolHash], ?headers: ::Hash[::String, untyped]?) -> API::Response
+    def bulk: (body: ::Array[stringOrSymbolHash], ?filter_path: ::String, ?refresh: bool) -> API::Response
+    def delete_by_query: (index: ::String, ?body: stringOrSymbolHash, ?refresh: bool, ?scroll: ::String) -> API::Response
+    def cat: () -> API::Cat::CatClient
+    def cluster: () -> API::Cluster::ClusterClient
+    def indices: () -> API::Indices::IndicesClient
+    def nodes: () -> API::Nodes::NodesClient
+  end
+end
+
+module Elastic
+  module Transport
+    module Transport
+      module Errors
+        class BadRequest < StandardError
+        end
+
+        class NotFound < StandardError
+        end
+      end
+    end
+  end
+end

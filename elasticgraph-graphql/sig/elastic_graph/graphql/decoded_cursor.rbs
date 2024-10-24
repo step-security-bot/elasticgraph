@@ -1,0 +1,31 @@
+module ElasticGraph
+  class GraphQL
+    type scalarUntyped = ::String | ::Numeric | bool
+
+    class DecodedCursor
+      def initialize: (::Hash[::String, scalarUntyped]) -> void
+      def sort_values: () -> ::Hash[::String, scalarUntyped]
+      def encode: () -> ::String
+      def self.try_decode: (::String) -> DecodedCursor?
+      def self.decode!: (::String) -> DecodedCursor
+      @encode: ::String?
+
+      SINGLETON: DecodedCursor
+
+      interface _Factory
+        def build: (::Array[scalarUntyped]) -> DecodedCursor
+      end
+
+      class Factory
+        include _Factory
+        attr_reader sort_fields: ::Array[::String]
+        def initialize: (::Array[::String]) -> Factory
+        def self.from_sort_list: (::Array[::Hash[::String, {"order" => "asc" | "desc"}]]) -> Factory
+
+        module Null
+          extend _Factory
+        end
+      end
+    end
+  end
+end

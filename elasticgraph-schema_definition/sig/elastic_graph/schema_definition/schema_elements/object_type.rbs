@@ -1,0 +1,21 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class ObjectTypeSupertype < TypeWithSubfields
+        def initialize: (TypeWithSubfields) -> void
+      end
+
+      # Technically, ObjectType isn't a subclass of TypeWithSubfields (we use `DelegateClass` instead),
+      # but that's an implementation detail. In the type system, it is a subtype in terms of it having
+      # the same interface as `TypeWithSubfields` plus some additional methods.
+      class ObjectType < ObjectTypeSupertype
+        include Mixins::HasIndices
+        include Mixins::ImplementsInterfaces
+        include Mixins::SupportsFilteringAndAggregation
+        include _IndexableType
+
+        def initialize: (State, ::String) ?{ (ObjectType) -> void } -> void
+      end
+    end
+  end
+end

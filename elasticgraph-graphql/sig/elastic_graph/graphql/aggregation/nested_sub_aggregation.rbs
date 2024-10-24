@@ -1,0 +1,25 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      class NestedSubAggregationSupertype
+        attr_reader nested_path: ::Array[PathSegment]
+        attr_reader query: Query
+
+        def initialize: (
+          nested_path: ::Array[PathSegment],
+          query: Query
+        ) -> void
+      end
+
+      class NestedSubAggregation < NestedSubAggregationSupertype
+        @nested_path_key: ::String?
+        def nested_path_key: () -> ::String
+
+        def build_agg_hash: (
+          Filtering::FilterInterpreter,
+          parent_queries: ::Array[Query]
+        ) -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

@@ -1,0 +1,29 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      module RelayConnection
+        class PageInfo[N < _NodeWithCursor] < ResolvableValueClass
+          include _RelayPageInfo
+
+          attr_reader before_truncation_nodes: ::Array[N]
+          attr_reader edges: ::Array[_RelayEdge[N]]
+          attr_reader paginator: DatastoreQuery::Paginator[N]
+
+          def initialize: [N] (
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            before_truncation_nodes: ::Array[N],
+            edges: ::Array[_RelayEdge[N]],
+            paginator: DatastoreQuery::Paginator[N]
+          ) -> void
+
+          def with: (
+            ?schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            ?before_truncation_nodes: ::Array[N],
+            ?edges: ::Array[_RelayEdge[N]],
+            ?paginator: DatastoreQuery::Paginator[N]
+          ) -> PageInfo[N]
+        end
+      end
+    end
+  end
+end

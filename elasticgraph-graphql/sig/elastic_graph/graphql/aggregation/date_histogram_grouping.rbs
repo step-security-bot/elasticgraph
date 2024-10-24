@@ -1,0 +1,40 @@
+module ElasticGraph
+  type timeGroupingInterval = "millisecond" | "second" | "minute" | "hour" | "day" | "week" | "month" | "quarter" | "year"
+
+  class GraphQL
+    module Aggregation
+      class DateHistogramGroupingSuperclass
+        attr_reader field_path: fieldPath
+        attr_reader interval: timeGroupingInterval
+        attr_reader time_zone: ::String?
+        attr_reader offset: ::String?
+
+        def initialize: (
+          field_path: fieldPath,
+          interval: timeGroupingInterval,
+          time_zone: ::String?,
+          offset: ::String?
+        ) -> void
+
+        def with: (
+          ?field_path: fieldPath,
+          ?interval: timeGroupingInterval,
+          ?time_zone: ::String?,
+          ?offset: ::String?
+        ) -> DateHistogramGrouping
+      end
+
+      class DateHistogramGrouping < DateHistogramGroupingSuperclass
+        attr_reader key: ::String
+        attr_reader encoded_index_field_path: ::String
+
+        def composite_clause: (?grouping_options: ::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+        def non_composite_clause_for: (Query) -> ::Hash[::String, untyped]
+        def inner_meta: () -> ::Hash[::String, untyped]
+
+        INNER_META: ::Hash[::String, untyped]
+        INTERVAL_OPTIONS_BY_NAME: ::Hash[timeGroupingInterval, ::Hash[::String, ::String]]
+      end
+    end
+  end
+end

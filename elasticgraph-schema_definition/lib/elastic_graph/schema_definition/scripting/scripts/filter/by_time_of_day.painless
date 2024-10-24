@@ -1,0 +1,22 @@
+ZoneId zoneId = ZoneId.of(params.time_zone);
+
+for (ZonedDateTime timestamp : doc[params.field]) {
+  long docValue = timestamp
+    .withZoneSameInstant(zoneId)
+    .toLocalTime()
+    .toNanoOfDay();
+
+  // Perform comparisons based on whichever params are set.
+  // ElasticGraph takes care of passing us param values as nano-of-day so that we
+  // can directly and efficiently compare against `docValue`.
+  if ((params.gte == null || docValue >= params.gte) &&
+      (params.gt == null || docValue > params.gt) &&
+      (params.lte == null || docValue <= params.lte) &&
+      (params.lt == null || docValue < params.lt) &&
+      (params.equal_to_any_of == null || params.equal_to_any_of.contains(docValue))) {
+    return true;
+  }
+}
+
+// No timestamp values matched the params, so return `false`.
+return false;

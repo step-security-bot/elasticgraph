@@ -1,0 +1,13 @@
+module ElasticGraph
+  module LambdaSupport
+    def self.build_from_env: [T] (
+      Support::FromYamlFile[T]
+    ) ?{ (parsedYamlSettings) -> parsedYamlSettings } -> T
+
+    private
+
+    def self.override_datastore_config: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+    def self.override_logger_config: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+    def self.configure_datastore_client: (untyped) -> void
+  end
+end

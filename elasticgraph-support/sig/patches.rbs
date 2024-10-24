@@ -1,0 +1,3 @@
+class Array[unchecked out Elem]
+  def combination: (2) -> ::Enumerator[[Elem, Elem], self] | ...
+end

@@ -1,0 +1,11 @@
+module ElasticGraph
+  class DatastoreCore
+    module IndexDefinition
+      class Index
+        include IndexDefinition::Base
+        include _IndexDefinition
+        def initialize: (**untyped) -> void
+      end
+    end
+  end
+end

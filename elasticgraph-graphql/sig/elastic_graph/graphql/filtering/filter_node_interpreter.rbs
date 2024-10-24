@@ -1,0 +1,45 @@
+module ElasticGraph
+  class GraphQL
+    module Filtering
+      class FilterNodeInterpreterSupertype
+        attr_reader runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema
+        attr_reader schema_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+        def initialize: (
+          runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema,
+          schema_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+        ) -> void
+      end
+
+      class FilterNodeInterpreter < FilterNodeInterpreterSupertype
+        type stringHash = ::Hash[::String, untyped]
+
+        type nodeType = :empty |
+            :not |
+            :list_any_filter |
+            :all_of |
+            :any_of |
+            :operator |
+            :list_count |
+            :sub_field |
+            :unknown
+
+        def initialize: (
+          runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema
+        ) -> void
+
+        def identify_node_type: (::String, stringHash) -> nodeType
+
+        attr_reader filter_operators: ::Hash[::String, ^(::String, untyped) -> queryClause?]
+
+        def build_filter_operators: (
+          SchemaArtifacts::RuntimeMetadata::Schema
+        ) -> ::Hash[::String, ^(::String, untyped) -> queryClause?]
+
+        def to_datastore_value: (untyped) -> untyped
+        def nano_of_day_from: (stringHash, ::String) -> ::Integer?
+        def list_of_nanos_of_day_from: (stringHash, ::String) -> ::Array[::Integer]?
+      end
+    end
+  end
+end

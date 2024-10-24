@@ -1,0 +1,61 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      interface _Param
+        def to_dumpable_hash: (::String) -> ::Hash[::String, untyped]
+        def value_for: (::Hash[::String, untyped]) -> untyped
+      end
+
+      type paramsHash = ::Hash[::String, _Param]
+
+      module Param
+        def self.dump_params_hash: (paramsHash) -> ::Hash[::String, ::Hash[::String, untyped]]
+        def self.load_params_hash: (::Hash[::String, ::Hash[::String, untyped]]) -> paramsHash
+        def self.from_hash: (::Hash[::String, untyped], ::String) -> _Param
+      end
+
+      type paramCardinality = :one | :many
+
+      class DynamicParamSuperType
+        attr_reader source_path: ::String
+        attr_reader cardinality: paramCardinality
+
+        def initialize: (
+          source_path: ::String,
+          cardinality: paramCardinality
+        ) -> void
+
+        def with: (
+          ?source_path: ::String,
+          ?cardinality: paramCardinality
+        ) -> DynamicParam
+
+        private
+
+        def to_h: () -> ::Hash[::Symbol, untyped]
+      end
+
+      class DynamicParam < DynamicParamSuperType
+        include _Param
+
+        SOURCE_PATH: "source_path"
+        CARDINALITY: "cardinality"
+
+        def self.from_hash: (::Hash[::String, untyped], ::String) -> DynamicParam
+      end
+
+      class StaticParamSuperType
+        attr_reader value: untyped
+        def initialize: (value: untyped) -> void
+        def with: (?value: untyped) -> StaticParam
+      end
+
+      class StaticParam < StaticParamSuperType
+        include _Param
+
+        VALUE: "value"
+        def self.from_hash: (::Hash[::String, untyped]) -> StaticParam
+      end
+    end
+  end
+end

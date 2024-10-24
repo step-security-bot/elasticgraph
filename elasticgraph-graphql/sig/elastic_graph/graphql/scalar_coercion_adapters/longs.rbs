@@ -1,0 +1,17 @@
+module ElasticGraph
+  class GraphQL
+    module ScalarCoercionAdapters
+      class Longs
+        def self.to_ruby_int_in_range: (untyped, ::Integer, ::Integer) -> ::Integer?
+      end
+
+      class JsonSafeLong
+        extend SchemaArtifacts::_ScalarCoercionAdapter[::Integer, ::Integer]
+      end
+
+      class LongString
+        extend SchemaArtifacts::_ScalarCoercionAdapter[::Integer, ::String]
+      end
+    end
+  end
+end

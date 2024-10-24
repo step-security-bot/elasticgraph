@@ -1,0 +1,33 @@
+module ElasticGraph
+  class GraphQL
+    module Filtering
+      type queryClause = RangeQuery | BooleanQuery
+      type stringOrSymbolHash = ::Hash[(::String | ::Symbol), untyped]
+      type occurrence = :must | :must_not | :filter | :should
+
+      class BooleanQuerySupertype
+        attr_reader occurrence: occurrence
+        attr_reader clauses: ::Array[stringOrSymbolHash]
+
+        def initialize: (
+          occurrence,
+          ::Array[stringOrSymbolHash]
+        ) -> void
+
+        def with: (
+          ?occurrence: occurrence,
+          ?clauses: ::Array[stringOrSymbolHash]
+        ) -> BooleanQuery
+      end
+
+      class BooleanQuery < BooleanQuerySupertype
+        def self.must: (*stringOrSymbolHash) -> BooleanQuery
+        def self.filter: (*stringOrSymbolHash) -> BooleanQuery
+        def self.should: (*stringOrSymbolHash) -> BooleanQuery
+        def merge_into: (stringOrSymbolHash) -> void
+
+        ALWAYS_FALSE_FILTER: BooleanQuery
+      end
+    end
+  end
+end

@@ -1,0 +1,34 @@
+module ElasticGraph
+  module Local
+    class DockerRunner
+      def initialize: (
+        ::Symbol,
+        port: ::Integer,
+        ui_port: ::Integer,
+        version: ::String,
+        env: ::String,
+        ready_log_line: ::Regexp,
+        daemon_timeout: ::Integer,
+        output: io
+      ) -> void
+
+      @variant: ::Symbol
+      @port: ::Integer
+      @ui_port: ::Integer
+      @version: ::String
+      @env: ::String
+      @ready_log_line: ::Regexp
+      @daemon_timeout: ::Integer
+      @output: io
+
+      def boot: () -> void
+      def halt: () -> void
+      def boot_as_daemon: (halt_command: ::String) -> void
+
+      private
+
+      def prepare_docker_compose_run: (*::String) { (::String) -> void } -> void
+      def with_pipe: [T] () { (::IO, ::IO) -> T } -> T
+    end
+  end
+end

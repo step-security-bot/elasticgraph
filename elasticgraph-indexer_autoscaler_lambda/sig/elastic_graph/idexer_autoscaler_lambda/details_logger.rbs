@@ -1,0 +1,42 @@
+module ElasticGraph
+  class IndexerAutoscalerLambda
+    class DetailsLogger
+     def initialize: (
+        logger: ::Logger,
+        queue_arns: ::Array[::String],
+        queue_urls: ::Array[::String],
+        min_cpu_target: ::Integer,
+        max_cpu_target: ::Integer,
+        num_messages: ::Integer,
+      ) -> void
+
+      def log_increase: (
+        cpu_utilization: ::Float,
+        current_concurrency: ::Integer,
+        new_concurrency: ::Integer
+      ) -> void
+
+      def log_decrease: (
+        cpu_utilization: ::Float,
+        current_concurrency: ::Integer,
+        new_concurrency: ::Integer
+      ) -> void
+
+      def log_no_change: (
+        cpu_utilization: ::Float,
+        current_concurrency: ::Integer
+      ) -> void
+
+      def log_reset: () -> void
+
+      def log_unset: () -> void
+
+      def log_result: (::Hash[::String, untyped]) -> void
+
+      private
+
+      @logger: ::Logger
+      @log_data: ::Hash[::String, untyped]
+    end
+  end
+end

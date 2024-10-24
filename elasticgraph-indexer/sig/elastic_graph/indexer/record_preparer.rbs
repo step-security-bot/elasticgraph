@@ -1,0 +1,64 @@
+module ElasticGraph
+  class Indexer
+    interface _RecordPreparer
+      def prepare_for_index: (::String, ::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+    end
+
+    class RecordPreparer
+      type egMetaByFieldHash = ::Hash[::String, {"type" => ::String, "nameInIndex" => ::String}]
+      type egMetaByFieldByTypeHash = ::Hash[::String, egMetaByFieldHash]
+
+      class Factory
+        def initialize: (schemaArtifacts) -> void
+
+        def for_json_schema_version: (::Integer) -> RecordPreparer
+        def for_latest_json_schema_version: () -> RecordPreparer
+
+        private
+
+        @schema_artifacts: schemaArtifacts
+        @preparers_by_json_schema_version: ::Hash[::Integer, RecordPreparer]
+
+        def build_type_metas_from: (::Hash[::String, untyped]) -> ::Array[TypeMetadata]
+      end
+
+      include _RecordPreparer
+
+      module Identity
+        extend _RecordPreparer
+      end
+
+      def initialize: (
+         ::Hash[::String, SchemaArtifacts::RuntimeMetadata::extensionClass?],
+         ::Array[TypeMetadata]
+      ) -> void
+
+      private
+
+      INTEGRAL_TYPE_NAMES: ::Set[::String]
+      @indexing_preparer_by_scalar_type_name: ::Hash[::String, SchemaArtifacts::RuntimeMetadata::extensionClass?]
+      @eg_meta_by_field_name_by_concrete_type: egMetaByFieldByTypeHash
+      @types_requiring_typename: ::Set[::String]
+
+      def prepare_value_for_indexing: (untyped, ::String) -> untyped
+
+      class TypeMetadata
+        attr_reader name: ::String
+        attr_reader requires_typename: bool
+        attr_reader eg_meta_by_field_name: egMetaByFieldHash
+
+        def initialize: (
+          name: ::String,
+          requires_typename: bool,
+          eg_meta_by_field_name: egMetaByFieldHash
+        ) -> void
+
+        def with: (
+          ?name: ::String,
+          ?requires_typename: bool,
+          ?eg_meta_by_field_name: egMetaByFieldHash
+        ) -> TypeMetadata
+      end
+    end
+  end
+end

@@ -1,0 +1,4 @@
+module ElasticGraph
+  type io = ::IO | ::StringIO
+  type untypedStringHash = ::Hash[::String, untyped]
+end

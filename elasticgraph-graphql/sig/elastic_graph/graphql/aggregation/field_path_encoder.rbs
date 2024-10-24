@@ -1,0 +1,15 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module FieldPathEncoder
+        DELIMITER: ::String
+
+        def self.encode: (::Array[::String]) -> ::String
+        def self.join: (::Array[::String]) -> ::String
+        def self.decode: (::String) -> ::Array[::String]
+        private
+        def self.verify_delimiters: (::String) -> void
+      end
+    end
+  end
+end

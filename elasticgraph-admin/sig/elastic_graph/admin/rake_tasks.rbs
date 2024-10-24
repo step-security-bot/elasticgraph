@@ -1,0 +1,7 @@
+module ElasticGraph
+  class Admin
+    class RakeTasks < ::Rake::TaskLib
+      def self.from_yaml_file: (::String | ::Pathname, ?output: io) -> RakeTasks
+    end
+  end
+end

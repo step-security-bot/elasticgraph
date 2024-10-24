@@ -1,0 +1,40 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Scripting
+      class ScriptSupertype
+        attr_reader name: ::String
+        attr_reader source: ::String
+        attr_reader language: datastoreScriptLanguage
+        attr_reader context: datastoreScriptContext
+
+        def initialize: (
+          name: ::String,
+          source: ::String,
+          language: datastoreScriptLanguage,
+          context: datastoreScriptContext
+        ) -> void
+
+        def self.with: (
+          name: ::String,
+          source: ::String,
+          language: datastoreScriptLanguage,
+          context: datastoreScriptContext
+        ) -> Script
+
+        def with: (
+          ?name: ::String,
+          ?source: ::String,
+          ?language: datastoreScriptLanguage,
+          ?context: datastoreScriptContext
+        ) -> Script
+      end
+
+      class Script < ScriptSupertype
+        attr_reader id: ::String
+        attr_reader scoped_name: ::String
+
+        def to_artifact_payload: () -> datastoreScriptPayloadHash
+      end
+    end
+  end
+end

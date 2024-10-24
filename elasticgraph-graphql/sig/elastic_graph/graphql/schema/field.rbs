@@ -1,0 +1,22 @@
+module ElasticGraph
+  class GraphQL
+    class Schema
+      # Note: this is a partial signature definition (`field.rb` is ignored in `Steepfile`)
+      class Field
+        attr_reader description: ::String
+        attr_reader schema: Schema
+        attr_reader name: ::Symbol
+        attr_reader name_in_index: ::Symbol
+        attr_reader parent_type: Type
+        attr_reader type: Type
+        attr_reader graphql_field: ::GraphQL::Schema::Field
+        attr_reader computation_detail: SchemaArtifacts::RuntimeMetadata::ComputationDetail?
+
+        def aggregated?: () -> bool
+        def sort_clauses_for: (::Array[::String]) -> ::Array[::Hash[::String, ::Hash[::String, ::String]]]
+        def args_to_schema_form: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+        def index_field_names_for_resolution: () -> ::Array[::String]
+      end
+    end
+  end
+end

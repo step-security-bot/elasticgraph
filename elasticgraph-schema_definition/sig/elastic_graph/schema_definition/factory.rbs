@@ -1,0 +1,149 @@
+module ElasticGraph
+  module SchemaDefinition
+    class Factory
+      @state: State
+      def initialize: (State) -> void
+
+      def self.prevent_non_factory_instantiation_of: (::Class) -> ::Method
+
+      def new_deprecated_element: (
+        ::String,
+        defined_at: ::Thread::Backtrace::Location?,
+        defined_via: ::String
+      ) -> SchemaElements::DeprecatedElement
+      @@deprecated_element_new: ::Method
+
+      def new_argument: (SchemaElements::Field, ::String, SchemaElements::TypeReference) ?{ (SchemaElements::Argument) -> void } -> SchemaElements::Argument
+      @@argument_new: ::Method
+
+      def new_built_in_types: (API) -> SchemaElements::BuiltInTypes
+      @@built_in_types_new: ::Method
+
+      def new_directive: (::String, SchemaElements::directiveArgHash) -> SchemaElements::Directive
+      @@directive_new: ::Method
+
+      def new_enum_type: (::String) ?{ (SchemaElements::EnumType) -> void } -> SchemaElements::EnumType
+      @@enum_type_new: ::Method
+
+      def new_enum_value: (::String, ::String) ?{ (SchemaElements::EnumValue) -> void } -> SchemaElements::EnumValue
+      @@enum_value_new: ::Method
+
+      def new_enums_for_indexed_types: () -> SchemaElements::EnumsForIndexedTypes
+      @@enums_for_indexed_types_new: ::Method
+
+      def new_field: (
+        name: ::String,
+        type: ::String,
+        parent_type: SchemaElements::anyObjectType,
+        ?filter_type: ::String?,
+        ?name_in_index: ::String,
+        ?accuracy_confidence: SchemaElements::Field::accuracyConfidence,
+        ?sortable: bool?,
+        ?filterable: bool?,
+        ?aggregatable: bool?,
+        ?groupable: bool?,
+        ?graphql_only: bool?,
+        ?runtime_metadata_graphql_field: SchemaArtifacts::RuntimeMetadata::GraphQLField
+      ) ?{ (SchemaElements::Field) -> void } -> SchemaElements::Field
+      @@field_new: ::Method
+
+      def new_graphql_sdl_enumerator: (::Array[SchemaElements::graphQLType]) -> SchemaElements::GraphQLSDLEnumerator
+      @@graphql_sdl_enumerator_new: ::Method
+
+      def new_input_field: (**untyped) { (SchemaElements::InputField) -> void } -> SchemaElements::InputField
+      @@input_field_new: ::Method
+
+      def new_input_type: (::String) { (SchemaElements::InputType) -> void } -> SchemaElements::InputType
+      @@input_type_new: ::Method
+
+      def new_filter_input_type: (::String, ?name_prefix: ::String, ?category: ::Symbol) { (SchemaElements::InputType) -> void } -> SchemaElements::InputType
+
+      def build_standard_filter_input_types_for_index_leaf_type: (
+        ::String,
+        ?name_prefix: ::String
+      ) { (SchemaElements::InputType) -> void } -> ::Array[SchemaElements::InputType]
+
+      def build_standard_filter_input_types_for_index_object_type: (
+        ::String,
+        ?name_prefix: ::String
+      ) { (SchemaElements::InputType) -> void } -> ::Array[SchemaElements::InputType]
+
+      def build_relay_pagination_types: (
+        ::String,
+        ?include_total_edge_count: bool,
+        ?derived_indexed_types: ::Array[Indexing::DerivedIndexedType],
+        ?support_pagination: bool
+      ) ?{ (SchemaElements::ObjectType) -> void } -> ::Array[SchemaElements::ObjectType]
+
+      def new_interface_type: (::String) { (SchemaElements::InterfaceType) -> void } -> SchemaElements::InterfaceType
+      @@interface_type_new: ::Method
+
+      def new_object_type: (::String) ?{ (SchemaElements::ObjectType) -> void } -> SchemaElements::ObjectType
+      @@object_type_new: ::Method
+
+      def new_scalar_type: (::String) { (SchemaElements::ScalarType) -> void } -> SchemaElements::ScalarType
+      @@scalar_type_new: ::Method
+
+      def new_sort_order_enum_value: (SchemaElements::EnumValue, ::Array[SchemaElements::Field]) -> SchemaElements::SortOrderEnumValue
+      @@sort_order_enum_value_new: ::Method
+
+      def new_type_reference: (::String) -> SchemaElements::TypeReference
+      @@type_reference_new: ::Method
+
+      def new_type_with_subfields: (
+        SchemaElements::schemaKind,
+        ::String,
+        wrapping_type: SchemaElements::anyObjectType,
+        field_factory: ::Method
+      ) ?{ (SchemaElements::TypeWithSubfields) -> void } -> SchemaElements::TypeWithSubfields
+      @@type_with_subfields_new: ::Method
+
+      def new_union_type: (::String) { (SchemaElements::UnionType) -> void } -> SchemaElements::UnionType
+      @@union_type_new: ::Method
+
+      def new_field_source: (relationship_name: ::String, field_path: ::String) -> SchemaElements::FieldSource
+      @@field_source_new: ::Method
+
+      def new_relationship: (
+        SchemaElements::Field,
+        cardinality: SchemaElements::Relationship::cardinality,
+        related_type: SchemaElements::TypeReference,
+        foreign_key: ::String,
+        direction: SchemaElements::foreignKeyDirection
+      ) -> SchemaElements::Relationship
+      @@relationship_new: ::Method
+
+      def new_aggregated_values_type_for_index_leaf_type: (
+        ::String
+      ) { (SchemaElements::ObjectType) -> void } -> SchemaElements::ObjectType
+
+      private
+
+      def new_list_filter_input_type: (
+        ::String,
+        name_prefix: ::String,
+        any_satisfy_type_category: ::Symbol
+      ) -> SchemaElements::InputType
+
+      def new_list_element_filter_input_type: (
+        ::String,
+        name_prefix: ::String
+      ) { (SchemaElements::InputType) -> void } -> SchemaElements::InputType
+
+      def new_fields_list_filter_input_type: (
+        ::String,
+        name_prefix: ::String
+      ) -> SchemaElements::InputType
+
+      def define_list_counts_filter_field_on: (SchemaElements::InputType) -> void
+
+      def edge_type_for: (::String) -> SchemaElements::ObjectType
+      def connection_type_for: (
+        ::String,
+        bool,
+        ::Array[Indexing::DerivedIndexedType],
+        bool
+      ) ?{ (SchemaElements::ObjectType) -> void } -> SchemaElements::ObjectType
+    end
+  end
+end

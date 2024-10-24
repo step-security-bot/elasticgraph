@@ -1,0 +1,32 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      class QueryOptimizer
+        type response = ::Hash[::String, untyped]
+
+        def self.optimize_queries: (
+          ::Array[DatastoreQuery]
+        ) { (::Array[DatastoreQuery]) -> ::Hash[DatastoreQuery, response] } -> ::Hash[DatastoreQuery, response]
+
+        def initialize: (::Array[DatastoreQuery], logger: ::Logger) -> void
+        @original_queries: ::Array[DatastoreQuery]
+        @logger: ::Logger
+        @unique_prefix_by_query: ::Hash[DatastoreQuery, ::String]
+
+        def merged_queries: () -> ::Array[DatastoreQuery]
+        def unmerge_responses: (::Hash[DatastoreQuery, response]) -> ::Hash[DatastoreQuery, response]
+
+        private
+
+        attr_reader original_queries_by_merged_query: ::Hash[DatastoreQuery, ::Array[DatastoreQuery]]
+
+        NO_AGGREGATIONS: ::Hash[::String, Aggregation::Query]
+
+        def queries_by_merge_key: () -> ::Hash[untyped, ::Array[DatastoreQuery]]
+        def merge_queries: (::Array[DatastoreQuery]) -> DatastoreQuery
+        def unmerge_response: (response, DatastoreQuery) -> response
+        def strip_prefix_from_agg_data: (untyped, ::String, ::String) -> untyped
+      end
+    end
+  end
+end

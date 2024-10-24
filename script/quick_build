@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# This script is meant to run a "quick" build. A "full" build performed on CI
+# isn't terribly suitable for engineers running locally: it assumes everything
+# has to be setup from scratch, and opts for completeness/strictness over build
+# speed to an extreme level that is great for CI but not for local builds.
+# For example, it opts in to some extra GraphQL schema validation and runs the
+# test suite without VCR, which verifies the test suite passes without VCR
+# recordings, but makes the test suite take much longer (e.g. 2.5-3 minutes
+# instead 30-45 seconds). Similarly, the full CI build runs the specs "file by file"
+# to ensure every spec file passes when run on its own. This fails *very* rarely but
+# is quite slow so we do not want to include it here.
+
+# Abort script at first error, when a command exits with non-zero status.
+# Verbose form of `set -e`.
+set -o errexit
+
+# Attempt to use undefined variable outputs error message, and forces an exit
+# Verbose form of `set -u`.
+set -o nounset
+
+# If set, the return value of a pipeline is the value of the last (rightmost)
+# command to exit with a non-zero status, or zero if all commands in the
+# pipeline exit successfully.
+set -o pipefail
+
+# Print a trace of simple commands.
+# Verbose form of `set -x`.
+set -o xtrace
+
+script/spellcheck
+bundle exec standardrb
+
+script/type_check
+
+bundle exec rake schema_artifacts:check
+COVERAGE=1 script/run_most_specs --backtrace
+
+bundle exec rake site:validate
+
+success=$?
+exit $success

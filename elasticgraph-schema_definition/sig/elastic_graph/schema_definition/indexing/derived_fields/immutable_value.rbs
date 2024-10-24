@@ -1,0 +1,33 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      module DerivedFields
+        class ImmutableValueSuperclass
+          attr_reader destination_field: ::String
+          attr_reader source_field: ::String
+          attr_reader nullable: bool
+          attr_reader can_change_from_null: bool
+
+          def initialize: (
+            destination_field: ::String,
+            source_field: ::String,
+            nullable: bool,
+            can_change_from_null: bool
+          ) -> void
+
+          def with: (
+            ?destination_field: ::String,
+            ?source_field: ::String,
+            ?nullable: bool,
+            ?can_change_from_null: bool
+          ) -> ImmutableValue
+        end
+
+        class ImmutableValue < ImmutableValueSuperclass
+          include _DerivedField
+          IDEMPOTENTLY_SET_VALUE: ::String
+        end
+      end
+    end
+  end
+end

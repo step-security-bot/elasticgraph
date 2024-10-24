@@ -1,0 +1,6 @@
+# This file lives in `spec_support/subdir_dot_rspec` but is symlinked from `.rspec`
+# in each of the `elasticgraph-*` gem directories.
+#
+# Here we just load the common `spec_helper` file, for anytime we run specs from
+# a specific gem directory.
+--require ../spec_support/spec_helper

@@ -1,0 +1,10 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module InputTypeExtension: ElasticGraph::SchemaDefinition::SchemaElements::InputType
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::Tag
+      end
+    end
+  end
+end

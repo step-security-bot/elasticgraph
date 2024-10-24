@@ -1,0 +1,43 @@
+module ElasticGraph
+  module QueryRegistry
+    class QueryValidator
+      def initialize: (
+        GraphQL::Schema,
+        require_eg_latency_slo_directive: bool
+      ) -> void
+
+      def validate: (
+        ::String,
+        previously_dumped_variables: ::Hash[::String, ::Hash[::String, VariableDumper::typeInfo]]?,
+        client_name: ::String,
+        query_name: ::String
+      ) -> ::Hash[::String?, ::Array[::GraphQL::validationErrorHash]]
+
+      private
+
+      @graphql_schema: ::GraphQL::Schema
+      @schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+      @var_dumper: VariableDumper
+      @var_incompat_detector: VariableBackwardIncompatibilityDetector
+      @require_eg_latency_slo_directive: bool
+
+      def variables_errors_for: (
+        ::String,
+        ::Hash[::String, ::Hash[::String, VariableDumper::typeInfo]]?,
+        ::Hash[::String, ::Hash[::String, VariableDumper::typeInfo]],
+        ::String,
+        ::String
+      ) -> ::Array[::GraphQL::validationErrorHash]
+
+      def directive_errors_for: (
+        ::GraphQL::Language::Nodes::OperationDefinition
+      ) -> ::Array[::GraphQL::validationErrorHash]
+
+      def static_validation_errors_for: (
+        ::GraphQL::Query,
+        ::GraphQL::Language::Nodes::OperationDefinition,
+        ::Array[::GraphQL::Language::Nodes::FragmentDefinition]
+      ) -> ::Array[::GraphQL::validationErrorHash]
+    end
+  end
+end

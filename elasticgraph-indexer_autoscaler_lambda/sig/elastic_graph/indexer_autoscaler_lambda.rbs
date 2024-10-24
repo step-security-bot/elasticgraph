@@ -1,0 +1,25 @@
+module ElasticGraph
+  class IndexerAutoscalerLambda
+    attr_reader datastore_core: DatastoreCore
+
+    extend _BuildableFromParsedYaml[IndexerAutoscalerLambda]
+    extend Support::FromYamlFile[IndexerAutoscalerLambda]
+
+     def self.from_env: () -> IndexerAutoscalerLambda
+
+    def initialize: (
+      datastore_core: DatastoreCore,
+      ?sqs_client: Aws::SQS::Client?,
+      ?lambda_client: Aws::Lambda::Client?,
+    ) -> void
+
+    @sqs_client: Aws::SQS::Client?
+    def sqs_client: () -> Aws::SQS::Client
+
+    @lambda_client: Aws::Lambda::Client?
+    def lambda_client: () -> Aws::Lambda::Client
+
+    @concurrency_scaler: ConcurrencyScaler?
+    def concurrency_scaler: () -> ConcurrencyScaler
+  end
+end

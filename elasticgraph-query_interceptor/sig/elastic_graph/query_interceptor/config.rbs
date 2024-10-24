@@ -1,0 +1,52 @@
+module ElasticGraph
+  module QueryInterceptor
+    type interceptorClass = Class & _InterceptorFactory
+
+    class ConfigSupertype
+      attr_reader interceptors: ::Array[InterceptorDataSuperType]
+
+      def self.new: (::Array[InterceptorDataSuperType]) -> Config
+      def with: (?interceptors: ::Array[InterceptorDataSuperType]) -> Config
+      def self.members: () -> ::Array[::Symbol]
+    end
+
+    class Config < ConfigSupertype
+      def self.from_parsed_yaml: (parsedYamlSettings, ?parsed_runtime_metadata_hashes: ::Array[::Hash[::String, untyped]]) -> Config
+
+      DEFAULT: Config
+      EXPECTED_KEYS: ::Array[::String]
+
+      class InterceptorData < InterceptorDataSuperType
+      end
+
+      class InterceptorInterface
+        include _Interceptor
+      end
+    end
+
+    class InterceptorDataSuperType
+      attr_reader klass: interceptorClass
+      attr_reader config: ::Hash[::String, untyped]
+
+      def initialize: (
+        klass: ::ElasticGraph::SchemaArtifacts::RuntimeMetadata::extensionClass,
+        config: ::Hash[::String, untyped]) -> void
+    end
+
+    interface _InterceptorFactory
+      def new: (elasticgraph_graphql: ElasticGraph::GraphQL, config: ::Hash[::String, untyped]) -> _Interceptor
+    end
+
+    interface _Interceptor
+      def initialize: (elasticgraph_graphql: ElasticGraph::GraphQL, config: ::Hash[::String, untyped]) -> void
+
+      def intercept: (
+        GraphQL::DatastoreQuery,
+        field: GraphQL::Schema::Field,
+        args: ::Hash[::String, untyped],
+        http_request: GraphQL::HTTPRequest,
+        context: ::GraphQL::Query::Context
+      ) -> GraphQL::DatastoreQuery
+    end
+  end
+end

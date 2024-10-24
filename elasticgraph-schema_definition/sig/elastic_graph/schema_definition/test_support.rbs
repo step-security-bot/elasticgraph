@@ -1,0 +1,34 @@
+module ElasticGraph
+  module SchemaDefinition
+    module TestSupport
+      def define_schema: (
+        schema_element_name_form: SchemaArtifacts::RuntimeMetadata::SchemaElementNames::form,
+        ?schema_element_name_overrides: ::Hash[::Symbol, ::String],
+        ?index_document_sizes: bool,
+        ?json_schema_version: ::Integer,
+        ?extension_modules: ::Array[::Module],
+        ?derived_type_name_formats: ::Hash[::Symbol, ::String],
+        ?type_name_overrides: ::Hash[::Symbol, ::String],
+        ?enum_value_overrides_by_type: ::Hash[::Symbol, ::Hash[::Symbol, ::String]],
+        ?output: io?
+      ) ?{ (API) -> void } -> Results
+
+      def define_schema_with_schema_elements: (
+        SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+        ?index_document_sizes: bool,
+        ?json_schema_version: ::Integer,
+        ?extension_modules: ::Array[::Module],
+        ?derived_type_name_formats: ::Hash[::Symbol, ::String],
+        ?type_name_overrides: ::Hash[::Symbol, ::String],
+        ?enum_value_overrides_by_type: ::Hash[::Symbol, ::Hash[::Symbol, ::String]],
+        ?output: io?
+      ) ?{ (API) -> void } -> Results
+
+      DOC_COMMENTS: ::String
+
+      def type_def_from: (::String, ::String, ?include_docs: bool) -> ::String
+
+      def strip_docs: (::String) -> ::String
+    end
+  end
+end

@@ -1,0 +1,26 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class EnumValueSupertype
+        attr_reader schema_def_state: State
+        attr_reader name: ::String
+        attr_reader runtime_metadata: SchemaArtifacts::RuntimeMetadata::Enum::Value
+
+        def initialize: (State, ::String, SchemaArtifacts::RuntimeMetadata::Enum::Value) -> void
+
+        private
+
+        attr_writer runtime_metadata: SchemaArtifacts::RuntimeMetadata::Enum::Value
+      end
+
+      class EnumValue < EnumValueSupertype
+        include Mixins::HasDirectives
+        include Mixins::HasDocumentation
+        def initialize: (State, ::String, ::String) ?{ (EnumValue) -> void } -> void
+        def to_sdl: () -> ::String
+        def duplicate_on: (EnumType) -> void
+        def update_runtime_metadata: (**untyped) -> void
+      end
+    end
+  end
+end

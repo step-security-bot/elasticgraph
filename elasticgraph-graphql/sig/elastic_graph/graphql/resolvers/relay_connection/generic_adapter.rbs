@@ -1,0 +1,53 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      module RelayConnection
+        interface _NodeWithCursor
+          def cursor: () -> DecodedCursor
+          def ==: (untyped) -> bool
+          def !=: (untyped) -> bool
+        end
+
+        class GenericAdapter[N < _NodeWithCursor] < ResolvableValueClass
+          include _RelayConnection[N]
+
+          attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+          attr_reader raw_nodes: ::Array[N]
+          attr_reader paginator: DatastoreQuery::Paginator[N]
+          attr_reader to_sort_value: ^(N, DecodedCursor) -> ::Array[DatastoreQuery::Paginator::SortValue]
+          attr_reader get_total_edge_count: ^() -> ::Integer?
+
+          def initialize: (
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            raw_nodes: ::Array[N],
+            paginator: DatastoreQuery::Paginator[N],
+            to_sort_value: ^(N, DecodedCursor) -> ::Array[DatastoreQuery::Paginator::SortValue],
+            get_total_edge_count: ^() -> ::Integer?
+          ) -> void
+
+          def with: (
+            ?schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            ?raw_nodes: ::Array[N],
+            ?paginator: DatastoreQuery::Paginator[N],
+            ?to_sort_value: ^(N, DecodedCursor) -> ::Array[DatastoreQuery::Paginator::SortValue],
+            ?get_total_edge_count: ^() -> ::Integer?
+          ) -> GenericAdapter[N]
+
+          private
+
+          @page_info: PageInfo[N]?
+          @edges: ::Array[_RelayEdge[N]]?
+          @nodes: ::Array[N]?
+
+          @before_truncation_nodes: ::Array[N]?
+          def before_truncation_nodes: () -> ::Array[N]
+
+          class Edge[N < _NodeWithCursor] < ResolvableValueClass
+            include _RelayEdge[N]
+            def initialize: (SchemaArtifacts::RuntimeMetadata::SchemaElementNames, N) -> void
+          end
+        end
+      end
+    end
+  end
+end

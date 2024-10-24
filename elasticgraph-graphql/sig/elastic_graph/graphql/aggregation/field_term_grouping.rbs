@@ -1,0 +1,16 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      class FieldTermGroupingSupertype
+        attr_reader field_path: fieldPath
+        def initialize: (field_path: fieldPath) -> void
+        def self.new: (field_path: fieldPath) -> instance | (fieldPath) -> instance
+      end
+
+      class FieldTermGrouping < FieldTermGroupingSupertype
+        include TermGrouping
+        include _TermGroupingSubtype
+      end
+    end
+  end
+end

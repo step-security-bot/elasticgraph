@@ -1,0 +1,18 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class IndexFieldSupertype
+        attr_reader source: ::String
+
+        def initialize: (source: ::String) -> void
+        def with: (?source: ::String) -> IndexField
+      end
+
+      class IndexField < IndexFieldSupertype
+        SOURCE: "source"
+        def self.from_hash: (::Hash[::String, untyped]) -> IndexField
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

@@ -1,0 +1,76 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      type anyObjectType = InputType | InterfaceType | ObjectType | UnionType
+      type graphQLType = _Type & (EnumType | anyObjectType | ScalarType) & Mixins::HasDirectives
+
+      class TypeReferenceSupertype
+        attr_reader name: ::String
+        attr_reader schema_def_state: State
+        def initialize: (String, State) -> void
+      end
+
+      class TypeReference < TypeReferenceSupertype
+        extend ::Forwardable
+        def type_namer: () -> TypeNamer
+        def fully_unwrapped: () -> TypeReference
+        def unwrap_non_null: () -> TypeReference
+        def wrap_non_null: () -> TypeReference
+        def unwrap_list: () -> TypeReference
+        def as_object_type: () -> anyObjectType?
+        def object?: () -> bool
+        def enum?: () -> bool
+        def leaf?: () -> bool
+        def list?: () -> bool
+        def non_null?: () -> bool
+        def boolean?: () -> bool
+        def resolved: () -> graphQLType?
+        def unwrapped_name: () -> ::String
+        def scalar_type_needing_grouped_by_object?: () -> bool
+        def with_reverted_override: () -> TypeReference
+
+        @json_schema_layers: jsonSchemaLayersArray?
+        def json_schema_layers: () -> jsonSchemaLayersArray
+
+        def to_final_form: (?as_input: bool) -> TypeReference
+
+        STATIC_FORMAT_NAME_BY_CATEGORY: ::Hash[::Symbol, ::Symbol]
+
+        def as_aggregated_values: () -> TypeReference
+        def as_aggregation: () -> TypeReference
+        def as_grouped_by: () -> TypeReference
+        def as_aggregation_sub_aggregations: (?parent_doc_types: ::Array[::String], ?field_path: ::Array[Field]) -> TypeReference
+        def as_connection: () -> TypeReference
+        def as_edge: () -> TypeReference
+        def as_fields_list_filter_input: () -> TypeReference
+        def as_filter_input: () -> TypeReference
+        def as_input_enum: () -> TypeReference
+        def as_list_element_filter_input: () -> TypeReference
+        def as_list_filter_input: () -> TypeReference
+        def as_parent_aggregation: (parent_doc_types: ::Array[::String]) -> TypeReference
+        def as_sort_order: () -> TypeReference
+        def as_static_derived_type: (::Symbol) -> TypeReference
+        def as_sub_aggregation: (parent_doc_types: ::Array[::String]) -> TypeReference
+
+        def list_filter_input?: () -> bool
+        def list_element_filter_input?: () -> bool
+
+        private
+
+        def peel_json_schema_layers_once: () -> [jsonSchemaLayersArray, TypeReference]
+
+        def matches_format_of?: (::Symbol) -> bool
+        def parent_aggregation_type: (::Array[::String]) -> ::String
+        def renamed_with_same_wrappings: (::String) -> TypeReference
+
+
+        ENUM_FORMATS: ::Set[::Symbol]
+        OBJECT_FORMATS: ::Set[::Symbol]
+        def schema_kind_implied_by_name: () -> (:enum | :object)?
+
+        def to_title_case: (::String) -> ::String
+        CamelCaseConverter: singleton(SchemaArtifacts::RuntimeMetadata::SchemaElementNamesDefinition::CamelCaseConverter)
+      end
+    end
+  end
+end

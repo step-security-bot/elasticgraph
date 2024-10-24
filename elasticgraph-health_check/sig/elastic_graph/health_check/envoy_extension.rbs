@@ -1,0 +1,6 @@
+module ElasticGraph
+  module HealthCheck
+    module EnvoyExtension: GraphQL
+    end
+  end
+end

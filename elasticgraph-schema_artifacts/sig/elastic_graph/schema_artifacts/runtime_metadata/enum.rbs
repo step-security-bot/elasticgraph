@@ -1,0 +1,70 @@
+module ElasticGraph
+  type primitiveValue = ::String | ::Integer
+
+  module SchemaArtifacts
+    module RuntimeMetadata
+      module Enum
+        class TypeSupertype
+          attr_reader values_by_name: ::Hash[::String, Value]
+          def initialize: (values_by_name: ::Hash[::String, Value]) -> void
+          def with: (?values_by_name: ::Hash[::String, Value]) -> Type
+        end
+
+        class Type < TypeSupertype
+          VALUES_BY_NAME: "values_by_name"
+          def self.from_hash: (::Hash[::String, untyped]) -> Type
+          def to_dumpable_hash: () -> ::Hash[::String, untyped]
+        end
+
+        class ValueSupertype
+          attr_reader sort_field: SortField?
+          attr_reader datastore_value: primitiveValue?
+          attr_reader datastore_abbreviation: ::Symbol?
+          attr_reader alternate_original_name: ::String?
+
+          def initialize: (
+            sort_field: SortField?,
+            datastore_value: primitiveValue?,
+            datastore_abbreviation: ::Symbol?,
+            alternate_original_name: ::String?
+          ) -> void
+
+          def with: (
+            ?sort_field: SortField?,
+            ?datastore_value: primitiveValue?,
+            ?datastore_abbreviation: ::Symbol?,
+            ?alternate_original_name: ::String?
+          ) -> Value
+
+          def self.new: (
+            sort_field: SortField?,
+            datastore_value: primitiveValue?,
+            datastore_abbreviation: ::Symbol?,
+            alternate_original_name: ::String?
+          ) -> Value | (
+            SortField?,
+            primitiveValue?,
+            ::Symbol?,
+            ::String?
+          ) -> Value
+
+          def to_h: () -> {
+            sort_field: SortField?,
+            datastore_value: primitiveValue?,
+            datastore_abbreviation: ::Symbol?,
+            alternate_original_name: ::String?
+          }
+        end
+
+        class Value < ValueSupertype
+          SORT_FIELD: "sort_field"
+          DATASTORE_VALUE: "datastore_value"
+          DATASTORE_ABBREVIATION: "datastore_abbreviation"
+          ALTERNATE_ORIGINAL_NAME: "alternate_original_name"
+          def self.from_hash: (::Hash[::String, untyped]) -> Value
+          def to_dumpable_hash: () -> ::Hash[::String, untyped]
+        end
+      end
+    end
+  end
+end

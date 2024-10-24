@@ -1,0 +1,79 @@
+module ElasticGraph
+  def self.define_schema: () { (SchemaDefinition::API) -> void } -> void
+
+  module SchemaDefinition
+    type jsonSchemaLayer = :nullable | :array
+    type jsonSchemaLayersArray = ::Array[jsonSchemaLayer]
+
+    interface _NamedElement
+      def name: () -> ::String
+    end
+
+    interface _HasSchemaDefState
+      def schema_def_state: () -> State
+    end
+
+    interface _Type
+      include _NamedElement
+      def type_ref: () -> SchemaElements::TypeReference
+      def graphql_only?: () -> bool
+      def indexed?: () -> bool
+      def to_sdl: () ?{ (SchemaElements::Field::argument) -> boolish } -> ::String
+      def derived_graphql_types: () -> ::Array[SchemaElements::graphQLType]
+      def to_indexing_field_type: () -> Indexing::_FieldType
+    end
+
+    interface _IndexableType
+      include _Type
+      def abstract?: () -> bool
+      def indices: () -> ::Array[Indexing::Index]
+      def runtime_metadata: (::Array[SchemaArtifacts::RuntimeMetadata::UpdateTarget]) -> SchemaArtifacts::RuntimeMetadata::ObjectType
+      def current_sources: () -> ::Array[::String]
+        def index_field_runtime_metadata_tuples: (
+          ?path_prefix: ::String,
+          ?parent_source: ::String,
+          ?list_counts_state: SchemaElements::ListCountsState
+        ) -> ::Array[[::String, SchemaArtifacts::RuntimeMetadata::IndexField]]
+      def derived_indexed_types: () -> ::Array[Indexing::DerivedIndexedType]
+      def verify_graphql_correctness!: () -> void
+      def relay_pagination_type: () -> bool
+    end
+
+    # Here we make a type alias that should be used in place of `_IndexableType`. All types
+    # wind up including `Mixins::HasDirectives` but steep doesn't know that `_IndexableType`
+    # instances therefore have the `HasDirectives` methods. This works around that: `indexableType`
+    # is a type that satisfies the `_IndexableType` interface _and_ mixes in `HasDirectives`.
+    #
+    # We could list other mixins here but will do that as there is need over time.
+    type indexableType = _IndexableType & Mixins::HasDirectives & Mixins::SupportsFilteringAndAggregation & Mixins::HasIndices
+
+    class API
+      attr_reader state: State
+      attr_reader factory: Factory
+
+      def initialize: (
+        SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+        bool,
+        ?extension_modules: ::Array[::Module],
+        ?derived_type_name_formats: ::Hash[::Symbol, ::String],
+        ?type_name_overrides: ::Hash[::Symbol, ::String],
+        ?enum_value_overrides_by_type: ::Hash[::Symbol, ::Hash[::Symbol, ::String]],
+        ?output: io
+      ) -> void
+
+      def raw_sdl: (::String) -> void
+      def object_type: (::String) { (SchemaElements::ObjectType) -> void } -> void
+      def interface_type: (::String) { (SchemaElements::InterfaceType) -> void } -> void
+      def enum_type: (::String) { (SchemaElements::EnumType) -> void } -> void
+      def union_type: (::String) { (SchemaElements::UnionType) -> void } -> void
+      def scalar_type: (::String) { (SchemaElements::ScalarType) -> void } -> void
+      def deleted_type: (::String) -> void
+      def as_active_instance: { () -> void } -> void
+      @results: Results?
+      def results: () -> Results
+      def json_schema_version: (::Integer) -> void
+      def register_graphql_extension: (::Module, defined_at: ::String, **untyped) -> void
+      def on_built_in_types: () { (SchemaElements::graphQLType) -> void } -> void
+    end
+  end
+end

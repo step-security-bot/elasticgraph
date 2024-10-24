@@ -1,0 +1,13 @@
+module ElasticGraph
+  module SchemaArtifacts
+    # RubyT is the type in Ruby. JsonT is the type that will be encoded into JSON.
+    interface _ScalarCoercionAdapter[RubyT, JsonT]
+      def coerce_input: (untyped, untyped) -> RubyT?
+      def coerce_result: (untyped, untyped) -> JsonT?
+    end
+
+    interface _IndexingPreparer[In, Out]
+      def prepare_for_indexing: (In) -> Out
+    end
+  end
+end

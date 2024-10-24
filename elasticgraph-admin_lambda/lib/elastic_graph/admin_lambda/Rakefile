@@ -1,0 +1,13 @@
+# Copyright 2024 Block, Inc.
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
+# frozen_string_literal: true
+
+require "elastic_graph/admin/rake_tasks"
+require "elastic_graph/admin_lambda"
+
+admin = ElasticGraph::AdminLambda.admin_from_env
+ElasticGraph::Admin::RakeTasks.new { admin }

@@ -1,0 +1,25 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class FieldSourceSupertype
+        attr_reader relationship_name: ::String
+        attr_reader field_path: ::String
+
+        def initialize: (::String, ::String) -> void
+
+        def self.with: (
+          relationship_name: ::String,
+          field_path: ::String
+        ) -> FieldSource
+
+        def with: (
+          ?relationship_name: ::String,
+          ?field_path: ::String
+        ) -> FieldSource
+      end
+
+      class FieldSource < FieldSourceSupertype
+      end
+    end
+  end
+end

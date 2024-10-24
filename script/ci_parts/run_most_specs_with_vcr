@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+source "script/ci_parts/setup_env" "test" $1 $2
+
+# Also make sure the test suite passes when VCR is used. For simplicity this runs test suites of all gems all at once.
+# One of the gems we use when VCR is loaded (`method_source`) isn't compatible with `--enable-frozen-string-literal`
+# so we unset `RUBYOPT` here to disable that.
+#
+# These ENV vars are set by default on CI so we have to unset them here.
+unset NO_VCR
+unset RUBYOPT
+
+# In addition, we want to run the extra GraphQL schema validation when running the whole schema together.
+VALIDATE_GRAPHQL_SCHEMAS=1 script/run_most_specs

@@ -1,0 +1,30 @@
+module ElasticGraph
+  class Admin
+    extend _BuildableFromParsedYaml[Admin]
+    extend Support::FromYamlFile[Admin]
+
+    def initialize: (
+      datastore_core: DatastoreCore,
+      ?monotonic_clock: Support::MonotonicClock?,
+      ?clock: singleton(::Time)
+    ) -> void
+
+    attr_reader datastore_core: DatastoreCore
+    attr_reader schema_artifacts: schemaArtifacts
+    @clock: singleton(::Time)
+
+    @cluster_configurator: Admin::ClusterConfigurator?
+    def cluster_configurator: () -> Admin::ClusterConfigurator
+
+    @cluster_settings_manager: Admin::ClusterConfigurator::ClusterSettingsManager?
+    def cluster_settings_manager: () -> Admin::ClusterConfigurator::ClusterSettingsManager
+
+    @datastore_indexing_router: Indexer::DatastoreIndexingRouter?
+    def datastore_indexing_router: () -> Indexer::DatastoreIndexingRouter
+
+    @monotonic_clock: Support::MonotonicClock?
+    def monotonic_clock: () -> Support::MonotonicClock
+
+    def with_dry_run_datastore_clients: () -> Admin
+  end
+end

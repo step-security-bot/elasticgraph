@@ -1,0 +1,23 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Scripting
+      class FileSystemRepositorySupertype
+        attr_reader dir: ::String
+        def initialize: (::String) -> void
+        def self.with: (dir: ::String) -> FileSystemRepository
+        def with: (?dir: ::String) -> FileSystemRepository
+      end
+
+      class FileSystemRepository < FileSystemRepositorySupertype
+        SUPPORTED_LANGUAGES_BY_EXTENSION: ::Hash[::String, datastoreScriptLanguage]
+
+        attr_reader scripts: ::Array[Script]
+        attr_reader script_ids_by_scoped_name: ::Hash[::String, ::String]
+
+        private
+
+        def verify_no_duplicates!: (::Array[Script]) -> (void | bot)
+      end
+    end
+  end
+end

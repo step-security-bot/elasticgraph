@@ -1,0 +1,16 @@
+module ElasticGraph
+  module Support
+    module TimeUtil
+      NANOS_PER_SECOND: ::Integer
+      NANOS_PER_MINUTE: ::Integer
+      NANOS_PER_HOUR: ::Integer
+
+      def self.nano_of_day_from_local_time: (::String) -> ::Integer
+
+      type advancementUnit = :year | :month | :day | :hour
+      def self.advance_one_unit: (::Time, advancementUnit) -> ::Time
+
+      def self.with_updated: (::Time, ?year: ::Integer, ?month: ::Integer, ?day: ::Integer) -> ::Time
+    end
+  end
+end

@@ -1,0 +1,19 @@
+query ArtistsWithPlatinum90sAlbum {
+  artists(filter: {
+    albums: {
+      anySatisfy: {
+        soldUnits: {gte: 1000000}
+        releasedOn: {gte: "1990-01-01", lt: "2000-01-01"}
+      }
+    }
+  }) {
+    nodes {
+      name
+      albums {
+        name
+        releasedOn
+        soldUnits
+      }
+    }
+  }
+}

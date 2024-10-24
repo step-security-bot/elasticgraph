@@ -1,0 +1,60 @@
+module ElasticGraph
+  class Indexer
+    module Operation
+      class CountAccumulator
+        def self.merge_list_counts_into: (
+          ::Hash[::String, untyped],
+          mapping: ::Hash[::String, untyped],
+          list_counts_field_paths_for_source: ::Set[::String]
+        ) -> ::Hash[::String, untyped]
+
+        def self.compute_list_counts_of:
+          [T] (T, CountAccumulator) -> T |
+          [T] (::Hash[::String, T], CountAccumulator) -> ::Hash[::String, T] |
+          [T] (::Array[T], CountAccumulator) -> ::Array[T]
+
+        attr_reader counts: ::Hash[::String, ::Integer]
+        attr_reader path_from_parent: ::String?
+        attr_reader path_from_root: ::String?
+        attr_reader mapping: ::Hash[::String, untyped]
+        attr_reader list_counts_field_paths_for_source: ::Set[::String]
+        attr_reader has_list_ancestor: bool
+
+        def initialize: (
+          ::Hash[::String, ::Integer],
+          ::String?,
+          ::String?,
+          ::Hash[::String, untyped],
+          ::Set[::String],
+          bool
+        ) -> void
+
+        def with: (
+          ?counts: ::Hash[::String, ::Integer],
+          ?path_from_parent: ::String?,
+          ?path_from_root: ::String?,
+          ?mapping: ::Hash[::String, untyped],
+          ?list_counts_field_paths_for_source: ::Set[::String],
+          ?has_list_ancestor: bool
+        ) -> CountAccumulator
+
+        def self.new_parent: (
+          ::Hash[::String, untyped],
+          ::Set[::String],
+          ?path_from_root: ::String?
+        ) -> CountAccumulator
+
+        def process_hash: (::Hash[::String, untyped]) {
+          (::String, untyped, CountAccumulator) -> [::String, untyped]
+        } -> ::Hash[::String, untyped]
+
+        def process_list: (::Array[untyped]) {
+          (untyped, CountAccumulator) -> untyped
+        } -> ::Array[untyped]
+
+        def maybe_increment: () -> void
+        def []: (::String) -> CountAccumulator
+      end
+    end
+  end
+end

@@ -1,0 +1,16 @@
+module ElasticGraph
+  class DatastoreCore
+    module IndexDefinition
+      class RolloverIndexSupertype < Index
+        include _IndexDefinition
+        def initialize: (Index) -> void
+        attr_reader __getobj__: Index
+      end
+
+      class RolloverIndex < RolloverIndexSupertype
+        def initialize: (Index, Support::TimeSet) -> void
+        attr_reader time_set: Support::TimeSet
+      end
+    end
+  end
+end

@@ -1,0 +1,13 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class InputFieldSupertype < Field
+        def initialize: (Field) -> void
+      end
+
+      class InputField < Field
+        prepend Mixins::SupportsDefaultValue
+      end
+    end
+  end
+end

@@ -1,0 +1,18 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class SubAggregationPath
+        attr_reader parent_doc_types: ::Array[::String]
+        attr_reader field_path: ::Array[Field]
+
+        def self.new: (::Array[::String], ::Array[Field]) -> SubAggregationPath
+        def self.paths_for: (Mixins::SupportsFilteringAndAggregation, schema_def_state: State) -> ::Array[SubAggregationPath]
+
+        def plus_parent: (::String) -> SubAggregationPath
+        def plus_field: (Field) -> SubAggregationPath
+        def with: (?parent_doc_types: ::Array[::String], ?field_path: ::Array[Field]) -> SubAggregationPath
+        def field_path_string: () -> ::String
+      end
+    end
+  end
+end

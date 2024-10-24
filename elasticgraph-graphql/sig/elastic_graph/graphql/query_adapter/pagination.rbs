@@ -1,0 +1,15 @@
+module ElasticGraph
+  class GraphQL
+    class QueryAdapter
+      class Pagination
+        include _QueryAdapter
+
+        attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+        def initialize: (
+          schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+        ) -> void
+      end
+    end
+  end
+end

@@ -1,0 +1,12 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      module ListCountsMapping
+        def self.merged_into: (
+          ::Hash[::String, untyped],
+          for_type: SchemaElements::anyObjectType
+        ) -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

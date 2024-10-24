@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# We boot the `local` datastore instead of `test` because the `index_fake_data` task below runs against the `local` datastore.
+source "script/ci_parts/setup_env" "local" $1 $2
+
+script/spellcheck
+script/type_check
+script/update_readme --verify
+script/update_ci_yaml --verify
+
+bundle _$bundler_version\_ exec standardrb
+bundle _$bundler_version\_ exec rake schema_artifacts:check VERBOSE=true
+
+# verify that we can index fake data locally. Note: this must come _after_ `rake schema_artifacts:check`
+# because the `index_fake_data:widgets:local` task depends on `schema_artifacts:dump`.
+bundle _$bundler_version\_ exec rake "index_fake_data:widgets[1]"
+bundle _$bundler_version\_ exec rspec config/linting
+
+# Validate the website. We get frozen string errors form liquid if we leave
+# frozen string literals enabled, so we have to disable them here.
+RUBYOPT=--disable-frozen-string-literal bundle _$bundler_version\_ exec rake site:validate
+
+# The apollo compatibility tests boot docker containers and need all the resources we can provide them.
+# There does not appear to be enough resources on GitHub Actions for them to run while the the datastore
+# docker container is still running, so we halt it before running the compatibility tests.
+halt_datastore_daemon
+
+# Test against federation v2.0, v2.3, and v2.6.
+elasticgraph-apollo/script/test_compatibility 2.6
+elasticgraph-apollo/script/test_compatibility 2.3
+elasticgraph-apollo/script/test_compatibility 2.0

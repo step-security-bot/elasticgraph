@@ -1,0 +1,46 @@
+module ElasticGraph
+  class GraphQL
+    class DatastoreQuery
+      class IndexExpressionBuilder
+        def initialize: (schema_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames) -> void
+        def determine_search_index_expression: (
+          ::Array[::Hash[::String, untyped]],
+          ::Array[DatastoreCore::_IndexDefinition],
+          require_indices: bool
+        ) -> IndexExpression
+
+        private
+
+        @filter_value_set_extractor: Filtering::FilterValueSetExtractor[Support::TimeSet]
+        def index_expression_for: (
+          ::Array[::Hash[::String, untyped]],
+          DatastoreCore::_IndexDefinition,
+          require_indices: bool
+        ) -> IndexExpression
+
+        def date_string?: (::String) -> bool
+      end
+
+      class IndexExpressionSupertype
+        attr_reader names_to_include: ::Set[::String]
+        attr_reader names_to_exclude: ::Set[::String]
+
+        def initialize: (
+          names_to_include: ::Set[::String],
+          names_to_exclude: ::Set[::String]
+        ) -> void
+
+        def with: (
+          ?names_to_include: ::Set[::String],
+          ?names_to_exclude: ::Set[::String]
+        ) -> instance
+      end
+
+      class IndexExpression < IndexExpressionSupertype
+        EMPTY: IndexExpression
+        def self.only: (::String?) -> IndexExpression
+        def +: (IndexExpression) -> IndexExpression
+      end
+    end
+  end
+end

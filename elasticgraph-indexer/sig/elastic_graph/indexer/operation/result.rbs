@@ -1,0 +1,27 @@
+module ElasticGraph
+  class Indexer
+    module Operation
+      class Result
+        type category = :failure | :noop | :success
+
+        attr_reader category: category
+        attr_reader operation: _Operation
+        attr_reader description: ::String?
+
+        def initialize: (
+          category: category,
+          operation: _Operation,
+          description: ::String?) -> void
+
+        attr_reader operation_type: operationType
+        attr_reader event: ::Hash[::String, untyped]
+        attr_reader event_id: EventID
+        attr_reader summary: ::String
+
+        def self.success_of: (_Operation) -> Result
+        def self.noop_of: (_Operation, ::String?) -> Result
+        def self.failure_of: (_Operation, ::String?) -> Result
+      end
+    end
+  end
+end

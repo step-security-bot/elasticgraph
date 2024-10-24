@@ -1,0 +1,65 @@
+module ElasticGraph
+  class Indexer
+    module Operation
+      class UpdateSupertype
+        attr_reader event: event
+        attr_reader prepared_record: ::Hash[::String, untyped]
+        attr_reader destination_index_def: DatastoreCore::_IndexDefinition
+        attr_reader update_target: SchemaArtifacts::RuntimeMetadata::UpdateTarget
+        attr_reader doc_id: ::String
+        attr_reader destination_index_mapping: ::Hash[::String, untyped]
+
+        def initialize: (
+          event,
+          ::Hash[::String, untyped],
+          DatastoreCore::_IndexDefinition,
+          SchemaArtifacts::RuntimeMetadata::UpdateTarget,
+          ::String,
+          ::Hash[::String, untyped]
+        ) -> void
+
+        def self.with: (
+          event: event,
+          prepared_record: ::Hash[::String, untyped],
+          destination_index_def: DatastoreCore::_IndexDefinition,
+          update_target: SchemaArtifacts::RuntimeMetadata::UpdateTarget,
+          doc_id: ::String,
+          destination_index_mapping: ::Hash[::String, untyped]
+        ) -> Update
+
+        def with: (
+          ?event: event,
+          ?prepared_record: ::Hash[::String, untyped],
+          ?destination_index_def: DatastoreCore::_IndexDefinition,
+          ?update_target: SchemaArtifacts::RuntimeMetadata::UpdateTarget,
+          ?doc_id: ::String,
+          ?destination_index_mapping: ::Hash[::String, untyped]
+        ) -> Update
+      end
+
+      class Update < UpdateSupertype
+        include _Operation
+
+        def self.operations_for: (
+          event:  event,
+          destination_index_def: DatastoreCore::_IndexDefinition,
+          record_preparer: _RecordPreparer,
+          update_target: SchemaArtifacts::RuntimeMetadata::UpdateTarget,
+          destination_index_mapping: ::Hash[::String, untyped]
+        ) -> ::Array[Update]
+
+        private
+
+        CONFLICT_RETRIES: ::Integer
+        def metadata: () -> ::Hash[::Symbol, untyped]
+
+        def update_request: () -> ::Hash[::Symbol, untyped]
+        def noop_result?: (::Hash[::String, untyped]) -> bool
+        def message_from_thrown_painless_exception: (::Hash[::String, untyped]) -> ::String?
+        def script_params: () -> ::Hash[::String, untyped]
+
+        @to_datastore_bulk: datastoreBulkPayload?
+      end
+    end
+  end
+end

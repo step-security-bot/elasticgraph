@@ -1,0 +1,18 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class InputTypeSupertype < TypeWithSubfields
+        def initialize: (TypeWithSubfields) -> void
+      end
+
+      # Technically, InputType isn't a subclass of TypeWithSubfields (we use `DelegateClass` instead),
+      # but that's an implementation detail. In the type system, it is a subtype in terms of it having
+      # the same interface as `TypeWithSubfields` plus some additional methods.
+      class InputType < InputTypeSupertype
+        def initialize: (State, ::String) { (InputType) -> void } -> void
+        def runtime_metadata: (::Array[SchemaArtifacts::RuntimeMetadata::UpdateTarget]) -> SchemaArtifacts::RuntimeMetadata::ObjectType
+        def derived_graphql_types: () -> ::Array[graphQLType]
+      end
+    end
+  end
+end

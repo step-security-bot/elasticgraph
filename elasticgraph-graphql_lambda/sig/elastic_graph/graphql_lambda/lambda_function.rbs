@@ -1,0 +1,11 @@
+module ElasticGraph
+  module GraphQLLambda
+    class LambdaFunction
+      include LambdaSupport::LambdaFunction[GraphQLEndpoint::lambdaHTTPResponse]
+      include LambdaSupport::_LambdaFunctionClass[GraphQLEndpoint::lambdaHTTPResponse]
+      @graphql_endpoint: GraphQLEndpoint
+    end
+  end
+end
+
+ExecuteGraphQLQuery: ElasticGraph::GraphQLLambda::LambdaFunction

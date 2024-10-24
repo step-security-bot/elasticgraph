@@ -1,0 +1,9 @@
+module ElasticGraph
+  class GraphQL
+    module ScalarCoercionAdapters
+      class NoOp
+        extend SchemaArtifacts::_ScalarCoercionAdapter[untyped, untyped]
+      end
+    end
+  end
+end

@@ -1,0 +1,67 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class IndexDefinitionSuperType
+        attr_reader route_with: ::String
+        attr_reader rollover: IndexDefinition::Rollover?
+        attr_reader default_sort_fields: ::Array[SortField]
+        attr_reader current_sources: ::Set[::String]
+        attr_reader fields_by_path: ::Hash[::String, IndexField]
+
+        def initialize: (
+          route_with: ::String,
+          rollover: IndexDefinition::Rollover?,
+          default_sort_fields: ::Array[SortField],
+          current_sources: ::Set[::String],
+          fields_by_path: ::Hash[::String, IndexField]
+        ) -> void
+
+        def with: (
+          ?route_with: ::String,
+          ?rollover: IndexDefinition::Rollover?,
+          ?default_sort_fields: ::Array[SortField],
+          ?current_sources: ::Enumerable[::String],
+          ?fields_by_path: ::Hash[::String, IndexField]
+        ) -> IndexDefinition
+      end
+
+      class IndexDefinition < IndexDefinitionSuperType
+        ROUTE_WITH: "route_with"
+        ROLLOVER: "rollover"
+        DEFAULT_SORT_FIELDS: "default_sort_fields"
+        CURRENT_SOURCES: "current_sources"
+        FIELDS_BY_PATH: "fields_by_path"
+
+        def initialize: (
+          route_with: ::String,
+          rollover: IndexDefinition::Rollover?,
+          default_sort_fields: ::Array[SortField],
+          current_sources: ::Enumerable[::String],
+          fields_by_path: ::Hash[::String, IndexField]
+        ) -> void
+
+        def self.from_hash: (::Hash[::String, untyped]) -> IndexDefinition
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+
+        class RolloverSupertype
+          attr_reader frequency: Rollover::frequency
+          attr_reader timestamp_field_path: ::String
+
+          def initialize: (
+              frequency: Rollover::frequency,
+              timestamp_field_path: ::String) -> void
+        end
+
+        class Rollover < RolloverSupertype
+          type frequency = :hourly | :daily | :monthly | :yearly
+
+          FREQUENCY: "frequency"
+          TIMESTAMP_FIELD_PATH: "timestamp_field_path"
+
+          def self.from_hash: (::Hash[::String, untyped]) -> Rollover
+          def to_dumpable_hash: () -> ::Hash[::String, untyped]
+        end
+      end
+    end
+  end
+end

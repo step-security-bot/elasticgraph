@@ -1,0 +1,15 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module InterfaceTypeExtension: ElasticGraph::SchemaDefinition::SchemaElements::InterfaceType
+        include ApolloDirectives::Authenticated
+        include ApolloDirectives::Extends
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::Key
+        include ApolloDirectives::Policy
+        include ApolloDirectives::RequiresScopes
+        include ApolloDirectives::Tag
+      end
+    end
+  end
+end

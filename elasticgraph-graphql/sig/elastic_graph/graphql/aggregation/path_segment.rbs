@@ -1,0 +1,20 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      class PathSegment
+        attr_reader name_in_graphql_query: ::String
+        attr_reader name_in_index: ::String?
+
+        def initialize: (
+          name_in_graphql_query: ::String,
+          name_in_index: ::String?
+        ) -> void
+
+        def self.for: (
+          lookahead: ::GraphQL::Execution::Lookahead,
+          ?field: Schema::Field?
+        ) -> PathSegment
+      end
+    end
+  end
+end

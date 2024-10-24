@@ -1,0 +1,20 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      # Note: this is a partial signature definition (`index.rb` is ignored in `Steepfile`)
+      class Index
+        attr_reader name: ::String
+        attr_reader routing_field_path: SchemaElements::FieldPath
+        attr_reader rollover_config: RolloverConfig?
+        def uses_custom_routing?: () -> bool
+        def to_index_config: () -> ::Hash[::String, untyped]
+        def to_index_template_config: () -> ::Hash[::String, untyped]
+        def runtime_metadata: () -> SchemaArtifacts::RuntimeMetadata::IndexDefinition
+
+        private
+
+        def date_and_datetime_types: () -> ::Array[::String]
+      end
+    end
+  end
+end

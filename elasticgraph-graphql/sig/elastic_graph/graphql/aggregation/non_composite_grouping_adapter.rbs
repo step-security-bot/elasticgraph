@@ -1,0 +1,38 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module NonCompositeGroupingAdapter
+        def self.meta_name: () -> ::String
+
+        def self.grouping_detail_for: (Query) { () -> ::Hash[::String, untyped] } -> AggregationDetail
+
+        def self.prepare_response_buckets: (
+          ::Hash[::String, untyped],
+          ::Array[::String],
+          ::Hash[::String, untyped]
+        ) -> ::Array[::Hash[::String, untyped]]
+
+        private
+
+        def self.grouping_detail: (
+          ::Array[grouping],
+          Query
+        ) { () -> AggregationDetail } -> AggregationDetail
+
+        def self.format_buckets: (
+          ::Hash[::String, untyped],
+          ::Array[::String],
+          ?parent_key_fields: ::Hash[::String, untyped],
+          ?parent_key_values: ::Array[untyped]
+        ) -> ::Array[::Hash[::String, untyped]]
+
+        def self.sort_and_truncate_buckets: (
+          ::Array[::Hash[::String, untyped]],
+          ::Integer
+        ) -> ::Array[::Hash[::String, untyped]]
+
+        def self.missing_bucket_path_from: (::Array[::String]) -> ::Array[::String]
+      end
+    end
+  end
+end

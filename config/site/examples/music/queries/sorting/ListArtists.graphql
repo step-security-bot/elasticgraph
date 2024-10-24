@@ -1,0 +1,10 @@
+query ListArtists {
+  artists(orderBy: [name_ASC, bio_yearFormed_DESC]) {
+    nodes {
+      name
+      albums {
+        name
+      }
+    }
+  }
+}

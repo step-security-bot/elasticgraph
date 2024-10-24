@@ -1,0 +1,11 @@
+module ElasticGraph
+  module Support
+    module FaradayMiddleware
+      class MSearchUsingGetInsteadOfPost
+        include ::Faraday::_App
+        attr_reader app: ::Faraday::_App
+        def initialize: (::Faraday::_App) -> void
+      end
+    end
+  end
+end

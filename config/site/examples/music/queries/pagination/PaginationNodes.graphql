@@ -1,0 +1,14 @@
+query PaginationNodes($cursor: Cursor) {
+  artists(first: 10, after: $cursor) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      name
+      albums {
+        name
+      }
+    }
+  }
+}

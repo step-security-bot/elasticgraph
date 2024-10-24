@@ -1,0 +1,52 @@
+# Copyright 2024 Block, Inc.
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
+# frozen_string_literal: true
+
+# Note: this Rakefile is designed to work either when run from within config/release or after being copied to the project root.
+# That's why we get the project root from git instead of using `__dir__`.
+project_root = `git rev-parse --show-toplevel`.strip
+
+require "gem/release"
+require "#{project_root}/elasticgraph-support/lib/elastic_graph/version"
+require "#{project_root}/script/list_eg_gems"
+
+desc "Bumps the ElasticGraph version to the specified new version number"
+task :bump_version, [:version] do |_, args|
+  version = args.fetch(:version)
+  ::Dir.chdir(project_root) do
+    sh "bundle exec gem bump elasticgraph-support --file #{project_root}/elasticgraph-support/lib/elastic_graph/version.rb -v #{version} -m 'Release v#{version}.'"
+  end
+end
+
+desc "Releases ElasticGraph to rubygems.org and tags the release in git"
+task :release do
+  ::Dir.chdir(project_root) do
+    # `gem release` deletes the built package file as part of its cleanup:
+    # https://github.com/svenfuchs/gem-release/blob/v2.2.2/lib/gem/release/cmds/release.rb#L115-L122
+    #
+    # However, that interferes with the rubygems release GitHub action: it uses `rubygems-await`
+    # which expects the pkg file to be at `pkg/*.gem`.
+    #
+    # To deal with this, this module disables cleanup.
+    mkdir_p "#{project_root}/pkg"
+    disable_cleanup = Module.new do
+      def cleanup
+      end
+    end
+    ::Gem::Release::Cmds::Release.prepend disable_cleanup
+
+    ElasticGraphGems.list.each do |gem|
+      ::Gem::Release::Cmds::Runner.new(:release, [gem], {}).run
+
+      unless ENV["GEM_RELEASE_PRETEND"] # If we're dry-running, the gem file won't be there to move.
+        mv "#{project_root}/#{gem}/#{gem}-#{ElasticGraph::VERSION}.gem", "pkg"
+      end
+    end
+
+    sh "bundle exec gem tag elasticgraph-support --push"
+  end
+end

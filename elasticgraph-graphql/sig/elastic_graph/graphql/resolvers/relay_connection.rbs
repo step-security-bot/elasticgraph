@@ -1,0 +1,15 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      module RelayConnection
+        def self.maybe_wrap: (
+          DatastoreResponse::SearchResponse,
+          field: Schema::Field,
+          context: ::GraphQL::Query::Context,
+          lookahead: ::GraphQL::Execution::Lookahead,
+          query: DatastoreQuery
+        ) -> (DatastoreResponse::SearchResponse | GenericAdapter[DatastoreResponse::Document] | GenericAdapter[Aggregation::Resolvers::Node])
+      end
+    end
+  end
+end

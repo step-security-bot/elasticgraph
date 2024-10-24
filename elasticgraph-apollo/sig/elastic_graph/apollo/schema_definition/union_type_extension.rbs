@@ -1,0 +1,10 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module UnionTypeExtension: ElasticGraph::SchemaDefinition::SchemaElements::UnionType
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::Tag
+      end
+    end
+  end
+end

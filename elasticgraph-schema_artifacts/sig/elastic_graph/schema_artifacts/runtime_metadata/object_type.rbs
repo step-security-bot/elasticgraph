@@ -1,0 +1,45 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      type elasticGraphCategory = :scalar_aggregated_values
+
+      class ObjectTypeSupertype
+        attr_reader update_targets: ::Array[UpdateTarget]
+        attr_reader index_definition_names: ::Array[::String]
+        attr_reader graphql_fields_by_name: ::Hash[::String, GraphQLField]
+        attr_reader elasticgraph_category: elasticGraphCategory?
+        attr_reader source_type: ::String?
+        attr_reader graphql_only_return_type: bool
+
+        def initialize: (
+          update_targets: ::Array[UpdateTarget],
+          index_definition_names: ::Array[::String],
+          graphql_fields_by_name: ::Hash[::String, GraphQLField],
+          elasticgraph_category: elasticGraphCategory?,
+          source_type: ::String?,
+          graphql_only_return_type: bool
+        ) -> void
+
+        def with: (
+          ?update_targets: ::Array[UpdateTarget],
+          ?index_definition_names: ::Array[::String],
+          ?graphql_fields_by_name: ::Hash[::String, GraphQLField],
+          ?elasticgraph_category: elasticGraphCategory?,
+          ?source_type: ::String?,
+          ?graphql_only_return_type: bool
+        ) -> ObjectType
+      end
+
+      class ObjectType < ObjectTypeSupertype
+        UPDATE_TARGETS: "update_targets"
+        INDEX_DEFINITION_NAMES: "index_definition_names"
+        GRAPHQL_FIELDS_BY_NAME: "graphql_fields_by_name"
+        ELASTICGRAPH_CATEGORY: "elasticgraph_category"
+        SOURCE_TYPE: "source_type"
+        GRAPHQL_ONLY_RETURN_TYPE: "graphql_only_return_type"
+        def self.from_hash: (::Hash[::String, untyped]) -> ObjectType
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

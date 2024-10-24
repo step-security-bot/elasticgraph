@@ -1,0 +1,23 @@
+query BluegrassArtistLifetimeSales {
+  artistAggregations(
+    filter: {bio: {description: {matchesQuery: {query: "bluegrass"}}}}
+  ) {
+    nodes {
+      groupedBy {
+        bio { yearFormed }
+      }
+
+      aggregatedValues {
+        lifetimeSales {
+          exactMin
+          exactMax
+
+          exactSum
+          approximateSum
+
+          approximateAvg
+        }
+      }
+    }
+  }
+}

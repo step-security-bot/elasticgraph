@@ -1,0 +1,8 @@
+module ElasticGraph
+  class Admin
+    class DatastoreClientDryRunDecorator
+      include DatastoreCore::_Client
+      def initialize: (DatastoreCore::_Client) -> void
+    end
+  end
+end

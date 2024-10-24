@@ -1,0 +1,30 @@
+module ElasticGraph
+  class GraphQL
+    class QueryDetailsTrackerSupertype
+      attr_accessor hidden_types: ::Set[::String]
+      attr_accessor shard_routing_values: ::Set[::String]
+      attr_accessor search_index_expressions: ::Set[::String]
+      attr_accessor query_counts_per_datastore_request: ::Array[::Integer]
+      attr_accessor datastore_query_server_duration_ms: ::Integer
+      attr_accessor datastore_query_client_duration_ms: ::Integer
+      attr_accessor mutex: ::Thread::Mutex
+
+      def initialize: (
+        hidden_types: ::Set[::String],
+        shard_routing_values: ::Set[::String],
+        search_index_expressions: ::Set[::String],
+        query_counts_per_datastore_request: ::Array[::Integer],
+        datastore_query_server_duration_ms: ::Integer,
+        datastore_query_client_duration_ms: ::Integer,
+        mutex: ::Thread::Mutex
+      ) -> void
+    end
+
+    class QueryDetailsTracker < QueryDetailsTrackerSupertype
+      def self.empty: () -> QueryDetailsTracker
+      def record_datastore_queries_for_single_request: (::Array[DatastoreQuery]) -> void
+      def record_hidden_type: (::String) -> void
+      def record_datastore_query_duration_ms: (client: ::Integer, server: ::Integer?) -> void
+    end
+  end
+end

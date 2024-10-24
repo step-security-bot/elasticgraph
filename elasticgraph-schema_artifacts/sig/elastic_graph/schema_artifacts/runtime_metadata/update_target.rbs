@@ -1,0 +1,62 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class UpdateTargetValueSuperType
+        attr_reader type: ::String
+        attr_reader relationship: ::String?
+        attr_reader script_id: ::String
+        attr_reader id_source: ::String
+        attr_reader routing_value_source: ::String?
+        attr_reader rollover_timestamp_value_source: ::String?
+        attr_reader data_params: paramsHash
+        attr_reader metadata_params: paramsHash
+
+        def initialize: (
+          type: ::String,
+          relationship: ::String?,
+          script_id: ::String,
+          id_source: ::String,
+          routing_value_source: ::String?,
+          rollover_timestamp_value_source: ::String?,
+          data_params: paramsHash,
+          metadata_params: paramsHash
+        ) -> void
+
+        def with: (
+          ?type: ::String,
+          ?relationship: ::String?,
+          ?script_id: ::String,
+          ?id_source: ::String,
+          ?routing_value_source: ::String?,
+          ?rollover_timestamp_value_source: ::String?,
+          ?data_params: paramsHash,
+          ?metadata_params: paramsHash
+        ) -> UpdateTarget
+
+        private
+
+        def to_h: () -> ::Hash[::Symbol, untyped]
+      end
+
+      class UpdateTarget < UpdateTargetValueSuperType
+        TYPE: "type"
+        RELATIONSHIP: "relationship"
+        SCRIPT_ID: "script_id"
+        ID_SOURCE: "id_source"
+        ROUTING_VALUE_SOURCE: "routing_value_source"
+        ROLLOVER_TIMESTAMP_VALUE_SOURCE: "rollover_timestamp_value_source"
+        DATA_PARAMS: "data_params"
+        METADATA_PARAMS: "metadata_params"
+
+        def self.from_hash: (::Hash[::String, untyped]) -> UpdateTarget
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+        def for_normal_indexing?: () -> bool
+        def params_for: (
+          doc_id: ::String,
+          event: ::Hash[::String, untyped],
+          prepared_record: ::Hash[::String, untyped]
+        ) -> ::Hash[::String, untyped]
+      end
+    end
+  end
+end

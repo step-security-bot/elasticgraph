@@ -1,0 +1,10 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class EnumsForIndexedTypes
+        def initialize: (State) -> void
+        def sort_order_enum_for: (Mixins::_FilterableAndAggregatableType) -> EnumType?
+      end
+    end
+  end
+end

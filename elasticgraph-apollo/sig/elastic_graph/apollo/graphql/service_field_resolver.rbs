@@ -1,0 +1,13 @@
+module ElasticGraph
+  module Apollo
+    module GraphQL
+      class ServiceFieldResolver
+        include ::ElasticGraph::GraphQL::Resolvers::_Resolver
+
+        private
+
+        def service_sdl: (::GraphQL::Schema) -> ::String
+      end
+    end
+  end
+end

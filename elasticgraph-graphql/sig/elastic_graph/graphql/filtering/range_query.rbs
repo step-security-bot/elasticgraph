@@ -1,0 +1,23 @@
+module ElasticGraph
+  class GraphQL
+    module Filtering
+      class RangeQuerySupertype
+        attr_reader field_name: ::String
+        attr_reader operator: ::Symbol
+        attr_reader value: untyped
+
+        def initialize: (::String, ::Symbol, untyped) -> void
+
+        def with: (
+          ?field_name: ::String,
+          ?operator: ::Symbol,
+          ?value: untyped
+        ) -> RangeQuery
+      end
+
+      class RangeQuery < RangeQuerySupertype
+        def merge_into: (stringOrSymbolHash) -> void
+      end
+    end
+  end
+end

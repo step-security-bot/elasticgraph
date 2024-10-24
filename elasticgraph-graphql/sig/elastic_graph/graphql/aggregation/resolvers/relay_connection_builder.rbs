@@ -1,0 +1,38 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module Resolvers
+        module RelayConnectionBuilder
+          def self.build_from_search_response: (
+            query: Query,
+            search_response: DatastoreResponse::SearchResponse,
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+          ) -> GraphQL::Resolvers::RelayConnection::GenericAdapter[Node]
+
+          def self.build_from_buckets: (
+            query: Query,
+            parent_queries: ::Array[Query],
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            ?field_path: ::Array[PathSegment]
+          ) { () -> ::Array[::Hash[::String, untyped]] } -> GraphQL::Resolvers::RelayConnection::GenericAdapter[Node]
+
+          private
+
+          def self.raw_nodes_for: (
+            Query,
+            ::Array[Query],
+            SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            ::Array[PathSegment]
+          ) { () -> ::Array[::Hash[::String, untyped]] } -> ::Array[Node]
+
+          def self.extract_buckets_from: (
+            DatastoreResponse::SearchResponse,
+            for_query: Query
+          ) -> ::Array[::Hash[::String, untyped]]
+
+          def self.build_bucket: (Query, ::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+        end
+      end
+    end
+  end
+end

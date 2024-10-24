@@ -1,0 +1,35 @@
+module ElasticGraph
+  class DatastoreCore
+    module Configuration
+      class ClusterDefinitionSupertype
+        attr_reader url: ::String
+        attr_reader backend_client_class: _ClientClass
+        attr_reader settings: ::Hash[::String, untyped]
+
+        def initialize: (
+          url: ::String,
+          backend_client_class: _ClientClass,
+          settings: ::Hash[::String, untyped]
+        ) -> void
+
+        def with: (
+          ?url: ::String,
+          ?backend_client_class: _ClientClass,
+          ?settings: ::Hash[::String, untyped]
+        ) -> ClusterDefinition
+
+        def self.members: () -> ::Array[::Symbol]
+      end
+
+      class ClusterDefinition < ClusterDefinitionSupertype
+        def self.from_hash: (::Hash[::String, untyped]) -> ClusterDefinition
+
+        def self.definitions_by_name_hash_from: (
+          ::Hash[::String, ::Hash[::String, untyped]]
+        ) -> ::Hash[::String, ClusterDefinition]
+
+        EXPECTED_KEYS: ::Array[::String]
+      end
+    end
+  end
+end

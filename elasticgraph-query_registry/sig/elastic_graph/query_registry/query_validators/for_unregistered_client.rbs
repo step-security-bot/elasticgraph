@@ -1,0 +1,23 @@
+module ElasticGraph
+  module QueryRegistry
+    module QueryValidators
+      class ForUnregisteredClient
+        attr_reader allow_unregistered_clients: bool
+        attr_reader allow_any_query_for_clients: ::Set[::String]
+
+        def initialize: (
+          allow_unregistered_clients: bool,
+          allow_any_query_for_clients: ::Set[::String]
+        ) -> void
+
+        def build_and_validate_query: (
+          ::String?,
+          client: GraphQL::Client,
+          ?variables: ::Hash[::String, untyped],
+          ?operation_name: ::String?,
+          ?context: ::Hash[::Symbol, untyped]
+        ) { () -> ::GraphQL::Query } -> [::GraphQL::Query, ::Array[::String]]
+      end
+    end
+  end
+end

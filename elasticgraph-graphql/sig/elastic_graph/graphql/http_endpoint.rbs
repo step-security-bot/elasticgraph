@@ -1,0 +1,116 @@
+module ElasticGraph
+  class GraphQL
+    class HTTPEndpoint
+      APPLICATION_JSON: ::String
+      APPLICATION_GRAPHQL: ::String
+
+      def initialize: (
+        query_executor: QueryExecutor,
+        monotonic_clock: Support::MonotonicClock,
+        client_resolver: Client::_Resolver
+      ) -> void
+
+      def process: (
+        HTTPRequest,
+        ?max_timeout_in_ms: ::Integer?,
+        ?start_time_in_ms: ::Integer
+      ) -> HTTPResponse
+
+      private
+
+      @query_executor: QueryExecutor
+      @monotonic_clock: Support::MonotonicClock
+      @client_resolver: Client::_Resolver
+
+      def with_parsed_request: (
+        HTTPRequest,
+        max_timeout_in_ms: ::Integer?
+      ) { (ParsedRequest) -> HTTPResponse } -> HTTPResponse
+
+      def with_request_params: (
+        HTTPRequest
+      ) { (::Hash[::String, untyped]) -> HTTPResponse } -> HTTPResponse
+
+      def with_timeout: (
+        HTTPRequest,
+        max_timeout_in_ms: ::Integer?
+      ) { (::Integer?) -> HTTPResponse } -> HTTPResponse
+
+      def with_context: (
+        HTTPRequest
+      ) { (::Hash[::Symbol, untyped]) -> HTTPResponse } -> HTTPResponse
+
+      class ParsedRequest
+        attr_reader query_string: ::String
+        attr_reader variables: ::Hash[::String, untyped]
+        attr_reader operation_name: ::String?
+        attr_reader timeout_in_ms: ::Integer?
+        attr_reader context: ::Hash[::Symbol, untyped]
+
+        def initialize: (
+          query_string: ::String,
+          variables: ::Hash[::String, untyped],
+          operation_name: ::String?,
+          timeout_in_ms: ::Integer?,
+          context: ::Hash[::Symbol, untyped]) -> void
+
+        def with: (
+          ?query_string: ::String,
+          ?variables: ::Hash[::String, untyped],
+          ?operation_name: ::String?,
+          ?timeout_in_ms: ::Integer?,
+          ?context: ::Hash[::Symbol, untyped]) -> ParsedRequest
+      end
+    end
+
+    class HTTPRequest
+      attr_reader http_method: ::Symbol
+      attr_reader url: ::String
+      attr_reader headers: ::Hash[::String, ::String]
+      attr_reader body: ::String?
+
+      def initialize: (
+        http_method: ::Symbol,
+        url: ::String,
+        headers: ::Hash[::String, ::String],
+        body: ::String?) -> void
+
+      def with: (
+        ?http_method: ::Symbol,
+        ?url: ::String,
+        ?headers: ::Hash[::String, ::String],
+        ?body: ::String) -> HTTPRequest
+
+      @normalized_headers: ::Hash[::String, ::String]?
+      def normalized_headers: () -> ::Hash[::String, ::String]
+
+      @content_type: ::String?
+      def content_type: () -> ::String
+
+      def self.normalize_header_name: (::String) -> ::String
+    end
+
+    class HTTPResponse
+      attr_reader status_code: ::Integer
+      attr_reader headers: ::Hash[::String, ::String]
+      attr_reader body: ::String
+
+      def initialize: (
+        status_code: ::Integer,
+        headers: ::Hash[::String, ::String],
+        body: ::String) -> void
+
+      def self.new:
+        (status_code: ::Integer, headers: ::Hash[::String, ::String], body: ::String) -> instance
+      | (::Integer, ::Hash[::String, ::String], ::String) -> instance
+
+      def with: (
+        ?status_code: ::Integer,
+        ?headers: ::Hash[::String, ::String],
+        ?body: ::String) -> HTTPResponse
+
+      def self.json: (::Integer, ::Hash[::String, untyped]) -> HTTPResponse
+      def self.error: (::Integer, ::String) -> HTTPResponse
+    end
+  end
+end

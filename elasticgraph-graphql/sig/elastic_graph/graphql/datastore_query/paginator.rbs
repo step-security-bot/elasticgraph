@@ -1,0 +1,64 @@
+module ElasticGraph
+  class GraphQL
+    class DatastoreQuery
+      # I is the type of item (document or aggregation bucket)
+      class Paginator[I]
+        type comparisonOperator = :< | :<= | :> | :>=
+        type sortDirection = :asc | :desc
+        type scalarValue = untyped
+
+        attr_reader default_page_size: ::Integer
+        attr_reader max_page_size: ::Integer
+        attr_reader first: ::Integer?
+        attr_reader after: DecodedCursor?
+        attr_reader last: ::Integer?
+        attr_reader before: DecodedCursor?
+        attr_reader schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+
+        def initialize: (
+          default_page_size: ::Integer,
+          max_page_size: ::Integer,
+          first: ::Integer?,
+          after: DecodedCursor?,
+          last: ::Integer?,
+          before: DecodedCursor?,
+          schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames) -> void
+
+        def requested_page_size: () -> ::Integer
+        def search_in_reverse?: () -> boolish
+        def search_after: () -> DecodedCursor?
+        def restore_intended_item_order: [E] (::Array[E]) -> ::Array[E]
+        def truncate_items: [E] (::Array[E]) { (E, DecodedCursor) -> ::Array[SortValue] } -> ::Array[E]
+        def paginated_from_singleton_cursor?: () -> bool
+
+        @desired_page_size: ::Integer?
+        def desired_page_size: () -> ::Integer
+
+        private
+
+        @first_n: ::Integer?
+        def first_n: () -> ::Integer?
+
+        @last_n: ::Integer?
+        def last_n: () -> ::Integer?
+
+        def size_arg_value: (::Symbol, ::Integer?) -> ::Integer?
+        def item_sort_values_satisfy?: (::Array[SortValue], comparisonOperator) -> bool
+
+        class SortValue
+          attr_reader from_item: scalarValue
+          attr_reader from_cursor: scalarValue
+          attr_reader sort_direction: sortDirection
+
+          def initialize: (
+            from_item: scalarValue,
+            from_cursor: scalarValue,
+            sort_direction: sortDirection) -> void
+
+          def unequal?: () -> bool
+          def item_satisfies_compared_to_cursor?: (comparisonOperator) -> bool
+        end
+      end
+    end
+  end
+end

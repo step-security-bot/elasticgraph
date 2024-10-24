@@ -1,0 +1,37 @@
+module ElasticGraph
+  class DatastoreCore
+    attr_reader config: Config
+    attr_reader logger: ::Logger
+    attr_reader schema_artifacts: schemaArtifacts
+    attr_reader client_customization_block: (^(untyped) -> void)?
+
+    def self.from_parsed_yaml: (
+      parsedYamlSettings,
+      for_context: SchemaArtifacts::context
+    ) ?{ (untyped) -> void } -> DatastoreCore
+
+    def initialize: (
+      config: Config,
+      logger: ::Logger,
+      schema_artifacts: schemaArtifacts,
+      ?clients_by_name: ::Hash[::String, _Client]?,
+      ?client_customization_block: (^(untyped) -> void)?
+    ) -> void
+
+    @index_definitions_by_name: ::Hash[::String, indexDefinition]?
+    def index_definitions_by_name: () -> ::Hash[::String, indexDefinition]
+
+    @index_definitions_by_graphql_type: ::Hash[::String, ::Array[indexDefinition]]?
+    def index_definitions_by_graphql_type: () -> ::Hash[::String, ::Array[indexDefinition]]
+
+    @clients_by_name: ::Hash[::String, _Client]?
+    def clients_by_name: () -> ::Hash[::String, _Client]
+
+    private
+
+    @config: Config
+    @logger: ::Logger
+    @schema_artifacts: schemaArtifacts
+    @client_customization_block: (^(untyped) -> void)?
+  end
+end

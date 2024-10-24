@@ -1,0 +1,45 @@
+module ElasticGraph
+  module Support
+    module Logger
+      extend _BuildableFromParsedYaml[::Logger]
+
+      module Factory
+        def self.build: (config: Config, ?device: ::Logger::logdev?) -> ::Logger
+      end
+
+      class JSONAwareFormatter
+        include ::Logger::_Formatter
+        @original_formatter: ::Logger::Formatter
+
+        # Steep 1.6 complains about our impl returning `nil` unless we define this as void
+        def initialize: () -> void
+      end
+
+      class ConfigSupertype
+        attr_reader level: ::String
+        attr_reader device: ::String
+        attr_reader formatter: ::Logger::_Formatter
+
+        def initialize: (
+          level: ::String,
+          device: ::String,
+          formatter: ::Logger::_Formatter
+        ) -> void
+
+        def with: (
+          ?level: ::String,
+          ?device: ::String,
+          ?formatter: ::Logger::_Formatter
+        ) -> Config
+
+        def self.members: () -> ::Array[::Symbol]
+      end
+
+      class Config < ConfigSupertype
+        extend _BuildableFromParsedYaml[Config]
+        def prepared_device: () -> (::String | ::IO)
+        EXPECTED_KEYS: ::Array[::String]
+      end
+    end
+  end
+end

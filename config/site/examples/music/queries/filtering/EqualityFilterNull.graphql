@@ -1,0 +1,12 @@
+query EqualityFilterNull {
+  artists(filter: {
+    name: {equalToAnyOf: [null]}
+  }) {
+    nodes {
+      name
+      bio {
+        yearFormed
+      }
+    }
+  }
+}

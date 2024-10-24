@@ -1,0 +1,17 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      module DerivedFields
+        class AppendOnlySet
+          include _DerivedField
+          def self.new: (::String, ::String) -> instance
+
+          private
+
+          IDEMPOTENTLY_INSERT_VALUES: ::String
+          IDEMPOTENTLY_INSERT_VALUE: ::String
+        end
+      end
+    end
+  end
+end

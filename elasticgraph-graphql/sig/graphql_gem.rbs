@@ -1,0 +1,191 @@
+module GraphQL
+  class CoercionError < StandardError
+  end
+
+  class Dataloader
+    class Source
+      def load_all: [Req, Res] (::Array[Req]) -> ::Array[Res]
+    end
+
+    def with: (Class, *untyped, **untyped) -> Source
+  end
+
+  module Execution
+    class Lookahead
+      attr_reader ast_nodes: ::Array[Language::Nodes::Field]
+      attr_reader name: ::String
+      attr_reader field: Schema::Field
+      attr_reader owner_type: Schema::_Type
+      attr_reader arguments: ::Hash[::String, untyped]
+
+      def initialize: (
+        query: Query,
+        ast_nodes: ::Array[Language::Nodes::AbstractNode],
+        field: Schema::Field,
+        owner_type: Schema::_Type
+      ) -> void
+
+      def selects?: (::String) -> bool
+      def selection: (::String) -> Lookahead
+      def selections: () -> ::Array[Lookahead]
+      def selected?: () -> bool
+    end
+  end
+
+  class ExecutionError < StandardError
+  end
+
+  module Language
+    module Nodes
+      class AbstractNode
+        def to_query_string: () -> ::String
+        def merge: (::Hash[::Symbol, untyped]) -> self
+      end
+
+      class Argument < AbstractNode
+        attr_reader name: ::String
+        attr_reader value: untyped
+      end
+
+      class Directive < AbstractNode
+        attr_reader name: ::String
+        attr_reader arguments: ::Array[Argument]
+      end
+
+      class Document < AbstractNode
+        attr_reader definitions: ::Array[FragmentDefinition | OperationDefinition]
+      end
+
+      class Field < AbstractNode
+        attr_reader alias: ::String?
+        attr_reader name: ::String
+      end
+
+      class FragmentDefinition < AbstractNode
+        attr_reader directives: ::Array[Directive]
+      end
+
+      class OperationDefinition < AbstractNode
+        attr_reader name: ::String?
+        attr_reader variables: ::Array[VariableDefinition]
+        attr_reader directives: ::Array[Directive]
+      end
+
+      type typeReference = TypeName | WrapperType
+
+      class TypeName < AbstractNode
+        attr_reader name: ::String
+      end
+
+      class VariableDefinition < AbstractNode
+        attr_reader line: ::Integer
+        attr_reader col: ::Integer
+        attr_reader name: ::String
+        attr_reader type: typeReference
+      end
+
+      class WrapperType < AbstractNode
+        def of_type: () -> typeReference
+      end
+    end
+  end
+
+  class Query
+    def initialize: (
+      ::GraphQL::Schema,
+      ::String?,
+      ?document: Language::Nodes::Document?,
+      ?validate: bool,
+      ?variables: ::Hash[::String, untyped]?,
+      ?operation_name: ::String?,
+      ?context: ::Hash[::Symbol, untyped]?
+    ) -> void
+
+    attr_reader document: Language::Nodes::Document
+    attr_reader operation_name: ::String?
+    attr_reader operations: ::Hash[::String, Language::Nodes::OperationDefinition]
+    attr_reader fingerprint: ::String
+    attr_reader sanitized_query_string: ::String?
+    attr_reader result: Result
+    attr_reader query_string: ::String?
+
+    def selected_operation: () -> Language::Nodes::OperationDefinition?
+    def static_errors: () -> ::Array[_ValidationError]
+
+    class Context
+      attr_reader query: Query
+      def []: (::Symbol | ::String) -> untyped
+      def fetch: (untyped) -> untyped
+      def add_error: (ExecutionError) -> void
+      def dataloader: () -> Dataloader
+    end
+
+    class Result
+      def initialize: (query: Query?, values: ::Hash[::String, untyped]) -> void
+      attr_reader to_h: ::Hash[::String, untyped]
+    end
+  end
+
+  class Schema
+    attr_reader types: ::Hash[::String, _Type]
+    attr_reader static_validator: StaticValidation::Validator
+
+    def execute: (::String, **untyped) -> ::Hash[::String, untyped]
+    def self.from_definition: (::String) -> Schema
+    def to_definition: () -> ::String
+    def type_from_ast: (Language::Nodes::AbstractNode) -> _Type?
+
+    interface _Type
+      def kind: () -> TypeKinds::TypeKind
+      def to_type_signature: () -> ::String
+      def unwrap: () -> _Type
+      def ==: (untyped) -> boolish
+      def graphql_name: () -> ::String
+    end
+
+    class InputObject
+      include _Type
+      attr_reader arguments: ::Hash[::String, Argument]
+    end
+
+    class Argument
+      attr_reader name: ::String
+      attr_reader type: _Type
+    end
+
+    class Field
+      include _Member
+      attr_reader name: ::String
+      def arguments: () -> ::Hash[::String, Argument]
+      def owner: () -> _Member
+      def introspection?: () -> bool
+    end
+
+    interface _Member
+      def graphql_name: () -> ::String
+    end
+
+    class Printer
+      def self.print_schema: (Schema, **untyped) -> ::String
+    end
+  end
+
+  module StaticValidation
+    class Validator
+      def validate: (Query) -> {errors: ::Array[_ValidationError]}
+    end
+  end
+
+  module TypeKinds
+    class TypeKind
+      def input_object?: () -> bool
+      def enum?: () -> bool
+    end
+  end
+
+  type validationErrorHash = ::Hash[::String, untyped]
+
+  interface _ValidationError
+    def to_h: () -> validationErrorHash
+  end
+end

@@ -1,0 +1,46 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      class ScalarTypeSupertype
+        attr_reader coercion_adapter_ref: ::Hash[::String, ::String]
+        attr_reader indexing_preparer_ref: ::Hash[::String, ::String]
+
+        def initialize: (
+          coercion_adapter_ref: ::Hash[::String, ::String],
+          indexing_preparer_ref: ::Hash[::String, ::String]
+        ) -> void
+
+        def with: (
+          ?coercion_adapter_ref: ::Hash[::String, ::String],
+          ?indexing_preparer_ref: ::Hash[::String, ::String]
+        ) -> ScalarType
+      end
+
+      class ScalarType < ScalarTypeSupertype
+        self.@coercion_adapter_extension_loader: ExtensionLoader?
+        def self.coercion_adapter_extension_loader: () -> ExtensionLoader
+
+        self.@indexing_preparer_extension_loader: ExtensionLoader?
+        def self.indexing_preparer_extension_loader: () -> ExtensionLoader
+
+        DEFAULT_COERCION_ADAPTER_REF: ::Hash[::String, ::String]
+        DEFAULT_INDEXING_PREPARER_REF: ::Hash[::String, ::String]
+
+        def self.load_many: (::Hash[::String, ::Hash[::String, untyped]]) -> ::Hash[::String, ScalarType]
+
+        def load_coercion_adapter: () -> Extension
+        def load_indexing_preparer: () -> Extension
+
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+      end
+
+      class ScalarCoercionAdapterInterface
+        extend _ScalarCoercionAdapter[untyped, untyped]
+      end
+
+      class ScalarIndexingPreparerInterface
+        extend _IndexingPreparer[untyped, untyped]
+      end
+    end
+  end
+end

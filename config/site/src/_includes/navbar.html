@@ -1,0 +1,51 @@
+<!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="{{ site.style.link }}">Docs</a>
+      <a href="/query-api" class="{{ site.style.link }}">Query API</a>
+    </div>
+    <div>
+      <a href="{{ site.github_url }}" target="_blank"
+        class="{{ site.style.link }} mr-2">GitHub</a>
+      <a href="/about" class="{{ site.style.link }}">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        {% if page.url != "/" %}
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        {% endif %}
+
+        {% assign url_parts = page.url | split: '/' | where_exp: "p", "p != ''" %}
+        {% assign link = '/' %}
+        {% for part in url_parts %}
+          {% assign link = link | append: part | append: '/' %}
+          {% assign page_title = nil %}
+          {% for p in site.pages %}
+            {% if p.url == link %}
+              {% assign page_title = p.subpage_title | default: p.title %}
+            {% endif %}
+          {% endfor %}
+
+          <li>
+            <span class="mx-2">/</span>
+            {% if page.url == link %}
+              {{ page_title }}
+            {% else %}
+              <a href="{{ link }}" class="hover:underline capitalize">
+                {{ page_title }}
+              </a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </nav>
+  </div>
+</nav>

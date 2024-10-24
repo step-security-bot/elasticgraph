@@ -1,0 +1,10 @@
+module ElasticGraph
+  class Indexer
+    class IndexingFailuresError < Errors::Error
+      def self.for: (
+        failures: ::Array[Indexer::FailedEventError],
+        events: ::Array[::Hash[::String, untyped]]
+      ) -> IndexingFailuresError
+    end
+  end
+end

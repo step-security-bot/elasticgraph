@@ -1,0 +1,40 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      class FieldReference
+        attr_reader name: ::String
+        attr_reader name_in_index: ::String
+        attr_reader type: SchemaElements::TypeReference
+        attr_reader mapping_options: ::Hash[::Symbol, untyped]
+        attr_reader json_schema_options: ::Hash[::Symbol, untyped]
+        attr_reader accuracy_confidence: Field::accuracyConfidence
+        attr_reader source: SchemaElements::FieldSource?
+        attr_reader runtime_field_script: ::String?
+
+        def initialize: (
+          name: ::String,
+          name_in_index: ::String,
+          type: SchemaElements::TypeReference,
+          mapping_options: ::Hash[::Symbol, untyped],
+          json_schema_options: ::Hash[::Symbol, untyped],
+          accuracy_confidence: Field::accuracyConfidence,
+          source: SchemaElements::FieldSource?,
+          runtime_field_script: ::String?
+        ) -> void
+
+        def with: (
+          ?name: ::String,
+          ?name_in_index: ::String,
+          ?type: SchemaElements::TypeReference,
+          ?mapping_options: ::Hash[::Symbol, untyped],
+          ?json_schema_options: ::Hash[::Symbol, untyped],
+          ?accuracy_confidence: Field::accuracyConfidence,
+          ?source: SchemaElements::FieldSource?,
+          ?runtime_field_script: ::String?
+        ) -> FieldReference
+
+        def resolve: () -> Field?
+      end
+    end
+  end
+end

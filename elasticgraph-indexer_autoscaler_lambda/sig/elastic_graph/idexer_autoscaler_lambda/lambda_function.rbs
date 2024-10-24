@@ -1,0 +1,11 @@
+module ElasticGraph
+  class IndexerAutoscalerLambda
+    class LambdaFunction
+      include LambdaSupport::LambdaFunction[void]
+      include LambdaSupport::_LambdaFunctionClass[void]
+      @concurrency_scaler: ConcurrencyScaler
+    end
+  end
+end
+
+AutoscaleIndexer: ElasticGraph::IndexerAutoscalerLambda::LambdaFunction

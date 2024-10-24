@@ -1,0 +1,111 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      # Note: this is a partial signature definition (the ruby file is ignored in `Steepfile`)
+      class SchemaElementNamesDefinition
+        module SnakeCaseConverter
+          def self.normalize_case: (::String) -> ::String
+        end
+
+        module CamelCaseConverter
+          def self.normalize_case: (::String) -> ::String
+        end
+      end
+
+      class SchemaElementNames
+        ELEMENT_NAMES: ::Array[::Symbol]
+
+        def canonical_name_for: (::String | ::Symbol) -> ::Symbol
+        attr_reader filter: ::String
+        attr_reader equal_to_any_of: ::String
+        attr_reader gt: ::String
+        attr_reader gte: ::String
+        attr_reader lt: ::String
+        attr_reader lte: ::String
+        attr_reader matches: ::String
+        attr_reader matches_query: ::String
+        attr_reader matches_phrase: ::String
+        attr_reader all_of: ::String
+        attr_reader any_of: ::String
+        attr_reader not: ::String
+        attr_reader time_of_day: ::String
+        attr_reader any_satisfy: ::String
+
+        attr_reader eg_latency_slo: ::String
+        attr_reader ms: ::String
+
+        attr_reader order_by: ::String
+        attr_reader ordered_by: ::String
+
+        attr_reader grouped_by: ::String
+        attr_reader count: ::String
+        attr_reader count_detail: ::String
+        attr_reader aggregated_values: ::String
+        attr_reader sub_aggregations: ::String
+
+        attr_reader as_date_time: ::String
+        attr_reader as_date: ::String
+        attr_reader as_time_of_day: ::String
+        attr_reader as_day_of_week: ::String
+
+        attr_reader offset: ::String
+        attr_reader amount: ::String
+        attr_reader unit: ::String
+        attr_reader time_zone: ::String
+        attr_reader truncation_unit: ::String
+
+        attr_reader offset_days: ::String
+        attr_reader granularity: ::String
+
+        attr_reader approximate_value: ::String
+        attr_reader exact_value: ::String
+        attr_reader upper_bound: ::String
+
+        attr_reader first: ::String
+        attr_reader after: ::String
+        attr_reader last: ::String
+        attr_reader before: ::String
+        attr_reader edges: ::String
+        attr_reader nodes: ::String
+        attr_reader node: ::String
+        attr_reader cursor: ::String
+        attr_reader page_info: ::String
+        attr_reader start_cursor: ::String
+        attr_reader end_cursor: ::String
+        attr_reader total_edge_count: ::String
+        attr_reader has_previous_page: ::String
+        attr_reader has_next_page: ::String
+
+        attr_reader query: ::String
+        attr_reader phrase: ::String
+        attr_reader allowed_edits_per_term: ::Integer
+        attr_reader require_all_terms: bool
+
+        attr_reader latitude: ::String
+        attr_reader longitude: ::String
+        attr_reader near: ::String
+        attr_reader max_distance: ::String
+
+        attr_reader exact_min: ::String
+        attr_reader exact_max: ::String
+        attr_reader approximate_min: ::String
+        attr_reader approximate_max: ::String
+        attr_reader approximate_avg: ::String
+        attr_reader approximate_sum: ::String
+        attr_reader exact_sum: ::String
+        attr_reader approximate_distinct_value_count: ::String
+
+        def normalize_case: (::String) -> ::String
+        def self.from_hash: (::Hash[::String, untyped]) -> SchemaElementNames
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+
+        type form = :snake_case | :camelCase | "snake_case" | "camelCase"
+        def initialize: (form: form, ?overrides: ::Hash[::Symbol, ::String]) -> void
+
+        def self.new:
+          (form: form, ?overrides: ::Hash[::Symbol, ::String]) -> instance
+        | (form, ?::Hash[::Symbol, ::String]) -> instance
+      end
+    end
+  end
+end

@@ -1,0 +1,41 @@
+// Check if required params are missing
+if (params.offset_ms == null) {
+  throw new IllegalArgumentException("Missing required parameter: offset_ms");
+}
+if (params.time_zone == null) {
+  throw new IllegalArgumentException("Missing required parameter: time_zone");
+}
+if (params.interval == null) {
+  throw new IllegalArgumentException("Missing required parameter: interval");
+}
+
+// Set variables used in the loop
+ZoneId zoneId = ZoneId.of(params.time_zone);
+ChronoUnit intervalUnit;
+if (params.interval == "hour") {
+  intervalUnit = ChronoUnit.HOURS;
+} else if (params.interval == "minute") {
+  intervalUnit = ChronoUnit.MINUTES;
+} else if (params.interval == "second") {
+  intervalUnit = ChronoUnit.SECONDS;
+} else {
+  throw new IllegalArgumentException("Invalid interval value: " + params.interval);
+}
+DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
+List results = new ArrayList();
+
+for (ZonedDateTime timestamp : doc[params.field]) {
+  // Convert the timestamp to the specified time zone
+  ZonedDateTime zonedTimestamp = timestamp.withZoneSameInstant(zoneId);
+
+  // Adjust the timestamp based on the offset_ms parameter
+  ZonedDateTime adjustedTimestamp = zonedTimestamp.plus(params.offset_ms, ChronoUnit.MILLIS);
+
+  // Truncate the timestamp to the specified interval
+  adjustedTimestamp = adjustedTimestamp.truncatedTo(intervalUnit);
+
+  // Format and add the result to the list
+  results.add(adjustedTimestamp.format(formatter));
+}
+
+return results;

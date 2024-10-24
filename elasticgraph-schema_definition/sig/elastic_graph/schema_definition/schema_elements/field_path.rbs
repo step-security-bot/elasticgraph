@@ -1,0 +1,30 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class FieldPathSuperType
+        attr_reader first_part: Field
+        attr_reader last_part: Field
+        attr_reader path_parts: ::Array[Field]
+        def initialize: (first_part: Field, last_part: Field, path_parts: ::Array[Field]) -> void
+      end
+
+      class FieldPath < FieldPathSuperType
+        def type: () -> TypeReference
+        def path: () -> ::String
+        def path_in_index: () -> ::String
+        def fully_qualified_path: () -> ::String
+        def fully_qualified_path_in_index: () -> ::String
+        def full_description: () -> ::String
+
+        def self.new: (Field, Field, ::Array[Field]) -> instance
+
+        class Resolver
+          @indexing_fields_by_public_name_by_type: ::Hash[indexableType, ::Hash[::String, Field]]
+          def initialize: () -> void
+          def resolve_public_path: (indexableType, ::String) { (Field) -> bool } -> FieldPath?
+          def determine_nested_paths: (indexableType, ::String) -> ::Array[::String]?
+        end
+      end
+    end
+  end
+end

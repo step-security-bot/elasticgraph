@@ -1,0 +1,21 @@
+module ElasticGraph
+  class GraphQL
+    module Filtering
+      class FieldPath
+        attr_reader from_root: ::Array[::String]
+        attr_reader from_parent: ::Array[::String]
+
+        def initialize: (
+          ::Array[::String],
+          ::Array[::String]
+        ) -> void
+
+        def self.empty: () -> FieldPath
+        def self.of: (::Array[::String]) -> FieldPath
+        def nested: () -> FieldPath
+        def +: (::String) -> FieldPath
+        def counts_path: () -> FieldPath
+      end
+    end
+  end
+end

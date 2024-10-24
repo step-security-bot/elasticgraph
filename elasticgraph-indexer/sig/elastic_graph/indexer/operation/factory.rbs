@@ -1,0 +1,72 @@
+module ElasticGraph
+  class Indexer
+    type event = ::Hash[::String, untyped]
+    type validator = JSONSchema::Validator
+    type validatorFactory = JSONSchema::ValidatorFactory
+
+    module Operation
+      class FactorySupertype
+        attr_reader schema_artifacts: schemaArtifacts
+        attr_reader index_definitions_by_graphql_type: ::Hash[::String, ::Array[DatastoreCore::_IndexDefinition]]
+        attr_reader record_preparer_factory: RecordPreparer::Factory
+        attr_reader logger: ::Logger
+        attr_reader skip_derived_indexing_type_updates: ::Hash[::String, ::Set[::String]]
+        attr_reader configure_record_validator: (^(validatorFactory) -> validatorFactory)?
+
+        def initialize: (
+          schema_artifacts: schemaArtifacts,
+          index_definitions_by_graphql_type: ::Hash[::String, ::Array[DatastoreCore::_IndexDefinition]],
+          record_preparer_factory: RecordPreparer::Factory,
+          logger: ::Logger,
+          skip_derived_indexing_type_updates: ::Hash[::String, ::Set[::String]],
+          configure_record_validator: (^(validatorFactory) -> validatorFactory)?
+        ) -> void
+
+        def with: (
+          ?schema_artifacts: schemaArtifacts,
+          ?index_definitions_by_graphql_type: ::Hash[::String, ::Array[DatastoreCore::_IndexDefinition]],
+          ?record_preparer_factory: RecordPreparer::Factory,
+          ?logger: ::Logger,
+          ?skip_derived_indexing_type_updates: ::Hash[::String, ::Set[::String]],
+          ?configure_record_validator: (^(validatorFactory) -> validatorFactory)?
+        ) -> instance
+      end
+
+      class Factory < FactorySupertype
+        def build: (event) -> BuildResult
+
+        private
+
+        def validator: (::String, ::Integer) -> JSONSchema::Validator
+
+        @validator_factories_by_version: ::Hash[::Integer, JSONSchema::ValidatorFactory]?
+        def validator_factories_by_version: () -> ::Hash[::Integer, JSONSchema::ValidatorFactory]
+
+        def select_json_schema_version: (event) { (BuildResult) -> bot } -> (::Integer | bot)
+        def prepare_event: (event) -> event
+        def validate_record_returning_failure: (event, ::Integer) -> BuildResult?
+        def build_failed_result: (event, ::String, ::String) -> BuildResult
+        def build_all_operations_for: (event, _RecordPreparer) -> ::Array[_Operation]
+        def upsert_operations: (event, _RecordPreparer) -> ::Array[_Operation]
+        def update_operations: (event, _RecordPreparer) -> ::Array[_Operation]
+        def index_definitions_for: (::String) -> ::Array[DatastoreCore::_IndexDefinition]
+        def raise: (*untyped) -> void
+
+        class BuildResult
+          attr_reader operations: ::Array[_Operation]
+          attr_reader failed_event_error: FailedEventError?
+
+          def initialize: (::Array[_Operation], FailedEventError?) -> void
+
+          def with: (
+            ?operations: ::Array[_Operation],
+            ?failed_event_error: FailedEventError?
+          ) -> BuildResult
+
+          def self.success: (::Array[_Operation]) -> BuildResult
+          def self.failure: (FailedEventError) -> BuildResult
+        end
+      end
+    end
+  end
+end

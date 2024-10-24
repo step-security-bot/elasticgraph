@@ -1,0 +1,32 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      interface _AbstractType
+        include _Type
+        def resolve_subtypes: () -> ::Array[SchemaElements::ObjectType]
+        def schema_def_state: () -> State
+      end
+
+      module HasSubtypes: _AbstractType
+        def recursively_resolve_subtypes: () -> ::Array[SchemaElements::ObjectType]
+        def graphql_fields_by_name: () -> ::Hash[::String, SchemaElements::Field]
+        def indexing_fields_by_name_in_index: () -> ::Hash[::String, SchemaElements::Field]
+        def abstract?: () -> true
+        def current_sources: () -> ::Array[::String]
+        def index_field_runtime_metadata_tuples: (
+          ?path_prefix: ::String,
+          ?parent_source: ::String,
+          ?list_counts_state: SchemaElements::ListCountsState
+        ) -> ::Array[[::String, SchemaArtifacts::RuntimeMetadata::IndexField]]
+
+        private
+
+        def merge_fields_by_name_from_subtypes: () {
+          (SchemaElements::ObjectType) -> ::Hash[::String, SchemaElements::Field]
+        } -> ::Hash[::String, SchemaElements::Field]
+
+        def subtypes_indexed?: () -> bool
+      end
+    end
+  end
+end

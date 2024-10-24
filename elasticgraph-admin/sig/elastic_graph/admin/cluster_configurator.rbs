@@ -1,0 +1,32 @@
+module ElasticGraph
+  class Admin
+    class ClusterConfigurator
+      def initialize: (
+        datastore_clients_by_name: ::Hash[::String, DatastoreCore::_Client],
+        index_defs: ::Array[DatastoreCore::indexDefinition],
+        index_configurations_by_name: ::Hash[::String, untyped],
+        index_template_configurations_by_name: ::Hash[::String, untyped],
+        scripts: datastoreScriptsByIdHash,
+        cluster_settings_manager: ClusterSettingsManager,
+        clock: singleton(::Time)
+      ) -> void
+
+      def configure_cluster: (io) -> void
+
+      @accessible_index_definitions: ::Array[DatastoreCore::indexDefinition]?
+      def accessible_index_definitions: () -> ::Array[DatastoreCore::indexDefinition]
+
+      private
+
+      @datastore_clients_by_name: ::Hash[::String, DatastoreCore::_Client]
+      @index_defs: ::Array[DatastoreCore::indexDefinition]
+      @index_configurations_by_name: DatastoreCore::indexConfigHash
+      @scripts_by_id: datastoreScriptsByIdHash
+      @cluster_settings_manager: ClusterSettingsManager
+      @clock: singleton(::Time)
+
+      def script_configurators_for: (io) -> ::Array[ScriptConfigurator]
+      def index_definition_configurators_for: (io) -> ::Array[indexDefinitionConfigurator]
+    end
+  end
+end

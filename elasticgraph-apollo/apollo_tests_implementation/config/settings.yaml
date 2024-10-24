@@ -1,0 +1,34 @@
+datastore:
+  client_faraday_adapter:
+    name: net_http
+  clusters:
+    main:
+      url: http://elasticsearch:9200
+      backend: elasticsearch
+      settings: {}
+  index_definitions:
+    products: &standard_index_settings
+      query_cluster: "main"
+      index_into_clusters: ["main"]
+      ignore_routing_values: []
+      custom_timestamp_ranges: []
+      setting_overrides: {}
+      setting_overrides_by_timestamp: {}
+    deprecated_products: *standard_index_settings
+    product_research: *standard_index_settings
+    users: *standard_index_settings
+    inventory: *standard_index_settings
+  log_traffic: true
+  max_client_retries: 3
+logger:
+  device: stdout
+indexer:
+  latency_slo_thresholds_by_timestamp_in_ms: {}
+graphql:
+  default_page_size: 50
+  max_page_size: 500
+  extension_modules:
+  - require_path: ./lib/test_implementation_extension
+    extension_name: ApolloTestImplementationExtension
+schema_artifacts:
+  directory: config/schema/artifacts

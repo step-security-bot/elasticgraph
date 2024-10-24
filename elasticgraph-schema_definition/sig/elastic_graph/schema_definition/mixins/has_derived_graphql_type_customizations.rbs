@@ -1,0 +1,25 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      module HasDerivedGraphQLTypeCustomizations: _Type
+        def customize_derived_types: (*(:all | ::String)) { (_Type) -> void } -> void
+        def customize_derived_type_fields: (
+          ::String, *::String
+        ) { (SchemaElements::Field) -> void } -> void
+
+        def derived_type_customizations_for_type: (_Type) -> ::Array[^(_Type) -> void]
+
+        def derived_field_customizations_by_name_for_type: (
+          _Type
+        ) -> ::Hash[::String, ::Array[^(SchemaElements::Field) -> void]]
+
+        attr_reader derived_type_customizations_by_name: ::Hash[::String, ::Array[^(_Type) -> void]]
+        attr_reader derived_field_customizations_by_type_and_field_name: ::Hash[::String, ::Hash[::String, ::Array[^(SchemaElements::Field) -> void]]]
+
+        private
+
+        attr_reader derived_type_customizations_for_all_types: ::Array[^(_Type) -> void]
+      end
+    end
+  end
+end

@@ -1,0 +1,11 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      module ImplementsInterfaces: SchemaElements::TypeWithSubfields
+        def implements: (*::String) -> void
+        attr_reader implemented_interfaces: ::Array[SchemaElements::TypeReference]
+        def verify_graphql_correctness!: () -> void
+      end
+    end
+  end
+end

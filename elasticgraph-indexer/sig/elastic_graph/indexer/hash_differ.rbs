@@ -1,0 +1,7 @@
+module ElasticGraph
+  class Indexer
+    class HashDiffer
+      def self.diff: [K, V] (::Hash[K, V], ::Hash[K, V], ?ignore_ops: ::Array[:+ | :- | :~]) -> ::String?
+    end
+  end
+end

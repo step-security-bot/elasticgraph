@@ -1,0 +1,23 @@
+module JSONSchemer
+  type error = {
+    "data" => untyped,
+    "data_pointer" => ::String,
+    "schema" => ::Hash[::String, untyped],
+    "schema_pointer" => ::String,
+    "root_schema" => ::Hash[::String, untyped],
+    "type" => ::String,
+    "details" => untyped?
+  }
+
+  class Schema
+    def ref: (::String) -> Schema
+    def valid?: (::Hash[::String, untyped]) -> bool
+    def validate: (::Hash[::String, untyped]) -> ::Enumerator[error, error]
+  end
+
+  def self.schema: (
+    ::Hash[::String, untyped],
+    ?meta_schema: ::String,
+    ?regexp_resolver: "ruby" | "ecma"
+  ) -> Schema
+end

@@ -1,0 +1,9 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      type fieldPath = ::Array[PathSegment]
+      type stringish = ::Symbol | ::String
+      type grouping = DateHistogramGrouping | FieldTermGrouping | ScriptTermGrouping
+    end
+  end
+end

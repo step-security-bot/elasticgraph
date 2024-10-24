@@ -1,0 +1,49 @@
+module ElasticGraph
+  class GraphQL
+    module Filtering
+      class FilterInterpreterSupertype
+        attr_reader filter_node_interpreter: FilterNodeInterpreter
+        attr_reader schema_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames
+        attr_reader logger: ::Logger
+
+        def initialize: (
+          filter_node_interpreter: FilterNodeInterpreter,
+          schema_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+          logger: ::Logger
+        ) -> void
+      end
+
+      class FilterInterpreter < FilterInterpreterSupertype
+        type stringHash = ::Hash[::String, untyped]
+        attr_reader logger: ::Logger
+
+        def initialize: (
+          filter_node_interpreter: FilterNodeInterpreter,
+          logger: ::Logger
+        ) -> void
+
+        def build_query: (
+          ::Enumerable[stringHash],
+          ?from_field_path: FieldPath
+        ) -> stringOrSymbolHash?
+
+        private
+
+        def process_filter_hash: (stringOrSymbolHash, stringHash, FieldPath) -> void
+        def filters_on_sub_fields?: (stringHash) -> bool
+        def process_not_expression: (stringOrSymbolHash, stringHash, FieldPath) -> void
+        def process_list_any_filter_expression: (stringOrSymbolHash, stringHash, FieldPath) -> void
+        def process_any_satisfy_filter_expression_on_nested_object_list: (stringOrSymbolHash, stringHash, FieldPath) -> void
+        def process_any_satisfy_filter_expression_on_scalar_list: (stringOrSymbolHash, stringHash, FieldPath) -> void
+        def process_any_of_expression: (stringOrSymbolHash, ::Array[stringHash], FieldPath) -> void
+        def process_all_of_expression: (stringOrSymbolHash, ::Array[stringHash], FieldPath) -> void
+        def process_operator_expression: (stringOrSymbolHash, ::String, stringHash, FieldPath) -> void
+        def process_sub_field_expression: (stringOrSymbolHash, stringHash, FieldPath) -> void
+        def process_list_count_expression: (stringOrSymbolHash, stringHash, FieldPath) -> void
+        def build_bool_hash: () { (stringOrSymbolHash) -> void } -> stringOrSymbolHash?
+        def excludes_zero?: (stringHash) -> bool
+        def required_matching_clause_count: (stringOrSymbolHash) -> ::Integer
+      end
+    end
+  end
+end

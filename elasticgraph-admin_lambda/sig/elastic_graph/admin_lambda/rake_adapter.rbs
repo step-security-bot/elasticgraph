@@ -1,0 +1,15 @@
+module ElasticGraph
+  module AdminLambda
+    class RakeAdapter
+      RAKEFILE: ::String
+
+      def self.run_rake: (::Array[::String]) -> ::String?
+      def self.capture_output: () { () -> void } -> ::String?
+
+      class Application < ::Rake::Application
+        # Steep 1.6 complains about our impl returning `nil` unless we define this as void
+        def initialize: () -> void
+      end
+    end
+  end
+end

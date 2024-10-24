@@ -1,0 +1,30 @@
+module ElasticGraph
+  class DatastoreCore
+    module Configuration
+      class ClientFaradayAdapterSupertypee
+        attr_reader name: ::Symbol?
+        attr_reader require: ::String?
+
+        def initialize: (name: ::Symbol?, require: ::String?) -> void
+
+        def with: (
+          ?name: ::Symbol?,
+          ?require: ::String?) -> ClientFaradayAdapter
+
+        def self.with: (
+          name: ::Symbol?,
+          require: ::String?) -> ClientFaradayAdapter
+
+        def self.members: () -> ::Array[::Symbol]
+      end
+
+      class ClientFaradayAdapter < ClientFaradayAdapterSupertypee
+        def self.from_parsed_yaml: (
+          ::Hash[::String, ::Hash[::String, untyped]]
+        ) -> ClientFaradayAdapter
+
+        EXPECTED_KEYS: ::Array[::String]
+      end
+    end
+  end
+end

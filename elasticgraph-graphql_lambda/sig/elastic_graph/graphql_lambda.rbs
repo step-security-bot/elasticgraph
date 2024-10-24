@@ -1,0 +1,5 @@
+module ElasticGraph
+  module GraphQLLambda
+    def self.graphql_from_env: () -> GraphQL
+  end
+end

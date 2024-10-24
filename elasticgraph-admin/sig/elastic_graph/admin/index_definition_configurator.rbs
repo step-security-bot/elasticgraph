@@ -1,0 +1,15 @@
+module ElasticGraph
+  class Admin
+    type indexDefinitionConfigurator = IndexDefinitionConfigurator::ForIndex | IndexDefinitionConfigurator::ForIndexTemplate
+
+    module IndexDefinitionConfigurator
+      def self.new: (
+        DatastoreCore::_Client,
+        DatastoreCore::indexDefinition,
+        ::Hash[::String, untyped],
+        io,
+        singleton(::Time)
+      ) -> indexDefinitionConfigurator
+    end
+  end
+end

@@ -1,0 +1,6 @@
+module ElasticGraph
+  module QueryInterceptor
+    module GraphQLExtension: GraphQL
+    end
+  end
+end

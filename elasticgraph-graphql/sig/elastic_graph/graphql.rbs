@@ -1,0 +1,71 @@
+module ElasticGraph
+  class GraphQL
+    attr_reader config: Config
+    attr_reader logger: ::Logger
+    attr_reader runtime_metadata: SchemaArtifacts::RuntimeMetadata::Schema
+    attr_reader graphql_schema_string: ::String
+    attr_reader datastore_core: DatastoreCore
+    attr_reader clock: singleton(::Time)
+
+    extend _BuildableFromParsedYaml[GraphQL]
+    extend Support::FromYamlFile[GraphQL]
+
+    def initialize: (
+      config: Config,
+      datastore_core: DatastoreCore,
+      ?graphql_adapter: Resolvers::GraphQLAdapter?,
+      ?datastore_search_router: DatastoreSearchRouter?,
+      ?filter_interpreter: Filtering::FilterInterpreter?,
+      ?sub_aggregation_grouping_adapter: Aggregation::groupingAdapter?,
+      ?monotonic_clock: Support::MonotonicClock?,
+      ?clock: singleton(::Time)
+    ) -> void
+
+    @graphql_http_endpoint: HTTPEndpoint?
+    def graphql_http_endpoint: () -> HTTPEndpoint
+
+    @graphql_query_executor: QueryExecutor?
+    def graphql_query_executor: () -> QueryExecutor
+
+    @schema: Schema?
+    def schema: () -> Schema
+
+    @datastore_search_router: DatastoreSearchRouter?
+    def datastore_search_router: () -> DatastoreSearchRouter
+
+    @datastore_query_builder: DatastoreQuery::Builder?
+    def datastore_query_builder: () -> DatastoreQuery::Builder
+
+    @graphql_gem_plugins: ::Hash[::Class, ::Hash[::Symbol, untyped]]?
+    def graphql_gem_plugins: () -> ::Hash[::Class, ::Hash[::Symbol, untyped]]
+
+    @graphql_resolvers: ::Array[Resolvers::_Resolver]?
+    def graphql_resolvers: () -> ::Array[Resolvers::_Resolver]
+
+    @datastore_query_adapters: ::Array[_QueryAdapter]?
+    def datastore_query_adapters: () -> ::Array[_QueryAdapter]
+
+    @filter_interpreter: Filtering::FilterInterpreter?
+    def filter_interpreter: () -> Filtering::FilterInterpreter
+
+    @filter_node_interpreter: Filtering::FilterNodeInterpreter?
+    def filter_node_interpreter: () -> Filtering::FilterNodeInterpreter
+
+    @filter_args_translator: Filtering::FilterArgsTranslator?
+    def filter_args_translator: () -> Filtering::FilterArgsTranslator
+
+    @sub_aggregation_grouping_adapter: Aggregation::groupingAdapter?
+    def sub_aggregation_grouping_adapter: () -> Aggregation::groupingAdapter
+
+    @monotonic_clock: Support::MonotonicClock?
+    def monotonic_clock: () -> Support::MonotonicClock
+
+    def load_dependencies_eagerly: () -> void
+
+    private
+
+    @datastore_core: DatastoreCore
+    @graphql_adapter: Resolvers::GraphQLAdapter?
+    EAGER_LOAD_QUERY: ::String
+  end
+end

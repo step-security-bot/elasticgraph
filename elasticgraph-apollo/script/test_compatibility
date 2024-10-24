@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# Abort script at first error, when a command exits with non-zero status.
+# Verbose form of `set -e`.
+set -o errexit
+
+# Attempt to use undefined variable outputs error message, and forces an exit
+# Verbose form of `set -u`.
+set -o nounset
+
+# If set, the return value of a pipeline is the value of the last (rightmost)
+# command to exit with a non-zero status, or zero if all commands in the
+# pipeline exit successfully.
+set -o pipefail
+
+# Print a trace of simple commands.
+# Verbose form of `set -x`.
+set -o xtrace
+
+script_dir=$(dirname $0)
+
+# Default to the Apollo federation version 2.6, as higher versions are not supported by the test suite properly.
+apollo_federation_version=${1:-2.6}
+
+# Latest version as of 2024-05-08. Gotten from:
+# https://www.npmjs.com/package/@apollo/federation-subgraph-compatibility?activeTab=versions
+apollo_subgraph_tests_version=2.2.0
+
+TARGET_APOLLO_FEDERATION_VERSION=$apollo_federation_version bundle exec rake \
+  --rakefile $script_dir/../apollo_tests_implementation/Rakefile schema_artifacts:dump
+
+source $script_dir/export_docker_env_vars.sh
+
+# Running the tests produces some artifacts we don't want at our project root, so we run it from a tmp directory.
+rm -rf $script_dir/../../tmp/apollo_compat_test
+mkdir -p $script_dir/../../tmp/apollo_compat_test
+
+pushd $script_dir/../../tmp/apollo_compat_test
+
+# The latest apollo/federation-subgraph-compatibility tests target federation v2.3, and
+# when we target lower federation versions (e.g. v2.0), we get warnings from some of the tests.
+# So we only want to `--failOnWarning` when targeting federation versions higher versions
+# (e.g. v2.3, v2.5, v2.6).
+additional_flags=$([ "$apollo_federation_version" == "2.0" ] && echo "" || echo "--failOnWarning" )
+
+TARGET_APOLLO_FEDERATION_VERSION=2.3 npx --yes \
+  @apollo/federation-subgraph-compatibility@${apollo_subgraph_tests_version} docker \
+  --compose ../../elasticgraph-apollo/apollo_tests_implementation/docker-compose.yaml \
+  --path /graphql \
+  --schema ../../elasticgraph-apollo/apollo_tests_implementation/config/schema/artifacts/schema.graphql \
+  --debug \
+  --failOnRequired $additional_flags
+
+popd

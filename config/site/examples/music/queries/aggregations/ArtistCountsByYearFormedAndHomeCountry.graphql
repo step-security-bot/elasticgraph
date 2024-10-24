@@ -1,0 +1,14 @@
+query ArtistCountsByYearFormedAndHomeCountry {
+  artistAggregations {
+    nodes {
+      groupedBy {
+        bio {
+          yearFormed
+          homeCountry
+        }
+      }
+
+      count
+    }
+  }
+}

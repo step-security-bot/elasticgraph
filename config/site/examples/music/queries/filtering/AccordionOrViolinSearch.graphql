@@ -1,0 +1,18 @@
+query AccordionOrViolinSearch {
+  artists(filter: {
+    bio: {
+      description: {
+        matchesQuery: {
+          query: "accordion violin"
+        }
+      }
+    }
+  }) {
+    nodes {
+      name
+      bio {
+        description
+      }
+    }
+  }
+}

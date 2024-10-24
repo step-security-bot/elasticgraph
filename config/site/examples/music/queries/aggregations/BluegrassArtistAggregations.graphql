@@ -1,0 +1,40 @@
+query BluegrassArtistAggregations($cursor: Cursor) {
+  artistAggregations(
+    first: 10
+    after: $cursor
+    filter: {bio: {description: {matchesQuery: {query: "bluegrass"}}}}
+  ) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+
+    nodes {
+      groupedBy {
+        bio { yearFormed }
+      }
+
+      aggregatedValues {
+        lifetimeSales {
+          approximateAvg
+          exactMin
+          exactMax
+        }
+      }
+
+      count
+
+      subAggregations {
+        albums(
+          first: 3
+          filter: {tracks: {count: {gt: 10}}}
+        ) {
+          nodes {
+            countDetail { approximateValue }
+          }
+        }
+      }
+    }
+  }
+}
+

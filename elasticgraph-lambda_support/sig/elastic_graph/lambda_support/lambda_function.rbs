@@ -1,0 +1,18 @@
+module ElasticGraph
+  module LambdaSupport
+    interface _LambdaFunctionClass[T]
+      def initialize: () -> void
+      def handle_request: (event: ::Hash[::String, untyped], context: untyped) -> T
+    end
+
+    module LambdaFunction[T]: _LambdaFunctionClass[T]
+      def initialize: (?output: io, ?monotonic_clock: Support::MonotonicClock) -> void
+      def handle_request: (event: ::Hash[::String, untyped], context: untyped) -> T
+
+      private
+
+      def handle_exceptions: [T] () { () -> T } -> T
+      def log_duration: (io, Support::MonotonicClock, ::String) { () -> void } -> void
+    end
+  end
+end

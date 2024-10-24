@@ -1,0 +1,50 @@
+---
+networks:
+  default:
+    name: opensearch
+    external: false
+services:
+  opensearch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: ${VERSION}
+    container_name: opensearch-${VERSION}-${ENV}
+    environment:
+    # Note: we use `discovery.type=single-node` to ensure that the OpenSearch node does not
+    # try to join a cluster (or let another node join it). This prevents problems when you
+    # have multiple projects using elasticgraph-local at the same time. You do not want
+    # their OpenSearch nodes to try to join into a single cluster.
+    - discovery.type=single-node
+    # recommended by https://opensearch.org/downloads.html#minimal
+    - bootstrap.memory_lock=true
+    # We don't want OpenSearch to block writes when the disk allocation passes a threshold for our local/test
+    # OpenSearch we run using this docker setup.
+    # https://stackoverflow.com/a/75962819
+    #
+    # Without this, I frequently get `FORBIDDEN/10/cluster create-index blocked (api)` errors when running tests.
+    - cluster.routing.allocation.disk.threshold_enabled=false
+    - OPENSEARCH_JAVA_OPTS=-Xms4g -Xmx4g
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+    - opensearch:/usr/share/opensearch/data
+    ports:
+    - ${PORT}:9200
+  dashboards:
+    build:
+      context: .
+      dockerfile: UI-Dockerfile
+      args:
+        VERSION: ${VERSION}
+    container_name: dashboards-${VERSION}-${ENV}
+    environment:
+    - OPENSEARCH_HOSTS=http://opensearch:9200
+    - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    ports:
+    - ${UI_PORT}:5601
+volumes:
+  opensearch:

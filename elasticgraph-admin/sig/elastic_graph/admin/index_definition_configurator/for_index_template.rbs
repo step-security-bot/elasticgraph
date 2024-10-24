@@ -1,0 +1,72 @@
+module ElasticGraph
+  class Admin
+    module IndexDefinitionConfigurator
+      class ForIndexTemplate
+        attr_reader index_template: DatastoreCore::IndexDefinition::RolloverIndexTemplate
+
+        def initialize: (
+          DatastoreCore::_Client,
+          DatastoreCore::IndexDefinition::RolloverIndexTemplate,
+          ::Hash[::String, untyped],
+          io,
+          singleton(::Time)
+        ) -> void
+
+        def configure!: () -> void
+        def validate: () -> ::Array[::String]
+
+        private
+
+        @datastore_client: DatastoreCore::_Client
+        @index_template: DatastoreCore::IndexDefinition::RolloverIndexTemplate
+        @env_agnostic_index_config_parent: ::Hash[::String, untyped]
+        @env_agnostic_index_config: ::Hash[::String, untyped]
+        @reporter: ClusterConfigurator::ActionReporter
+        @output: io
+        @clock: singleton(::Time)
+
+        def put_index_template: () -> void
+        def cannot_modify_mapping_field_type_error: () -> ::String
+        def index_template_exists?: () -> bool
+
+        @mapping_removals: ::Array[::String]?
+        def mapping_removals: () -> ::Array[::String]
+
+        @mapping_type_changes: ::Array[::String]?
+        def mapping_type_changes: () -> ::Array[::String]
+
+        def has_mapping_updates?: () -> bool
+
+        @settings_updates: DatastoreCore::indexSettingsHash?
+        def settings_updates: () -> DatastoreCore::indexSettingsHash
+
+        def mapping_fields_from: (DatastoreCore::indexMappingHash, ?::String) -> ::Array[::String]
+
+        def desired_mapping: () -> DatastoreCore::indexMappingHash
+
+        @desired_settings: DatastoreCore::indexSettingsHash?
+        def desired_settings: () -> DatastoreCore::indexSettingsHash
+
+        @desired_config_parent: ::Hash[::String, untyped]
+        def desired_config_parent: () -> ::Hash[::String, untyped]
+
+        def current_mapping: () -> DatastoreCore::indexMappingHash
+
+        @current_settings: DatastoreCore::indexSettingsHash?
+        def current_settings: () -> DatastoreCore::indexSettingsHash
+
+        @current_config_parent: ::Hash[::String, untyped]
+        def current_config_parent: () -> ::Hash[::String, untyped]
+
+        @config_diff: ::String
+        def config_diff: () -> ::String
+
+        def report_action: (::String) -> void
+        def merge_properties: (::Hash[::String, untyped], ::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+
+        @related_index_configurators: ::Array[ForIndex]?
+        def related_index_configurators: () -> ::Array[ForIndex]
+      end
+    end
+  end
+end

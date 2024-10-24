@@ -1,0 +1,17 @@
+query TotalAlbumSales {
+  artistAggregations {
+    nodes {
+      subAggregations {
+        albums {
+          nodes {
+            aggregatedValues {
+              soldUnits {
+                exactSum
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

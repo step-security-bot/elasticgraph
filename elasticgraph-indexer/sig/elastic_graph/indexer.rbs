@@ -1,0 +1,38 @@
+module ElasticGraph
+  class Indexer
+    attr_reader config: Config
+    attr_reader datastore_core: DatastoreCore
+    attr_reader schema_artifacts: schemaArtifacts
+    attr_reader logger: ::Logger
+
+    extend _BuildableFromParsedYaml[Indexer]
+    extend Support::FromYamlFile[Indexer]
+
+    def initialize: (
+      config: Config,
+      datastore_core: DatastoreCore,
+      ?datastore_router: DatastoreIndexingRouter?,
+      ?monotonic_clock: Support::MonotonicClock?,
+      ?clock: singleton(::Time)?
+    ) -> void
+
+    @datastore_router: DatastoreIndexingRouter?
+    def datastore_router: () -> DatastoreIndexingRouter
+
+    @record_preparer_factory: RecordPreparer::Factory?
+    def record_preparer_factory: () -> RecordPreparer::Factory
+
+    @processor: Processor?
+    def processor: () -> Processor
+
+    @operation_factory: Operation::Factory?
+    def operation_factory: () -> Operation::Factory
+
+    @monotonic_clock: Support::MonotonicClock?
+    def monotonic_clock: () -> Support::MonotonicClock
+
+    private
+
+    @clock: singleton(::Time)
+  end
+end

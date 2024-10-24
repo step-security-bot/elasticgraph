@@ -1,0 +1,73 @@
+module ElasticGraph
+  class DatastoreCore
+    module Configuration
+      class IndexDefinitionSupertype
+        attr_reader ignore_routing_values: ::Set[::String]
+        attr_reader query_cluster: ::String
+        attr_reader index_into_clusters: ::Array[::String]
+        attr_reader setting_overrides: ::Hash[::String, untyped]
+        attr_reader setting_overrides_by_timestamp: ::Hash[::String, ::Hash[::String, untyped]]
+        attr_reader custom_timestamp_ranges: ::Array[IndexDefinition::CustomTimestampRange]
+        attr_reader use_updates_for_indexing: bool
+
+        def initialize: (
+          ignore_routing_values: ::Set[::String],
+          query_cluster: ::String,
+          index_into_clusters: ::Array[::String],
+          setting_overrides: ::Hash[::String, untyped],
+          setting_overrides_by_timestamp: ::Hash[::String, ::Hash[::String, untyped]],
+          custom_timestamp_ranges: ::Array[IndexDefinition::CustomTimestampRange],
+          use_updates_for_indexing: bool) -> void
+
+        def with: (
+          ?ignore_routing_values: ::Set[::String],
+          ?query_cluster: ::String,
+          ?index_into_clusters: ::Array[::String],
+          ?setting_overrides: ::Hash[::String, untyped],
+          ?setting_overrides_by_timestamp: ::Hash[::String, ::Hash[::String, untyped]],
+          ?custom_timestamp_ranges: ::Array[IndexDefinition::CustomTimestampRange],
+          ?use_updates_for_indexing: bool) -> IndexDefinition
+      end
+
+      class IndexDefinition < IndexDefinitionSupertype
+        def initialize: (ignore_routing_values: ::Array[::String], **untyped) -> void
+        def without_env_overrides: () -> IndexDefinition
+        def custom_timestamp_range_for: (::Time) -> CustomTimestampRange?
+        def self.definitions_by_name_hash_from: (::Hash[::String, ::Hash[::String, untyped]]) -> ::Hash[::String, IndexDefinition]
+
+        def self.from: (
+          custom_timestamp_ranges: ::Array[::Hash[::String, untyped]],
+          ?use_updates_for_indexing: bool,
+          **untyped) -> IndexDefinition
+
+        class CustomTimestampRangeSupertype
+          attr_reader index_name_suffix: ::String
+          attr_reader setting_overrides: ::Hash[::String, untyped]
+          attr_reader time_set: Support::TimeSet
+
+          def initialize: (
+            index_name_suffix: ::String,
+            setting_overrides: ::Hash[::String, untyped],
+            time_set: Support::TimeSet) -> void
+
+          def with: (
+            ?index_name_suffix: ::String,
+            ?setting_overrides: ::Hash[::String, untyped],
+            ?time_set: Support::TimeSet) -> CustomTimestampRange
+        end
+
+        class CustomTimestampRange < CustomTimestampRangeSupertype
+          def self.ranges_from: (::Array[::Hash[::String, untyped]]) -> ::Array[CustomTimestampRange]
+
+          private
+
+          def self.from: (
+            index_name_suffix: ::String,
+            setting_overrides: ::Hash[::String, untyped],
+            **::String
+          ) -> CustomTimestampRange
+        end
+      end
+    end
+  end
+end

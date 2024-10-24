@@ -1,0 +1,9 @@
+--markup markdown
+--no-private
+--tag dynamic
+--hide-tag dynamic
+--tag implements
+--hide-tag implements
+--exclude bundle
+--exclude spec
+--exclude sig

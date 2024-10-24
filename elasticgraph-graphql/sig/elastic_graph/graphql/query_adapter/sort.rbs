@@ -1,0 +1,15 @@
+module ElasticGraph
+  class GraphQL
+    class QueryAdapter
+      class Sort
+        include _QueryAdapter
+
+        attr_reader order_by_arg_name: ::String
+
+        def initialize: (
+          order_by_arg_name: ::String
+        ) -> void
+      end
+    end
+  end
+end

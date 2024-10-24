@@ -1,0 +1,14 @@
+module ElasticGraph
+  class GraphQL
+    module Resolvers
+      class NestedRelationships
+        include _Resolver
+
+        def initialize: (
+          schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+          logger: ::Logger
+        ) -> void
+      end
+    end
+  end
+end

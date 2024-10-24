@@ -1,0 +1,9 @@
+module ElasticGraph
+  module Support
+    module UntypedEncoder
+      def self.encode: (untyped) -> ::String?
+      def self.decode: (::String?) -> untyped
+      def self.canonicalize: (untyped) -> untyped
+    end
+  end
+end

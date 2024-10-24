@@ -1,0 +1,13 @@
+module ElasticGraph
+  class GraphQL
+    module ScalarCoercionAdapters
+      class Date
+        extend SchemaArtifacts::_ScalarCoercionAdapter[::String, ::String]
+
+        private
+
+        def self.raise_coercion_error: (::String) -> bot
+      end
+    end
+  end
+end

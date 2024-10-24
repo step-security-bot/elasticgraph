@@ -1,0 +1,15 @@
+module ElasticGraph
+  class DatastoreCore
+    module IndexConfigNormalizer
+      READ_ONLY_SETTINGS: ::Array[::String]
+
+      def self.normalize: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+      def self.normalize_mappings: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+
+      private
+
+      def self.normalize_settings: (::Hash[::String, untyped]) -> ::Hash[::String, untyped]
+      def self.normalize_setting_value: (untyped) -> untyped
+    end
+  end
+end

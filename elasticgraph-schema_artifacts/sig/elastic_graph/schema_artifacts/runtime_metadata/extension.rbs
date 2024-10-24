@@ -1,0 +1,33 @@
+module ElasticGraph
+  module SchemaArtifacts
+    module RuntimeMetadata
+      type extensionClass = ::Module | ::Class
+
+      class Extension
+        attr_reader extension_class: extensionClass
+        attr_reader require_path: ::String
+        attr_reader extension_config: ::Hash[::Symbol, untyped]
+
+        def initialize: (
+          extension_class: extensionClass,
+          require_path: ::String,
+          extension_config: ::Hash[::Symbol, untyped]
+        ) -> void
+
+        def self.new:
+          (extension_class: extensionClass, require_path: ::String, extension_config: ::Hash[::Symbol, untyped]) -> Extension
+          | (extensionClass, ::String, ::Hash[::Symbol, untyped]) -> Extension
+
+        def self.load_from_hash: (::Hash[::String, untyped], via: ExtensionLoader) -> Extension
+        def extension_name: () -> ::String
+        def to_dumpable_hash: () -> ::Hash[::String, untyped]
+
+        def with: (
+          ?extension_class: extensionClass,
+          ?require_path: ::String,
+          ?extension_config: ::Hash[::Symbol, untyped]
+        ) -> Extension
+      end
+    end
+  end
+end

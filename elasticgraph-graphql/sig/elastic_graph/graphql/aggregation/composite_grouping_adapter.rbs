@@ -1,0 +1,22 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module CompositeGroupingAdapter
+        def self.meta_name: () -> ::String
+
+        def self.grouping_detail_for: (Query) { () -> ::Hash[::String, untyped] } -> AggregationDetail
+
+        def self.prepare_response_buckets: (
+          ::Hash[::String, untyped],
+          ::Array[::String],
+          ::Hash[::String, untyped]
+        ) -> ::Array[::Hash[::String, untyped]]
+
+        private
+
+        def self.composite_after: (Query) -> ::Hash[::String, untyped]?
+        def self.build_sources: (Query) -> ::Array[::Hash[::String, ::Hash[::String, untyped]]]
+      end
+    end
+  end
+end

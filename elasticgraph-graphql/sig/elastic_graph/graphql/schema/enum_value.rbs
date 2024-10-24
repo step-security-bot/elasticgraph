@@ -1,0 +1,33 @@
+module ElasticGraph
+  class GraphQL
+    class Schema
+      class EnumValueSupertype
+        attr_reader name: ::Symbol
+        attr_reader type: Type
+        attr_reader runtime_metadata: SchemaArtifacts::RuntimeMetadata::Enum::Value
+
+        def initialize: (
+          ::Symbol,
+          Type,
+          SchemaArtifacts::RuntimeMetadata::Enum::Value
+        ) -> void
+
+        def self.with: (
+          name: ::Symbol,
+          type: Type,
+          runtime_metadata: SchemaArtifacts::RuntimeMetadata::Enum::Value
+        ) -> EnumValue
+
+        def with: (
+          ?name: ::Symbol,
+          ?type: Type,
+          ?runtime_metadata: SchemaArtifacts::RuntimeMetadata::Enum::Value
+        ) -> EnumValue
+      end
+
+      class EnumValue < EnumValueSupertype
+        def sort_clauses: () -> ::Array[::Hash[::String, ::Hash[::String, ::String]]]
+      end
+    end
+  end
+end

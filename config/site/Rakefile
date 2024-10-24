@@ -1,0 +1,290 @@
+# Copyright 2024 Block, Inc.
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
+# frozen_string_literal: true
+
+require "elastic_graph/local/rake_tasks"
+require "elastic_graph/query_registry/rake_tasks"
+require "pathname"
+
+module ElasticGraph
+  class SiteRakeTasks < ::Rake::TaskLib
+    SITE_CONFIG_DIR = ::Pathname.new(__dir__)
+    REPO_ROOT = SITE_CONFIG_DIR.parent.parent
+    SITE_SOURCE_DIR = SITE_CONFIG_DIR / "src"
+    YARD_OUTPUT_DIR = SITE_SOURCE_DIR / "docs" / "main"
+    JEKYLL_SITE_DIR = SITE_CONFIG_DIR / "_site"
+    JEKYLL_DATA_DIR = SITE_SOURCE_DIR / "_data"
+    EXAMPLE_SCHEMA_FILES_BY_NAME = SITE_CONFIG_DIR.glob("examples/*/schema.rb").to_h do |file|
+      [file.parent.basename.to_s, file]
+    end
+
+    # The list of currently undocumented gems. Over time we're going to shrink this until it's empty.
+    undocumented_gems = %w[
+      elasticgraph-admin
+      elasticgraph-datastore_core
+      elasticgraph-graphql
+      elasticgraph-health_check
+      elasticgraph-indexer
+      elasticgraph-lambda_support
+      elasticgraph-query_interceptor
+      elasticgraph-query_registry
+      elasticgraph-schema_artifacts
+    ]
+
+    require_relative "../../script/list_eg_gems"
+    DOCUMENTED_GEMS = ::ElasticGraphGems.list - undocumented_gems
+
+    def initialize
+      namespace :site do
+        task build_docs: :render_mermaid do
+          # Clean the docs output directory
+          FileUtils.rm_rf(YARD_OUTPUT_DIR)
+          run_yard_doc_ignoring_expected_warnings
+        end
+
+        # Note: we tried to get this setup as a single task that serves load for all ElasticGraph gems,
+        # but we haven't succeeded in getting that to work. We've only gotten it to work by changing
+        # to a specific gem directory to run the command.
+        namespace :preview_docs do
+          ::ElasticGraphGems.list.each do |gem|
+            desc "Boots a reloading doc server for `#{gem}`."
+            task gem do
+              ::Dir.chdir(gem) do
+                sh "bundle exec yard server --reload"
+              end
+            end
+          end
+        end
+
+        desc "Check documentation coverage"
+        task :docs_coverage do
+          doc_output = run_yard_doc_ignoring_expected_warnings
+
+          coverage = doc_output[/([\d\.]+)% documented/, 1]
+          warning_count = doc_output.scan("[warn]:").count
+          error_count = doc_output.scan("[error]:").count
+
+          if coverage.to_f < 100
+            # Since we do not have 100% coverage, we want to list what is undocumented.
+            #
+            # Note: we don't use this as the main command above because we've observed that
+            # `stats` does not produce as many warnings as `doc`--so we'd rather run `doc`
+            # when detecting warnings, and use `stats --list-undoc` for supplemental output.
+            undoc_output = IO.popen(yard_cmd("stats --list-undoc")).read
+
+            # Just print the output starting with `Undocumented Objects"
+            puts "\n#{undoc_output[/^Undocumented .*/m]}"
+          end
+
+          issues = []
+          issues << "Missing documentation coverage (currently at #{coverage}%)." if coverage.to_f < 100
+          issues << "YARD emitted #{warning_count} documentation warning(s)." if warning_count > 0
+          issues << "YARD emitted #{error_count} documentation error(s)." if error_count > 0
+
+          unless issues.empty?
+            abort <<~EOS
+
+              Documentation has #{issues.size} issues:
+
+              #{issues.map { |i| " - #{i}" }.join("\n")}
+            EOS
+          end
+        end
+
+        desc "Tests all documentation examples."
+        task :doctest do
+          require "yard-doctest"
+
+          # Change the log level to ERROR in order to silence yard warnings.
+          # (We deal with yard warnings in `docs_coverage` and don't want to also print them here.)
+          ::YARD::Logger.instance.enter_level(::Logger::ERROR) do
+            # We change into this directory because `yard-doctest` loads `doctest_helper.rb` from specific paths
+            # such as `support/doctest_helper.rb`.
+            ::Dir.chdir(__dir__) do
+              paths_with_yard_examples = ::ElasticGraphGems.list.map do |gem|
+                "#{REPO_ROOT}/#{gem}/lib"
+              end
+
+              ::YARD::CLI::Doctest.run(*paths_with_yard_examples)
+            end
+          end
+        end
+
+        task :npm_install do
+          ::Dir.chdir(SITE_CONFIG_DIR) do
+            sh "npm install"
+          end
+        end
+
+        task render_mermaid: :npm_install do
+          ::Dir.chdir(SITE_CONFIG_DIR) do
+            sh "npx -p @mermaid-js/mermaid-cli mmdc -i ../../README.md -o ../../tmp/README.md"
+          end
+        end
+
+        desc "Build Jekyll site with freshly generated YARD documentation"
+        task build: [:build_docs, :build_css, "examples:compile_queries"] do
+          sh "bundle exec jekyll build --source #{SITE_SOURCE_DIR} --destination #{JEKYLL_SITE_DIR}"
+        end
+
+        desc "Serve Jekyll site locally"
+        task serve: [:build_docs, :build_css, "examples:compile_queries"] do
+          require "filewatcher"
+
+          # Regenerate the YARD docs anytime we change anything.
+          ::Thread.new do
+            ::Filewatcher.new(DOCUMENTED_GEMS.map { |g| "#{g}/" }).watch do |changes|
+              changed_files = changes.keys.map { |f| ::Pathname.new(f).relative_path_from(REPO_ROOT) }.sort
+              puts "#{changed_files.size} files changed (#{changed_files.join(", ")}). Regenerating YARD docs..."
+              run_yard_doc_ignoring_expected_warnings
+            end
+          end
+
+          # Re-compile queries when any of the examples change.
+          ::Thread.new do
+            ::Filewatcher.new(EXAMPLE_SCHEMA_FILES_BY_NAME.values.map { |f| "#{f.parent}/" }, exclude: "**/*.variables.yaml").watch do |changes|
+              changed_files = changes.keys.map { |f| ::Pathname.new(f).relative_path_from(REPO_ROOT) }.sort
+
+              puts "#{changed_files.size} files changed (#{changed_files.join(", ")}). Recompiling GraphQL queries into data files..."
+              changed_files.each do |file|
+                t1 = ::Time.now
+                example_schema = file.to_s.split("/")[3]
+                task = ::Rake::Task["site:examples:#{example_schema}:compile_queries"]
+                task.all_prerequisite_tasks.each(&:reenable)
+                task.tap(&:reenable).invoke
+                t2 = ::Time.now
+
+                puts "Done in #{(t2 - t1).round(3)} seconds."
+              rescue => e
+                # Print validation errors and allow the filewatcher to continue.
+                puts <<~EOS
+                  #{e.class}: #{e.message}
+
+                  #{e.backtrace.join("\n")}
+                EOS
+              end
+            end
+          end
+
+          sh "bundle exec jekyll serve --source #{SITE_SOURCE_DIR} --destination #{JEKYLL_SITE_DIR} --trace"
+        end
+
+        desc "Perform validations of the website, including doc tests and doc coverage"
+        task validate: [:build, :docs_coverage, :doctest]
+
+        task build_css: :npm_install do
+          require "rouge"
+
+          ::Dir.chdir(SITE_SOURCE_DIR) do
+            sh "npm run build:css"
+            # tulip appears to provide the best looking syntax highlighting theme of all the built-in rouge themes.
+            ::File.write("assets/css/highlight.css", ::Rouge::Theme.find("tulip").render(scope: ".highlight"))
+          end
+        end
+
+        namespace :examples do
+          task compile_queries: EXAMPLE_SCHEMA_FILES_BY_NAME.keys.map { |schema| "#{schema}:compile_queries" }
+
+          EXAMPLE_SCHEMA_FILES_BY_NAME.each do |schema_name, schema_file|
+            example_dir = schema_file.parent
+            settings_file = example_dir / "local_settings.yaml"
+            queries_dir = example_dir / "queries"
+
+            namespace schema_name do
+              ::ElasticGraph::Local::RakeTasks.new(local_config_yaml: settings_file, path_to_schema: schema_file) do |tasks|
+                tasks.opensearch_versions = []
+                tasks.enforce_json_schema_version = false
+              end
+              ::ElasticGraph::QueryRegistry::RakeTasks.from_yaml_file(settings_file, queries_dir)
+
+              task "query_registry:validate_queries" => ["schema_artifacts:dump", "query_registry:dump_variables:all"]
+
+              task compile_queries: "query_registry:validate_queries" do
+                queries_by_name_by_category = queries_dir.children.to_h do |category_path|
+                  queries_by_name = category_path.glob("*.graphql").to_h do |query_path|
+                    [query_path.basename.sub_ext("").to_s, query_path.read.strip]
+                  end
+
+                  [category_path.basename.to_s, queries_by_name]
+                end
+
+                ::FileUtils.mkdir_p JEKYLL_DATA_DIR
+                ::File.write(::File.join(JEKYLL_DATA_DIR, "#{schema_name}_queries.yaml"), ::YAML.dump(queries_by_name_by_category))
+              end
+            end
+          end
+        end
+      end
+    end
+
+    # Yard doesn't allow us to suppress warnings. Warnings are for code constructs its not able to understand, and sometimes we're ok
+    # with that (e.g. when the alternative is making the code worse or more verbose). Here we suppress warnings using custom logic:
+    # we filter out specific warnings that we don't want to be notified about.
+    YARD_WARNINGS_TO_IGNORE = {
+      # `Data.define` metaprograms a superclass and there's not a way to avoid the warning:
+      # https://github.com/lsegal/yard/issues/1533
+      # https://github.com/lsegal/yard/issues/1477#issuecomment-1399339983
+      "`Data.define` superclass" =>
+        # https://rubular.com/r/lecYmbp981T4LY
+        /^\[warn\]: in YARD::Handlers::Ruby::ClassHandler: Undocumentable superclass \(class was added without superclass\)\n\s+in file[^\n]+\n\n\s+\d+:[^\n]*?(Data\.define|Struct.new)[^\n]*\n\n/m,
+
+      # We sometimes include/extend/prepend a mixin that is a dynamic module
+      # (e.g. `include Mixins::HasReadableToSAndInspect.new`) and YARD isn't able to understand this.
+      # That's fine, and we don't want a warning for this.
+      "Undocumentable mixin" =>
+        # https://rubular.com/r/o0Daj0rKgNLes0
+        /^\[warn\]: in YARD::Handlers::Ruby::(Extend|Mixin)Handler: Undocumentable mixin: YARD::Parser::UndocumentableError[^\n]*\n\s+in file[^\n]+\n\n\s+\d+: (include|extend|prepend) [A-Za-z:]+\.new[^\n]*\n\n/m
+    }
+
+    def run_yard_doc_ignoring_expected_warnings
+      command = yard_cmd("doc")
+      puts "#{command}\n\n"
+
+      t1 = ::Time.now
+      doc_output = IO.popen(command).read
+      t2 = ::Time.now
+
+      ignored_warnings_output = YARD_WARNINGS_TO_IGNORE.filter_map do |warning, regex|
+        if (count = doc_output.scan(regex).count) > 0
+          "Ignored #{count} #{warning} warning(s)."
+        end
+      end.join("\n")
+
+      filtered_output = YARD_WARNINGS_TO_IGNORE.values.reduce(doc_output) { |accum, regex| accum.gsub(regex, "") }
+
+      <<~EOS.strip.tap { |output| puts output }
+        YARD doc generation took #{(t2 - t1).round(3)} seconds.
+        #{ignored_warnings_output}
+
+        #{filtered_output}
+      EOS
+    end
+
+    yardopts_from_file = ::File.read(::File.expand_path("yardopts", __dir__))
+      .split("\n")
+      .map(&:strip)
+      .reject(&:empty?)
+
+    YARD_DOC_OPTS = [
+      "--output-dir #{YARD_OUTPUT_DIR}",
+      "--db #{SITE_CONFIG_DIR}/.yardoc",
+      "--main tmp/README.md",
+      *yardopts_from_file,
+      *DOCUMENTED_GEMS
+    ].join(" ")
+
+    def yard_cmd(subcmd)
+      assets = Dir.glob("tmp/README-*.svg").map do |svg_file|
+        "--asset #{svg_file}:#{::File.basename(svg_file)}"
+      end
+
+      "bundle exec yard #{subcmd} #{YARD_DOC_OPTS} #{assets.join(" ")}"
+    end
+  end
+end
+
+ElasticGraph::SiteRakeTasks.new

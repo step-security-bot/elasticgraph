@@ -1,0 +1,28 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      class ScriptTermGroupingSuperclass
+        attr_reader field_path: fieldPath
+        attr_reader script_id: ::String
+        attr_reader params: ::Hash[::String, untyped]
+
+        def initialize: (
+          field_path: fieldPath,
+          script_id: ::String,
+          params: ::Hash[::String, untyped]
+        ) -> void
+
+        def with: (
+          ?field_path: fieldPath,
+          ?script_id: ::String,
+          ?params: ::Hash[::String, untyped],
+        ) -> ScriptTermGrouping
+      end
+
+      class ScriptTermGrouping < ScriptTermGroupingSuperclass
+        include TermGrouping
+        include _TermGroupingSubtype
+      end
+    end
+  end
+end

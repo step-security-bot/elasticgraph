@@ -1,0 +1,18 @@
+query PhraseSearch {
+  artists(filter: {
+    bio: {
+      description:{
+        matchesPhrase: {
+          phrase: "Ed Sullivan Show"
+        }
+      }
+    }
+  }) {
+    nodes {
+      name
+      bio {
+        description
+      }
+    }
+  }
+}

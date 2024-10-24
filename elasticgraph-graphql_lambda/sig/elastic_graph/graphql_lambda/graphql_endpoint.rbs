@@ -1,0 +1,28 @@
+module ElasticGraph
+  module GraphQLLambda
+    class GraphQLEndpoint
+      LAMBDA_TIMEOUT_BUFFER_MS: ::Integer
+      LAMBDA_MAX_RESPONSE_PAYLOAD_BYTES: ::Integer
+      type lambdaHTTPResponse = {statusCode: ::Integer, body: ::String, headers: ::Hash[::String, ::String]}
+
+      def initialize: (GraphQL) -> void
+
+      def handle_request: (
+        event: ::Hash[::String, untyped],
+        context: LambdaContext
+      ) -> lambdaHTTPResponse
+
+      private
+
+      @graphql_http_endpoint: GraphQL::HTTPEndpoint
+      @logger: ::Logger
+      @monotonic_clock: Support::MonotonicClock
+
+      def request_from: (::Hash[::String, untyped]) -> GraphQL::HTTPRequest
+      def convert_response: (GraphQL::HTTPResponse) -> lambdaHTTPResponse
+      def url_from: (::Hash[::String, untyped]) -> ::String
+      def http_method_from: (::Hash[::String, untyped]) -> ::Symbol
+      def content_too_large_response: (GraphQL::HTTPResponse) -> GraphQL::HTTPResponse
+    end
+  end
+end

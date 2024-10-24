@@ -1,0 +1,17 @@
+module ElasticGraph
+  class Indexer
+    type operationType = :upsert | :delete | :update
+    type datastoreBulkPayload = ::Array[::Hash[::Symbol | ::String, untyped]]
+
+    interface _Operation
+      def to_datastore_bulk: () -> datastoreBulkPayload
+      def event: () -> event
+      def destination_index_def: () -> DatastoreCore::indexDefinition
+      def categorize: (::Hash[::String, untyped]) -> Operation::Result
+      def doc_id: () -> ::String
+      def type: () -> operationType
+      def description: () -> ::String
+      def versioned?: () -> bool
+    end
+  end
+end

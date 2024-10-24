@@ -1,0 +1,20 @@
+module ElasticGraph
+  class DatastoreCore
+    module IndexDefinition
+      module Base: _IndexDefinitionImplementationMethods
+        include _IndexDefinitionCommonMethods
+
+        @flattened_env_setting_overrides: ::Hash[::String, untyped]
+        @all_accessible_cluster_names: ::Array[::String]?
+        @accessible_cluster_names_to_index_into: ::Array[::String]?
+        @known_related_query_rollover_indices: ::Array[RolloverIndex]?
+        @searches_could_hit_incomplete_docs: bool
+        @list_counts_field_paths_for_source: ::Hash[::String, ::Set[::String]]
+
+        private
+
+        def identify_list_counts_field_paths_for_source: (::String) -> ::Set[::String]
+      end
+    end
+  end
+end

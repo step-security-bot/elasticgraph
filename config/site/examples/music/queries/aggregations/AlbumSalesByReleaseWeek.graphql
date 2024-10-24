@@ -1,0 +1,23 @@
+query AlbumSalesByReleaseWeek {
+  artistAggregations {
+    nodes {
+      subAggregations {
+        albums {
+          nodes {
+            groupedBy {
+              releasedOn {
+                asDate(truncationUnit: WEEK, offset: {amount: -1, unit: DAY})
+              }
+            }
+
+            aggregatedValues {
+              soldUnits {
+                exactSum
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

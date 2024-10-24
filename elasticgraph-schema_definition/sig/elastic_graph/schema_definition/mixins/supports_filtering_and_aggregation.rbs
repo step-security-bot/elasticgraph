@@ -1,0 +1,34 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      interface _FilterableAndAggregatableType
+        def schema_def_state: () -> State
+        def name: () -> ::String
+        def type_ref: () -> SchemaElements::TypeReference
+        def mapping_options: () -> HasTypeInfo::optionsHash
+        def indexed?: () -> bool
+        def abstract?: () -> bool
+        def graphql_only?: () -> bool
+        def runtime_metadata: (::Array[SchemaArtifacts::RuntimeMetadata::UpdateTarget]) -> SchemaArtifacts::RuntimeMetadata::ObjectType
+        def graphql_fields_by_name: () -> ::Hash[::String, SchemaElements::Field]
+      end
+
+      module SupportsFilteringAndAggregation: _FilterableAndAggregatableType
+        def supports?: () { (SchemaElements::Field) -> bool } -> bool
+        def does_not_support?: () { (SchemaElements::Field) -> bool } -> bool
+        def derived_graphql_types: () -> ::Array[SchemaElements::graphQLType]
+        def has_custom_mapping_type?: () -> bool
+
+        private
+
+        def to_input_filters: () -> ::Array[SchemaElements::InputType]
+        def sub_aggregation_types_for_nested_field_references: () -> ::Array[SchemaElements::ObjectType]
+        def build_aggregation_sub_aggregations_types: () -> ::Array[SchemaElements::ObjectType]
+        def to_indexed_aggregation_type: () -> SchemaElements::ObjectType?
+        def to_grouped_by_type: () -> SchemaElements::ObjectType?
+        def to_aggregated_values_type: () -> SchemaElements::ObjectType?
+        def new_non_empty_object_type: (::String) { (SchemaElements::ObjectType) -> void } -> SchemaElements::ObjectType?
+      end
+    end
+  end
+end

@@ -1,0 +1,10 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class SortOrderEnumValue < EnumValue
+        attr_reader sort_order_field_path: ::Array[Field]
+        def initialize: (EnumValue, ::Array[Field]) -> void
+      end
+    end
+  end
+end

@@ -1,0 +1,23 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class EnumValueNamerSupertype
+        attr_reader overrides_by_type_name: ::Hash[::String, ::Hash[::String, ::String]]
+        def initialize: (overrides_by_type_name: ::Hash[::String, ::Hash[::String, ::String]]) -> void
+      end
+
+      class EnumValueNamer < EnumValueNamerSupertype
+        @used_value_names_by_type_name: ::Hash[::String, ::Array[::String]]
+        def initialize: (?::Hash[::String | ::Symbol, ::Hash[::String | ::Symbol, ::String]]) -> void
+        def name_for: (::String, ::String) -> ::String
+        def unused_overrides: () -> ::Hash[::String, ::Hash[::String, ::String]]
+        def used_value_names_by_type_name: () -> ::Hash[::String, ::Array[::String]]
+
+        private
+
+        def validate_overrides: (::Hash[::String, ::Hash[::String, ::String]]) -> void
+        def notify_problems: (::Array[::String]) -> void
+      end
+    end
+  end
+end

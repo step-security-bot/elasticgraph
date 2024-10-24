@@ -1,0 +1,44 @@
+module ElasticGraph
+  module Local
+    class RakeTasks < ::Rake::TaskLib
+      attr_accessor index_document_sizes: bool
+      attr_accessor schema_element_name_form: :snake_case | :camelCase
+      attr_accessor schema_element_name_overrides: ::Hash[::Symbol, ::String]
+      attr_accessor derived_type_name_formats: ::Hash[::Symbol, ::String]
+      attr_accessor type_name_overrides: ::Hash[::Symbol, ::String]
+      attr_accessor enum_value_overrides_by_type: ::Hash[::Symbol, ::Hash[::Symbol, ::String]]
+      attr_accessor schema_definition_extension_modules: ::Array[::Module]
+      attr_accessor enforce_json_schema_version: bool
+      attr_accessor elasticsearch_versions: ::Array[::String]
+      attr_accessor opensearch_versions: ::Array[::String]
+      attr_accessor env_port_mapping: ::Hash[::String, ::Integer]
+      attr_accessor output: io
+      attr_accessor daemon_timeout: ::Integer
+
+      UI_PORT_OFFSET: ::Integer
+      VALID_PORT_RANGE: ::Range[::Integer]
+
+      def define_fake_data_batch_for: (::Symbol) { (::Array[::Hash[::String, untyped]]) -> void } -> void
+
+      def initialize: (
+        local_config_yaml: ::String | ::Pathname,
+        path_to_schema: ::String | ::Pathname
+      ) ?{ (RakeTasks) -> void } -> void
+
+      @local_config_yaml: ::String
+      @fake_data_batch_generator_by_type: ::Hash[::Symbol, ^(::Array[::Hash[::String, untyped]]) -> void]
+
+      private
+
+      def define_docker_tasks: (::String, ::String, ::Array[::String], ::Regexp) -> void
+      def define_docker_tasks_for_version: (::String, ::Symbol, ::String, port: ::Integer, version: ::String, env: ::String, ready_log_line: ::Regexp) -> void
+      def define_other_tasks: () -> void
+
+      @local_datastore_port: ::Integer?
+      def local_datastore_port: () -> ::Integer
+
+      @local_config: ::Hash[::String, untyped]?
+      def local_config: () -> ::Hash[::String, untyped]
+    end
+  end
+end

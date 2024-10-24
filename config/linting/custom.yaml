@@ -1,0 +1,266 @@
+AllCops:
+  TargetRubyVersion: 3.2
+  DisplayCopNames: true
+  Exclude:
+    - bin/**/*
+    - bundle/**/*
+    - tmp/**/*
+    - vendor/**/*
+    - "*/bin/**/*"
+    - "*/bundle/**/*"
+    - "*/tmp/**/*"
+    - "*/vendor/**/*"
+
+# Put any custom Rubocop configuration here. Note, however, that standardrb (which wraps rubocop)
+# does not allow its lint settings to be overriden--we can only add new cops here, so please confirm
+# that any new cops added here are actually effective.
+
+require:
+  - rubocop-factory_bot
+  - rubocop-rake
+  - rubocop-rspec
+  - ./custom_cops/require_standard_comment_header
+
+ElasticGraph/RequireStandardCommentHeader:
+  Enabled: true
+
+
+FactoryBot/AssociationStyle:
+  Enabled: false
+FactoryBot/AttributeDefinedStatically:
+  Enabled: true
+FactoryBot/ConsistentParenthesesStyle:
+  Enabled: false
+FactoryBot/CreateList:
+  Enabled: false
+FactoryBot/FactoryAssociationWithStrategy:
+  Enabled: false
+FactoryBot/FactoryClassName:
+  Enabled: false
+FactoryBot/FactoryNameStyle:
+  Enabled: true
+FactoryBot/IdSequence:
+  Enabled: false
+FactoryBot/RedundantFactoryOption:
+  Enabled: true
+FactoryBot/SyntaxMethods:
+  Enabled: false
+
+
+Rake/ClassDefinitionInTask:
+  Enabled: true
+Rake/Desc:
+  Enabled: true
+Rake/DuplicateNamespace:
+  Enabled: true
+Rake/DuplicateTask:
+  Enabled: true
+Rake/MethodDefinitionInTask:
+  Enabled: true
+
+
+RSpec/AlignLeftLetBrace:
+  Enabled: false
+RSpec/AlignRightLetBrace:
+  Enabled: false
+RSpec/AnyInstance:
+  Enabled: false
+RSpec/AroundBlock:
+  Enabled: true
+RSpec/Be:
+  Enabled: true
+RSpec/BeEmpty:
+  Enabled: false
+RSpec/BeEq:
+  Enabled: false
+RSpec/BeEql:
+  Enabled: false
+RSpec/BeNil:
+  Enabled: false
+RSpec/BeforeAfterAll:
+  Enabled: false
+RSpec/ChangeByZero:
+  Enabled: true
+RSpec/ClassCheck:
+  Enabled: false
+RSpec/ContainExactly:
+  Enabled: false
+RSpec/ContextMethod:
+  Enabled: false
+RSpec/ContextWording:
+  Enabled: false
+RSpec/DescribeClass:
+  Enabled: false
+RSpec/DescribeMethod:
+  Enabled: false
+RSpec/DescribeSymbol:
+  Enabled: true
+RSpec/DescribedClass:
+  Enabled: false
+RSpec/DescribedClassModuleWrapping:
+  Enabled: false
+RSpec/Dialect:
+  Enabled: false
+RSpec/DuplicatedMetadata:
+  Enabled: true
+RSpec/EmptyExampleGroup:
+  Enabled: true
+RSpec/EmptyHook:
+  Enabled: true
+RSpec/EmptyLineAfterExample:
+  Enabled: false
+RSpec/EmptyLineAfterExampleGroup:
+  Enabled: false
+RSpec/EmptyLineAfterFinalLet:
+  Enabled: false
+RSpec/EmptyLineAfterHook:
+  Enabled: false
+RSpec/EmptyLineAfterSubject:
+  Enabled: false
+RSpec/EmptyMetadata:
+  Enabled: true
+RSpec/Eq:
+  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/ExampleWithoutDescription:
+  Enabled: true
+  EnforcedStyle: always_allow
+RSpec/ExampleWording:
+  Enabled: false
+RSpec/ExcessiveDocstringSpacing:
+  Enabled: true
+RSpec/ExpectActual:
+  Enabled: true
+RSpec/ExpectChange:
+  Enabled: false
+RSpec/ExpectInHook:
+  Enabled: false
+RSpec/ExpectInLet:
+  Enabled: false
+RSpec/ExpectOutput:
+  Enabled: false
+RSpec/Focus:
+  Enabled: false
+RSpec/HookArgument:
+  Enabled: false
+RSpec/HooksBeforeExamples:
+  Enabled: false
+RSpec/IdenticalEqualityAssertion:
+  Enabled: true
+RSpec/ImplicitBlockExpectation:
+  Enabled: false
+RSpec/ImplicitExpect:
+  Enabled: false
+RSpec/ImplicitSubject:
+  Enabled: false
+RSpec/IndexedLet:
+  Enabled: false
+RSpec/InstanceSpy:
+  Enabled: true
+RSpec/InstanceVariable:
+  Enabled: false
+RSpec/ItBehavesLike:
+  Enabled: false
+RSpec/IteratedExpectation:
+  Enabled: false
+RSpec/LeadingSubject:
+  Enabled: false
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+RSpec/LetBeforeExamples:
+  Enabled: false
+RSpec/LetSetup:
+  Enabled: false
+RSpec/MatchArray:
+  Enabled: false
+RSpec/MessageChain:
+  Enabled: false
+RSpec/MessageExpectation:
+  Enabled: false
+RSpec/MessageSpies:
+  Enabled: false
+RSpec/MetadataStyle:
+  Enabled: false
+RSpec/MissingExampleGroupArgument:
+  Enabled: false
+RSpec/MultipleDescribes:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+RSpec/MultipleSubjects:
+  Enabled: true
+RSpec/NamedSubject:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
+RSpec/NoExpectationExample:
+  Enabled: false
+RSpec/NotToNot:
+  Enabled: false
+RSpec/OverwritingSetup:
+  Enabled: true
+RSpec/Pending:
+  Enabled: false
+RSpec/PendingWithoutReason:
+  Enabled: false
+RSpec/PredicateMatcher:
+  Enabled: false
+RSpec/ReceiveCounts:
+  Enabled: false
+RSpec/ReceiveMessages:
+  Enabled: false
+RSpec/ReceiveNever:
+  Enabled: false
+RSpec/RedundantAround:
+  Enabled: true
+RSpec/RepeatedDescription:
+  Enabled: false
+RSpec/RepeatedExample:
+  Enabled: false
+RSpec/RepeatedExampleGroupBody:
+  Enabled: false
+RSpec/RepeatedExampleGroupDescription:
+  Enabled: false
+RSpec/RepeatedIncludeExample:
+  Enabled: true
+RSpec/ReturnFromStub:
+  Enabled: false
+RSpec/ScatteredLet:
+  Enabled: false
+RSpec/ScatteredSetup:
+  Enabled: false
+RSpec/SharedContext:
+  Enabled: false
+RSpec/SharedExamples:
+  Enabled: false
+RSpec/SingleArgumentMessageChain:
+  Enabled: false
+RSpec/SkipBlockInsideExample:
+  Enabled: true
+RSpec/SortMetadata:
+  Enabled: false
+RSpec/SpecFilePathFormat:
+  Enabled: false
+RSpec/SpecFilePathSuffix:
+  Enabled: true
+RSpec/StubbedMock:
+  Enabled: false
+RSpec/SubjectDeclaration:
+  Enabled: false
+RSpec/SubjectStub:
+  Enabled: false
+RSpec/UnspecifiedException:
+  Enabled: false
+RSpec/VariableDefinition:
+  Enabled: false
+RSpec/VariableName:
+  Enabled: false
+RSpec/VerifiedDoubleReference:
+  Enabled: false
+RSpec/VoidExpect:
+  Enabled: true
+RSpec/Yield:
+  Enabled: false

@@ -1,0 +1,25 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      # Note: this is a partial signature definition (`union_type.rb` is ignored in `Steepfile`)
+      class UnionType
+        include _IndexableType
+        include Mixins::CanBeGraphQLOnly
+        include Mixins::HasDocumentation
+        include Mixins::HasIndices
+        include Mixins::HasDirectives
+        include Mixins::SupportsFilteringAndAggregation
+        include Mixins::HasDerivedGraphQLTypeCustomizations
+
+        attr_reader schema_def_state: State
+        attr_reader subtype_refs: ::Set[TypeReference]
+
+        def initialize: (State, ::String) { (UnionType) -> void } -> void
+        def graphql_fields_by_name: () -> ::Hash[String, Field]
+        def subtype: (::String) -> void
+        def subtypes: (*::String) -> void
+        def mapping_options: () -> ::Hash[::Symbol, untyped]
+      end
+    end
+  end
+end

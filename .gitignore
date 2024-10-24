@@ -1,0 +1,73 @@
+# We support running commands from the repository root or from a gem subdirectory.
+# To support that, many/most of our ignores are duplicated at both levels.
+
+# Ignore bundler and steep artifacts.
+/bin/
+/bundle/
+/.bundle
+Gemfile.lock
+rbs_collection.lock.yaml
+/*/bin/
+/*/bundle/
+/*/.bundle
+/*/Gemfile.lock
+/*/rbs_collection.lock.yaml
+
+# Allows customization of the bundle for things like pry, debugger, etc.
+Gemfile-custom
+
+# Ignore log and temp files.
+/log/*
+/tmp/*
+/*/log/*
+/*/tmp/*
+
+# Ignore artifacts from building the gems.
+/pkg/
+/*/pkg/
+
+# Ignore Byebug command history file.
+.byebug_history
+/*/.byebug.history
+
+# Ignore local rspec config
+.rspec-local
+/*/.rspec-local
+
+# Ignore RBS collection directory--it can be regenerated from `rbs_collection.lockl.yaml`.
+.gem_rbs_collection
+
+# Mac OSX file.
+.DS_Store
+/*/.DS_Store
+
+# This is git-ignored because we dynamically gnerate it from test.yaml.template on each test run
+# based on which datastore backend is being used.
+/config/settings/test.yaml
+
+# We don't want to commit these artifacts to source control
+/elasticgraph-apollo/apollo_tests_implementation/config/schema/artifacts/
+
+# Allow specifying a Ruby version locally
+.ruby-version
+
+# Ignore Bundler artifacts for our `config/release/Gemfile` bundle.
+/config/release/.bundle
+/config/release/vendor/bundle
+
+# Ignore YARD documentation artifacts
+/**/.yardoc/
+config/site/doc/
+
+# Ignore Jekyll generated site artifacts
+config/site/_site
+config/site/src/docs
+config/site/src/_data/*_queries.yaml
+config/site/.jekyll-metadata
+config/site/package-lock.json
+config/site/examples/*/schema_artifacts
+config/site/examples/*/queries/*/*.variables.yaml
+
+# Ignore the generated CSS
+config/site/src/assets/css/main.css
+config/site/src/assets/css/highlight.css

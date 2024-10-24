@@ -1,0 +1,32 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class EnumTypeSuperclass
+        attr_reader schema_def_state: State
+        attr_reader type_ref: TypeReference
+        attr_accessor for_output: bool
+        attr_reader values_by_name: ::Hash[::String, EnumValue]
+
+        def initialize: (
+          State,
+          TypeReference,
+          bool,
+          ::Hash[::String, EnumValue]) -> void
+      end
+
+      class EnumType < EnumTypeSuperclass
+        include Mixins::CanBeGraphQLOnly
+        include Mixins::HasDirectives
+        include Mixins::HasDocumentation
+        include Mixins::HasDerivedGraphQLTypeCustomizations
+        include _Type
+        def initialize: (State, ::String) ?{ (EnumType) -> void } -> void
+        def aggregated_values_type: () -> TypeReference
+        def value: (::String) ?{ (EnumValue) -> void } -> void
+        def values: (*::String) -> void
+        def runtime_metadata: () -> SchemaArtifacts::RuntimeMetadata::Enum::Type
+        def as_input: () -> EnumType
+      end
+    end
+  end
+end

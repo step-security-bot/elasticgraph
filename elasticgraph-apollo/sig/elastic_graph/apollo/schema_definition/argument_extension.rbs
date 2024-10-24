@@ -1,0 +1,10 @@
+module ElasticGraph
+  module Apollo
+    module SchemaDefinition
+      module ArgumentExtension: ElasticGraph::SchemaDefinition::SchemaElements::Argument
+        include ApolloDirectives::Inaccessible
+        include ApolloDirectives::Tag
+      end
+    end
+  end
+end

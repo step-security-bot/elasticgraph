@@ -1,0 +1,49 @@
+module ElasticGraph
+  module Support
+    class TimeSetSupertype
+      def initialize: (ranges: ::Set[TimeSet::timeRange]) -> void
+      attr_reader ranges: ::Set[TimeSet::timeRange]
+    end
+
+    class TimeSet < TimeSetSupertype
+      include _NegatableSet[TimeSet]
+      type timeRange = ::Range[::Time?]
+
+      def self.of_range: (
+        ?gt: ::Time?,
+        ?gte: ::Time?,
+        ?lt: ::Time?,
+        ?lte: ::Time?,
+      ) -> TimeSet
+
+      def self.of_times: (::Enumerable[::Time]) -> TimeSet
+      def self.of_range_objects: (::Array[timeRange] | ::Set[timeRange]) -> TimeSet
+
+      ALL: TimeSet
+      EMPTY: TimeSet
+
+      def member?: (::Time?) -> bool
+      def intersect?: (TimeSet) -> bool
+      def empty?: () -> bool
+      def -: (TimeSet) -> TimeSet
+
+      def self.new: (ranges: ::Array[timeRange] | ::Set[timeRange]) -> instance
+                  | (::Array[timeRange] | ::Set[timeRange]) -> instance
+
+      private
+
+      def initialize: (ranges: ::Array[timeRange] | ::Set[timeRange]) -> void
+      CONSECUTIVE_TIME_INCREMENT: ::Rational
+      def ranges_intersect?: (timeRange, timeRange) -> bool
+      def adjacent?: (timeRange, timeRange) -> bool
+      def intersect_ranges: (timeRange, timeRange) -> timeRange?
+      def merge_overlapping_or_adjacent_ranges: (::Set[timeRange]) -> ::Set[timeRange]
+      def nil_or: (:min | :max, from: [::Time?, ::Time?]) -> ::Time?
+      def descending_range?: (timeRange) -> bool
+
+      module RangeFactory
+        def self.build_non_empty: (::Time?, ::Time?) -> timeRange?
+      end
+    end
+  end
+end

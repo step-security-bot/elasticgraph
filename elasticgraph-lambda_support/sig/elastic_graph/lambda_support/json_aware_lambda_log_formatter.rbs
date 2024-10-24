@@ -1,0 +1,7 @@
+module ElasticGraph
+  module LambdaSupport
+    class JSONAwareLambdaLogFormatter < ::Logger::Formatter
+      FORMAT: String
+    end
+  end
+end

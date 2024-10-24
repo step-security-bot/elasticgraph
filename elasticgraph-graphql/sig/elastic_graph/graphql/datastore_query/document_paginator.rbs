@@ -1,0 +1,12 @@
+module ElasticGraph
+  class GraphQL
+    class DatastoreQuery
+      # Note: this class is not fully type checked yet.
+      class DocumentPaginator
+        attr_reader paginator: Paginator[DatastoreResponse::Document]
+
+        def sort: () -> ::Array[::Hash[::String, untyped]]
+      end
+    end
+  end
+end

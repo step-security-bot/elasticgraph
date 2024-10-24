@@ -1,0 +1,15 @@
+module ElasticGraph
+  module Support
+    module FromYamlFile[T]: _BuildableFromParsedYaml[T]
+      def from_yaml_file: (
+        ::String,
+        ?datastore_client_customization_block: (^(untyped) -> void)?
+      ) ?{ (parsedYamlSettings) -> parsedYamlSettings } -> T
+
+      class ForRakeTasks[T] < ::Module
+        def initialize: (_BuildableFromParsedYaml[untyped]) -> void
+        def from_yaml_file: (::String, *untyped, **untyped) -> T
+      end
+    end
+  end
+end

@@ -1,0 +1,12 @@
+query FindArtistsWithBios {
+  artists(filter: {
+    bio: {description: {not: {equalToAnyOf: [null]}}}
+  }) {
+    nodes {
+      name
+      bio {
+        description
+      }
+    }
+  }
+}

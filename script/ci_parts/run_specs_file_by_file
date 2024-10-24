@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+source "script/ci_parts/setup_env" "test" $1 $2
+
+# We don't want to track coverage when we run each spec file individually, as we don't expect 100% coverage
+# of entire gems when just one spec file is run.
+unset COVERAGE
+
+# Setup standalone binstubs for RSpec that we use below.
+bundle _$bundler_version\_ install --standalone && bundle _$bundler_version\_ binstubs rspec-core --standalone
+
+function run_gem_specs_file_by_file() {
+  gem=$1
+  pushd $gem
+    for file in `find spec -iname '*_spec.rb'`; do
+      echo "Running $file"
+
+      # Note: here we avoid using `bundle exec`, opting for a binstub instead.
+      # Our `bundle install` command (with `--standalone` and `binstubs` options) creates the
+      # rspec binstub in a way where it won't actually load bundler at runtime. This is
+      # *slightly* faster. Not enough to usually matter, but it adds up when we boot rspec
+      # once for each spec file as we do here!
+      ../bin/rspec $file -b --format progress --no-profile
+    done
+  popd
+}
+
+echo "Running each spec file, one-by-one..."
+
+for gem in $gems_to_build_with_datastore_booted; do
+  run_gem_specs_file_by_file $gem
+done
+
+halt_datastore_daemon
+
+for gem in $gems_to_build_with_datastore_halted; do
+  run_gem_specs_file_by_file $gem
+done

@@ -1,0 +1,9 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Mixins
+      module VerifiesGraphQLName: _NamedElement
+        def self.verify_name!: (::String) -> void
+      end
+    end
+  end
+end

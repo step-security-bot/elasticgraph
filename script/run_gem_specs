@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+source "script/ci_parts/setup_env"
+
+gem=$1
+
+if [ ! -d "$gem/spec" ]; then
+  echo "Skipping script/run_gem_specs for $gem because it has no spec directory."
+  exit 0
+fi
+
+pushd $gem
+  # When running the test suite for a gem, we want it to run in the context of a bundle that is
+  # specific to that gem, so that we will get load errors if the gem attempts to load any gems
+  # that are not declared as dependencies in the gemspec. To achieve that, we're doing a couple
+  # notable things here:
+  #
+  #   1. We copy `Gemfile.lock` from the root `Gemfile.lock`. We do this because we don't want to
+  #      have to re-run `bundle install` here. The `Gemfile.lock` of the repository contains a
+  #      superset of the gems needed for each gem, and bundler will allow us to reuse it when
+  #      dealing with a bundle that contains fewer gems based on the gemspec. Note that `Gemfile.lock`
+  #      in subdirs is git-ignored. We copy instead of symlink it because `bundle exec` will update
+  #      the `Gemfile.lock` based on the smaller set of gems and we don't want to update the root
+  #      `Gemfile.lock`.
+  #   2. We pass `BUNDLE_GEMFILE=Gemfile` to force it to use the `Gemfile` from the gem subdirectory.
+  #      By default, bundler would use that file, but if the file did not exist, it would fall back
+  #      to the `Gemfile` from the parent directory (which would allow the gem to load any gem that
+  #      is a dependency of any other elasticgraph gem). To ensure that there is a proper `Gemfile` in
+  #      each gem subdirectory, we pass the ENV var here. If the file does not exist, we'll get an error.
+  cp ../Gemfile.lock Gemfile.lock
+  BUNDLE_GEMFILE=Gemfile bundle _$bundler_version\_ check || (rm -rf Gemfile.lock && bundle _$bundler_version\_ install)
+  BUNDLE_GEMFILE=Gemfile bundle _$bundler_version\_ exec rspec --backtrace --format progress
+popd

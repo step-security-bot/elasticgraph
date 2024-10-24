@@ -1,0 +1,11 @@
+module ElasticGraph
+  class Admin
+    class ClusterConfigurator
+      class ActionReporter
+        def initialize: (io) -> void
+        def report_action: (::String) -> void
+        @output: io
+      end
+    end
+  end
+end

@@ -1,0 +1,8 @@
+module ElasticGraph
+  module Apollo
+    module GraphQL
+      module EngineExtension: ElasticGraph::GraphQL
+      end
+    end
+  end
+end

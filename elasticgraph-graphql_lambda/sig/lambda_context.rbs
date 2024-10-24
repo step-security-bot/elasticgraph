@@ -1,0 +1,8 @@
+# Type signatures for `context` arg passed to AWS Lambda handlers.
+# Note that we have only bothered to define signatures for the parts we use.
+#
+# Based on:
+# https://github.com/aws/aws-lambda-ruby-runtime-interface-client/blob/v1.0.2/lib/aws_lambda_ric/lambda_context.rb
+class LambdaContext
+  def get_remaining_time_in_millis: () -> ::Integer
+end

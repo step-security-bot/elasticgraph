@@ -1,0 +1,27 @@
+module ElasticGraph
+  class Admin
+    class ClusterConfigurator
+      class ScriptConfigurator
+        def initialize: (
+            datastore_client: DatastoreCore::_Client,
+            script_context: datastoreScriptContext,
+            script_id: ::String,
+            script: datastoreScriptScriptHash,
+            output: io) -> void
+
+        def validate: () -> ::Array[::String]
+        def configure!: () -> void
+
+        private
+
+        @datastore_client: DatastoreCore::_Client
+        @script_context: datastoreScriptContext
+        @script_id: ::String
+        @script: datastoreScriptScriptHash
+        @action_reporter: ActionReporter
+
+        attr_reader existing_datastore_script: :not_found | datastoreScriptScriptHash?
+      end
+    end
+  end
+end

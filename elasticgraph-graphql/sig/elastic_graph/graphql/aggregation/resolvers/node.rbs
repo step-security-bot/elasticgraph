@@ -1,0 +1,45 @@
+module ElasticGraph
+  class GraphQL
+    module Aggregation
+      module Resolvers
+        class NodeSupertype < GraphQL::Resolvers::ResolvableValueClass
+          attr_reader query: Query
+          attr_reader parent_queries: ::Array[Query]
+          attr_reader bucket: ::Hash[::String, untyped]
+          attr_reader field_path: ::Array[PathSegment]
+
+          def self.new: (
+            SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            Query,
+            ::Array[Query],
+            ::Hash[::String, untyped],
+            ::Array[PathSegment]
+          ) -> instance | (
+            schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            query: Query,
+            parent_queries: ::Array[Query],
+            bucket: ::Hash[::String, untyped],
+            field_path: ::Array[PathSegment]
+          ) -> instance
+
+          def with: (
+            ?schema_element_names: SchemaArtifacts::RuntimeMetadata::SchemaElementNames,
+            ?query: Query,
+            ?parent_queries: ::Array[Query],
+            ?bucket: ::Hash[::String, untyped],
+            ?field_path: ::Array[PathSegment]
+          ) -> instance
+        end
+
+        class Node < NodeSupertype
+          attr_reader grouped_by: GroupedBy
+          attr_reader aggregated_values: AggregatedValues
+          attr_reader sub_aggregations: SubAggregations
+          def count: () -> ::Integer
+          attr_reader count_detail: CountDetail
+          attr_reader cursor: DecodedCursor
+        end
+      end
+    end
+  end
+end

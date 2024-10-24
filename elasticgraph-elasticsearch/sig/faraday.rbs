@@ -1,0 +1,4 @@
+module Faraday
+  class RetriableResponse < StandardError
+  end
+end

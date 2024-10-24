@@ -1,0 +1,27 @@
+module ElasticGraph
+  class Indexer
+    class Processor
+      def initialize: (
+        datastore_router: DatastoreIndexingRouter,
+        operation_factory: Operation::Factory,
+        logger: ::Logger,
+        indexing_latency_slo_thresholds_by_timestamp_in_ms: ::Hash[::String, ::Integer],
+        ?clock: singleton(::Time)
+      ) -> void
+
+      def process: (::Array[event], ?refresh_indices: bool) -> void
+      def process_returning_failures: (::Array[event], ?refresh_indices: bool) -> ::Array[FailedEventError]
+
+      private
+
+      @datastore_router: DatastoreIndexingRouter
+      @operation_factory: Operation::Factory
+      @logger: ::Logger
+      @indexing_latency_slo_thresholds_by_timestamp_in_ms: ::Hash[::String, ::Integer]
+      @clock: singleton(::Time)
+
+      def categorize_failures: (::Array[FailedEventError], ::Array[event]) -> ::Array[FailedEventError]
+      def calculate_latency_metrics: (::Array[_Operation], ::Array[Operation::Result]) -> void
+    end
+  end
+end

@@ -1,0 +1,86 @@
+datastore:
+  client_faraday_adapter:
+    name: httpx
+    require: httpx/adapters/faraday
+  clusters:
+    main:
+      url: http://localhost:9234
+      backend: "%{datastore_backend}"
+      settings:
+        # We set this to be quite high, in order to support a parallel test suite runner. When we run specs in parallel we
+        # add a per-worker-process prefix to the index names used by that worker in order to isolate the tests that get run
+        # on each worker. This leads to a large number of indices being created. To support up to 16 workers on 16-core
+        # machines, we've increased this from 1000 (the default) to 16000.
+        cluster.max_shards_per_node: 16000
+    other1:
+      url: http://localhost:9234
+      backend: "opensearch"
+      settings:
+        cluster.max_shards_per_node: 16001 # to be different from the above; a spec asserts on this.
+    other2:
+      url: http://localhost:9234
+      backend: "%{datastore_backend}"
+      settings: {}
+    other3:
+      url: http://localhost:9234
+      backend: "%{datastore_backend}"
+      settings: {}
+  index_definitions:
+    addresses: &main_index_settings
+      query_cluster: "main"
+      index_into_clusters: ["main"]
+      ignore_routing_values: []
+      custom_timestamp_ranges: []
+      setting_overrides:
+        number_of_shards: 1
+      setting_overrides_by_timestamp: {}
+    components: *main_index_settings
+    electrical_parts: *main_index_settings
+    manufacturers: *main_index_settings
+    mechanical_parts: *main_index_settings
+    teams: *main_index_settings
+    widget_currencies: *main_index_settings
+    widgets:
+      query_cluster: "main"
+      index_into_clusters: ["main"]
+      ignore_routing_values: ["ignored_workspace_1", "ignored_workspace_2"]
+      setting_overrides:
+        number_of_shards: 1
+      # The settings here are designed to remove some non-determinism from the tests, related to
+      # index expressions used in queries. The logic that selects which indices to query based on
+      # a timestamp filter excludes known indices that could not match the query (based on the
+      # timestamp filter being used), which means that the body of the request is based partially
+      # on what indices exist for our rollover indices (of which `widgets` is the only one). But
+      # without configuring things here, the indices created from the rollover template would be
+      # created lazily when a document is indexed having a timestamp that falls in a new index's
+      # time range. If we relied on that, our tests would be slightly non-deterministic, where the
+      # indices available to exclude would depend on what tests had run before.
+      #
+      # Here we avoid that non-determism by explicitly defining the indices: one per year between
+      # 2019 and 2021, one for before 2019, and one for after 2021. All possible timestamps are
+      # covered by these defined indices so no new indices will be created lazily when documents
+      # are indexed.
+      custom_timestamp_ranges:
+      - index_name_suffix: "before_2019"
+        lt: "2019-01-01T00:00:00Z"
+        setting_overrides: {}
+      - index_name_suffix: "after_2021"
+        gte: "2022-01-01T00:00:00Z"
+        setting_overrides: {}
+      setting_overrides_by_timestamp:
+        "2019-01-01T00:00:00Z": {}
+        "2020-01-01T00:00:00Z": {}
+        "2021-01-01T00:00:00Z": {}
+    widget_workspaces: *main_index_settings
+    sponsors: *main_index_settings
+  max_client_retries: 3
+graphql:
+  # default_page_size of 50 is duplicated in `elasticgraph/spec/support/aggregations_helpers.rb`.
+  default_page_size: 50
+  max_page_size: 500
+logger:
+  device: log/test.log
+indexer:
+  latency_slo_thresholds_by_timestamp_in_ms: {}
+schema_artifacts:
+  directory: config/schema/artifacts

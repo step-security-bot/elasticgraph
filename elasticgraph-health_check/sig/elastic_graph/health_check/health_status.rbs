@@ -1,0 +1,71 @@
+module ElasticGraph
+  module HealthCheck
+    class HealthStatusSupertype
+      attr_reader cluster_health_by_name: ::Hash[::String, HealthStatus::ClusterHealth]
+      attr_reader latest_record_by_type: ::Hash[::String, HealthStatus::LatestRecord?]
+      attr_reader category: HealthStatus::category
+
+      def initialize: (
+        cluster_health_by_name: ::Hash[::String, HealthStatus::ClusterHealth],
+        latest_record_by_type: ::Hash[::String, HealthStatus::LatestRecord?],
+        category: HealthStatus::category
+      ) -> void
+
+      def self.new: (
+        cluster_health_by_name: ::Hash[::String, HealthStatus::ClusterHealth],
+        latest_record_by_type: ::Hash[::String, HealthStatus::LatestRecord?]
+      ) -> HealthStatus
+
+      def with: (
+        ?cluster_health_by_name: ::Hash[::String, HealthStatus::ClusterHealth],
+        ?latest_record_by_type: ::Hash[::String, HealthStatus::LatestRecord?]
+      ) -> HealthStatus
+    end
+
+    class HealthStatus < HealthStatusSupertype
+      type category = :unhealthy | :healthy | :degraded
+
+      def initialize: (
+        cluster_health_by_name: ::Hash[::String, HealthStatus::ClusterHealth],
+        latest_record_by_type: ::Hash[::String, HealthStatus::LatestRecord?]
+      ) -> void
+
+      def to_loggable_description: () -> ::String
+
+      private
+
+      def compute_category: (
+        ::Hash[::String, HealthStatus::ClusterHealth],
+        ::Hash[::String, HealthStatus::LatestRecord?]
+      ) -> category
+
+      class ClusterHealth
+        attr_reader status: ::String
+        def self.with: (**untyped) -> ClusterHealth
+        def to_loggable_description: (::String) -> ::String
+        def to_h: () -> ::Hash[::Symbol, untyped]
+      end
+
+      class LatestRecord
+        attr_reader id: ::String
+        attr_reader timestamp: ::Time
+        attr_reader seconds_newer_than_required: ::Float
+
+        def self.new: (
+          id: ::String,
+          timestamp: ::Time,
+          seconds_newer_than_required: ::Float
+        ) -> LatestRecord
+
+        def with: (
+          ?id: ::String,
+          ?timestamp: ::Time,
+          ?seconds_newer_than_required: ::Float
+        ) -> LatestRecord
+
+        def to_loggable_description: (::String) -> ::String
+        def too_old?: () -> bool
+      end
+    end
+  end
+end

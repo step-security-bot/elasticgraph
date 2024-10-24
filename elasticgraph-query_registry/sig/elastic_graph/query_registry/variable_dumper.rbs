@@ -1,0 +1,22 @@
+module ElasticGraph
+  module QueryRegistry
+    class VariableDumper
+      type objectTypeInfo = {"type" => ::String, "fields" => ::Hash[::String, typeInfo]}
+      type enumTypeInfo = {"type" => ::String, "values" => ::Array[::String]}
+      type typeInfo = ::String | objectTypeInfo | enumTypeInfo
+
+      def initialize: (::GraphQL::Schema) -> void
+      def dump_variables_for_query: (::String) -> ::Hash[::String, ::Hash[::String, typeInfo]]
+      def dump_variables_for_operations: (
+        ::Array[::GraphQL::Language::Nodes::OperationDefinition]
+      ) -> ::Hash[::String, ::Hash[::String, typeInfo]]
+
+      private
+
+      @graphql_schema: ::GraphQL::Schema
+      def variables_for_op: (::GraphQL::Language::Nodes::OperationDefinition) -> ::Hash[::String, typeInfo]
+      def type_info: (::GraphQL::Schema::_Type) -> typeInfo
+      def fields_for: (::GraphQL::Schema::InputObject) -> ::Hash[::String, typeInfo]
+    end
+  end
+end

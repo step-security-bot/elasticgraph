@@ -1,0 +1,72 @@
+module OpenSearch
+  type stringOrSymbolHash = ::Hash[(::String | ::Symbol), untyped]
+
+  module API
+    module Cat
+      class CatClient
+        def indices: (?index: ::String, ?format: ::String, ?h: ::Array[::String]) -> ::Array[::Hash[::String, untyped]]
+      end
+    end
+
+    module Cluster
+      class ClusterClient
+        def health: () -> ::Hash[::String, untyped]
+        def get_settings: (?flat_settings: bool) -> ::Hash[::String, untyped]
+        def put_settings: (body: stringOrSymbolHash) -> void
+      end
+    end
+
+    module Indices
+      class IndicesClient
+        def get_index_template: (name: ::String, ?flat_settings: bool) -> ::Hash[::String, untyped]
+        def put_index_template: (name: ::String, body: stringOrSymbolHash) -> void
+        def delete_index_template: (name: ::Array[::String], ?ignore: [::Integer]) -> void
+        def get: (index: ::String, ?ignore_unavailable: bool, ?flat_settings: bool) -> ::Hash[::String, untyped]
+        def create: (index: ::String, body: stringOrSymbolHash) -> void
+        def put_mapping: (index: ::String, body: stringOrSymbolHash) -> void
+        def put_settings: (index: ::String, body: stringOrSymbolHash) -> void
+        def delete: (index: ::Array[::String], ?ignore_unavailable: bool, ?allow_no_indices: bool) -> void
+      end
+    end
+
+    module Nodes
+      class NodesClient
+        def stats: (metric: ::String) -> ::Hash[::String, untyped]
+      end
+    end
+  end
+
+  class Client
+    def initialize: (
+      url: ::String,
+      ?retry_on_failure: ::Integer,
+      ?adapter: ::Symbol?,
+      ?logger: ::Logger?,
+      ?tracer: ::Logger?
+    ) { (::Faraday::RackBuilder) -> void } -> void
+
+    def transport: () -> untyped
+    def get_script: (id: ::String) -> ::Hash[::String, untyped]
+    def put_script: (id: ::String, body: stringOrSymbolHash, ?context: (::Symbol | ::String)) -> ::Hash[::String, untyped]
+    def delete_script: (id: ::String) -> ::Hash[::String, untyped]
+    def msearch: (body: ::Array[stringOrSymbolHash], ?headers: ::Hash[::String, untyped]?) -> ::Hash[::String, untyped]
+    def bulk: (body: ::Array[stringOrSymbolHash], ?filter_path: ::String, ?refresh: bool) -> ::Hash[::String, untyped]
+    def delete_by_query: (index: ::String, ?body: stringOrSymbolHash, ?refresh: bool, ?scroll: ::String) -> void
+    def cat: () -> API::Cat::CatClient
+    def cluster: () -> API::Cluster::ClusterClient
+    def indices: () -> API::Indices::IndicesClient
+    def nodes: () -> API::Nodes::NodesClient
+  end
+
+  module Transport
+    module Transport
+      module Errors
+        class BadRequest < StandardError
+        end
+
+        class NotFound < StandardError
+        end
+      end
+    end
+  end
+end

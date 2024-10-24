@@ -1,0 +1,14 @@
+module ElasticGraph
+  class GraphQL
+    class DatastoreSearchRouter
+      def initialize: (
+        datastore_clients_by_name: ::Hash[::String, DatastoreCore::_Client],
+        logger: ::Logger,
+        monotonic_clock: Support::MonotonicClock,
+        config: Config
+      ) -> void
+
+      def msearch: (::Array[DatastoreQuery], ?query_tracker: QueryDetailsTracker) -> ::Hash[DatastoreQuery, DatastoreResponse::SearchResponse]
+    end
+  end
+end

@@ -1,0 +1,23 @@
+query TotalAlbumSalesByArtistHomeCountry {
+  artistAggregations {
+    nodes {
+      groupedBy {
+        bio {
+          homeCountry
+        }
+      }
+
+      subAggregations {
+        albums {
+          nodes {
+            aggregatedValues {
+              soldUnits {
+                exactSum
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

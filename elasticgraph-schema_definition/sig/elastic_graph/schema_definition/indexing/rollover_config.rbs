@@ -1,0 +1,29 @@
+module ElasticGraph
+  module SchemaDefinition
+    module Indexing
+      class RolloverConfigSupertype
+        attr_reader frequency: SchemaArtifacts::RuntimeMetadata::IndexDefinition::Rollover::frequency
+        attr_reader timestamp_field_path: SchemaElements::FieldPath
+
+        def initialize: (
+          SchemaArtifacts::RuntimeMetadata::IndexDefinition::Rollover::frequency,
+          SchemaElements::FieldPath
+        ) -> void
+
+        def self.with: (
+          frequency: SchemaArtifacts::RuntimeMetadata::IndexDefinition::Rollover::frequency,
+          timestamp_field_path: SchemaElements::FieldPath
+        ) -> RolloverConfig
+
+        def with: (
+          ?frequency: SchemaArtifacts::RuntimeMetadata::IndexDefinition::Rollover::frequency,
+          ?timestamp_field_path: SchemaElements::FieldPath
+        ) -> RolloverConfig
+      end
+
+      class RolloverConfig < RolloverConfigSupertype
+        def runtime_metadata: () -> SchemaArtifacts::RuntimeMetadata::IndexDefinition::Rollover
+      end
+    end
+  end
+end

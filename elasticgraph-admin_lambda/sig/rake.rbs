@@ -1,0 +1,10 @@
+module Rake
+  def self.with_application: (Application) { (Application) -> void } -> void
+
+  class Application
+    @rakefiles: ::Array[::String]
+
+    def run: (::Array[::String]) -> void
+    def standard_exception_handling: () { () -> void } -> void
+  end
+end

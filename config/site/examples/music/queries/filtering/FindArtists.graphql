@@ -1,0 +1,21 @@
+query FindArtists(
+  $names: [String!] = null
+  $yearFormed_gt: Int = null
+  $albumNames: [String!] = null
+) {
+  artists(filter: {
+    name: {equalToAnyOf: $names}
+    bio: {yearFormed: {gt: $yearFormed_gt}}
+    albums: {anySatisfy: {name: {equalToAnyOf: $albumNames}}}
+  }) {
+    nodes {
+      name
+      bio {
+        yearFormed
+      }
+      albums {
+        name
+      }
+    }
+  }
+}

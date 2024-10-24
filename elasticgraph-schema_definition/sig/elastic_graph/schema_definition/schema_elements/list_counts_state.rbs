@@ -1,0 +1,19 @@
+module ElasticGraph
+  module SchemaDefinition
+    module SchemaElements
+      class ListCountsState
+        attr_reader path_to_list_counts: ::String
+        attr_reader path_from_list_counts: ::String
+        def self.new: (path_to_list_counts: ::String, path_from_list_counts: ::String) -> ListCountsState
+        def with: (?path_to_list_counts: ::String, ?path_from_list_counts: ::String) -> ListCountsState
+
+        def self.new_list_counts_field: (at: ::String) -> ListCountsState
+
+        INITIAL: ListCountsState
+
+        def []: (::String) -> ListCountsState
+        def path_to_count_subfield: (::String) -> ::String
+      end
+    end
+  end
+end
