@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElasticGraph Query API: Filtering</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/" class="hover:underline capitalize">
+                ElasticGraph Query API
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Filtering
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>ElasticGraph Query API: Filtering</h2>
+
+        <p>Use <code class="language-plaintext highlighter-rouge">filter:</code> on a root query field to narrow down the returned results:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">FindArtist</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">byName</span><span class="p">:</span><span class="w"> </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">equalToAnyOf</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"U2"</span><span class="p">]}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">yearFormed</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+
+  </span><span class="n">byBioYearFounded</span><span class="p">:</span><span class="w"> </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">yearFormed</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">gt</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span><span class="p">}}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">yearFormed</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>As shown here, filters have two basic parts:</p>
+
+<ul>
+  <li>A <em>field path</em>: this specifies which field you want to filter on. When dealing with a nested field (e.g. <code class="language-plaintext highlighter-rouge">bio.yearFormed</code>),
+you’ll need to provide a nested object matching the field structure.</li>
+  <li>A <em>filtering predicate</em>: this specifies a filtering operator to apply at the field path.</li>
+</ul>
+
+<h3 id="ignored-filters">Ignored Filters</h3>
+
+<p>Filters with a value of <code class="language-plaintext highlighter-rouge">null</code> or empty object (<code class="language-plaintext highlighter-rouge">{}</code>) are ignored. The filters in this query are all ignored:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">IgnoredFilters</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">equalToAnyOf</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">}</span><span class="w">
+    </span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">yearFormed</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">yearFormed</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>This particularly comes in handy when using <a href="https://graphql.org/learn/queries/#variables">query variables</a>.
+It allows a query to flexibly support a wide array of filters without requiring them to all be used for an
+individual request.</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">FindArtists</span><span class="p">(</span><span class="w">
+  </span><span class="nv">$names</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nb">String</span><span class="p">!]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">null</span><span class="w">
+  </span><span class="nv">$yearFormed_gt</span><span class="p">:</span><span class="w"> </span><span class="nb">Int</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">null</span><span class="w">
+  </span><span class="nv">$albumNames</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="nb">String</span><span class="p">!]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">equalToAnyOf</span><span class="p">:</span><span class="w"> </span><span class="nv">$names</span><span class="p">}</span><span class="w">
+    </span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">yearFormed</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">gt</span><span class="p">:</span><span class="w"> </span><span class="nv">$yearFormed_gt</span><span class="p">}}</span><span class="w">
+    </span><span class="n">albums</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">anySatisfy</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">equalToAnyOf</span><span class="p">:</span><span class="w"> </span><span class="nv">$albumNames</span><span class="p">}}}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">yearFormed</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+      </span><span class="n">albums</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<div class="my-8">
+  <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">Subpages</h3>
+  <ul class="space-y-2">
+    
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/available-predicates/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Available Filter Predicates
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/comparison/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Comparison Filtering
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/conjunctions/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Conjunctions
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/date-time/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Date Time Filtering
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/equality/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Equality Filtering
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/full-text-search/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Full Text Search
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/geographic/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Geographic Filtering
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/list/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            List Filtering
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/filtering/negation/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Negation
+          </a>
+        </li>
+      
+    
+  </ul>
+</div>
+
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

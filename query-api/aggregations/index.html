@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElasticGraph Query API: Aggregations</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/" class="hover:underline capitalize">
+                ElasticGraph Query API
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Aggregations
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>ElasticGraph Query API: Aggregations</h2>
+
+        <p>ElasticGraph offers a powerful aggregations API. Each indexed type gets a corresponding <code class="language-plaintext highlighter-rouge">*Aggregations</code> field.
+Here’s a complete example:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">BluegrassArtistAggregations</span><span class="p">(</span><span class="nv">$cursor</span><span class="p">:</span><span class="w"> </span><span class="n">Cursor</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="p">(</span><span class="w">
+    </span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="n">after</span><span class="p">:</span><span class="w"> </span><span class="nv">$cursor</span><span class="w">
+    </span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">description</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">matchesQuery</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">query</span><span class="p">:</span><span class="w"> </span><span class="s2">"bluegrass"</span><span class="p">}}}}</span><span class="w">
+  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">pageInfo</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">hasNextPage</span><span class="w">
+      </span><span class="n">endCursor</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">yearFormed</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+
+      </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">lifetimeSales</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">approximateAvg</span><span class="w">
+          </span><span class="n">exactMin</span><span class="w">
+          </span><span class="n">exactMax</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+
+      </span><span class="n">count</span><span class="w">
+
+      </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">albums</span><span class="p">(</span><span class="w">
+          </span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+          </span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">tracks</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">gt</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">}}}</span><span class="w">
+        </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">countDetail</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">approximateValue</span><span class="w"> </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>Aggregation fields support <a href="/query-api/filtering/">filtering</a> and <a href="/query-api/pagination/">pagination</a>
+but do <em>not</em> support client-specified <a href="/query-api/sorting/">sorting</a><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Under an aggregations field, each node
+represents a grouping of documents. When <a href="/query-api/aggregations/grouping/"><code class="language-plaintext highlighter-rouge">groupedBy</code> fields</a> have been requested,
+each node represents the grouping of documents that have the <code class="language-plaintext highlighter-rouge">groupedBy</code> values. When no <code class="language-plaintext highlighter-rouge">groupedBy</code> fields have been requested,
+a single node will be returned containing a grouping for all documents matched by the filter.</p>
+
+<p>Aggregation nodes in turn offer 4 different aggregation features.</p>
+
+<div class="my-8">
+  <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">Subpages</h3>
+  <ul class="space-y-2">
+    
+    
+      
+      
+        <li>
+          <a href="/query-api/aggregations/aggregated-values/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Aggregated Values
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/aggregations/counts/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Counts
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/aggregations/grouping/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Grouping
+          </a>
+        </li>
+      
+    
+      
+      
+        <li>
+          <a href="/query-api/aggregations/sub-aggregations/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+            Sub-Aggregations
+          </a>
+        </li>
+      
+    
+  </ul>
+</div>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Aggregation sorting is implicitly controlled by the <a href="/query-api/aggregations/grouping/">groupings</a>–the
+  nodes will sort ascending by each of the grouping fields. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

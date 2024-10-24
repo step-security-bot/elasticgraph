@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElasticGraph Query API: DateTime Filtering</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/" class="hover:underline capitalize">
+                ElasticGraph Query API
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/filtering/" class="hover:underline capitalize">
+                Filtering
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Date Time Filtering
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>ElasticGraph Query API: DateTime Filtering</h2>
+
+        <p>ElasticGraph supports three different date/time types:</p>
+
+<dl>
+  <dt><code class="language-plaintext highlighter-rouge">Date</code></dt>
+  <dd>A date, represented as an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 date string</a>.
+Example: <code class="language-plaintext highlighter-rouge">"2024-10-15"</code>.</dd>
+  <dt><code class="language-plaintext highlighter-rouge">DateTime</code></dt>
+  <dd>A timestamp, represented as an <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 time string</a>.
+Example: <code class="language-plaintext highlighter-rouge">"2024-10-15T07:23:15Z"</code>.</dd>
+  <dt><code class="language-plaintext highlighter-rouge">LocalTime</code></dt>
+  <dd>A local time such as <code class="language-plaintext highlighter-rouge">"23:59:33"</code> or <code class="language-plaintext highlighter-rouge">"07:20:47.454"</code> without a time zone or offset,
+formatted based on the <a href="https://datatracker.ietf.org/doc/html/rfc3339#section-5.6">partial-time portion of RFC3339</a>.</dd>
+</dl>
+
+<p>All three support the standard set of <a href="/query-api/filtering/equality/">equality</a> and
+<a href="/query-api/filtering/comparison/">comparison</a> predicates. In addition, <code class="language-plaintext highlighter-rouge">DateTime</code> fields
+support one more filtering operator:</p>
+
+<dl>
+  <dt><a href="/query-api/filtering/date-time/"><code class="language-plaintext highlighter-rouge">timeOfDay</code></a></dt>
+  <dd>Matches records based on the time-of-day of the DateTime values.
+
+    <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> of an empty object is passed.</p>
+  </dd>
+</dl>
+
+<p>For example, you could use it to find shows that started between noon and 3 pm on any date:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">FindEarlyAfternoonShows</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">tours</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">anySatisfy</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">shows</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">anySatisfy</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">startedAt</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">timeOfDay</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">timeZone</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/Los_Angeles"</span><span class="w">
+          </span><span class="n">gte</span><span class="p">:</span><span class="w"> </span><span class="s2">"12:00:00"</span><span class="w">
+          </span><span class="n">lt</span><span class="p">:</span><span class="w"> </span><span class="s2">"15:00:00"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}}}}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+
+      </span><span class="n">tours</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">shows</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">venue</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">id</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+          </span><span class="n">startedAt</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

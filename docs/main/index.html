@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.9.37
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "README";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div id='filecontents'><h1 id="elasticgraph">ElasticGraph</h1>
+
+<p>ElasticGraph is a general purpose, near real-time data query and search platform that is scalable and performant,
+serves rich interactive queries, and dramatically simplifies the creation of complex reports. The platform combines
+the power of indexing and search of Elasticsearch or OpenSearch with the query flexibility of GraphQL language.
+Optimized for AWS cloud, it also offers scale and reliability.</p>
+
+<p>ElasticGraph is a naturally flexible framework with many different possible applications. However, the main motivation we have for
+building it is to power various data APIs, UIs and reports. These modern reports require filtering and aggregations across a body of ever
+growing data sets. Modern APIs allow us to:</p>
+
+<ul>
+  <li>Minimize network trips to retrieve your data</li>
+  <li>Get exactly what you want in a single query. No over- or under-serving the data.</li>
+  <li>Push filtering complex calculations to the backend.</li>
+</ul>
+
+<h2 id="libraries">Libraries</h2>
+
+<p>ElasticGraph is designed to be modular, with a small core, and many built-in extensions that extend that core
+for specific use cases. This minimizes exposure to vulnerabilities, reduces bloat, and makes ongoing upgrades
+easier. The libraries that ship with ElasticGraph can be broken down into several categories.</p>
+
+<h3 id="core-libraries-8-gems">Core Libraries (8 gems)</h3>
+
+<p>These libraries form the core backbone of ElasticGraph that is designed to run in a production deployment. Every ElasticGraph deployment will need to use all of these.</p>
+
+<ul>
+  <li><a href="elasticgraph/README.md">elasticgraph</a>: ElasticGraph meta-gem that pulls in all the core ElasticGraph gems.</li>
+  <li><a href="elasticgraph-admin/README.md">elasticgraph-admin</a>: ElasticGraph gem that provides datastore administrative tasks, to keep a datastore up-to-date with an ElasticGraph schema.</li>
+  <li><a href="elasticgraph-datastore_core/README.md">elasticgraph-datastore_core</a>: ElasticGraph gem containing the core datastore support types and logic.</li>
+  <li><a href="elasticgraph-graphql/README.md">elasticgraph-graphql</a>: The ElasticGraph GraphQL query engine.</li>
+  <li><a href="elasticgraph-indexer/README.md">elasticgraph-indexer</a>: ElasticGraph gem that provides APIs to robustly index data into a datastore.</li>
+  <li><a href="elasticgraph-json_schema/README.md">elasticgraph-json_schema</a>: ElasticGraph gem that provides JSON Schema validation.</li>
+  <li><a href="elasticgraph-schema_artifacts/README.md">elasticgraph-schema_artifacts</a>: ElasticGraph gem containing code related to generated schema artifacts.</li>
+  <li><a href="elasticgraph-support/README.md">elasticgraph-support</a>: ElasticGraph gem providing support utilities to the other ElasticGraph gems.</li>
+</ul>
+
+<h4 id="dependency-diagram">Dependency Diagram</h4>
+
+<p><img src="./README-1.svg" alt="diagram" /></p>
+
+<h3 id="aws-lambda-integration-libraries-5-gems">AWS Lambda Integration Libraries (5 gems)</h3>
+
+<p>These libraries wrap the the core ElasticGraph libraries so that they can be deployed using AWS Lambda.</p>
+
+<ul>
+  <li><a href="elasticgraph-admin_lambda/README.md">elasticgraph-admin_lambda</a>: ElasticGraph gem that wraps elasticgraph-admin in an AWS Lambda.</li>
+  <li><a href="elasticgraph-graphql_lambda/README.md">elasticgraph-graphql_lambda</a>: ElasticGraph gem that wraps elasticgraph-graphql in an AWS Lambda.</li>
+  <li><a href="elasticgraph-indexer_autoscaler_lambda/README.md">elasticgraph-indexer_autoscaler_lambda</a>: ElasticGraph gem that monitors OpenSearch CPU utilization to autoscale indexer lambda concurrency.</li>
+  <li><a href="elasticgraph-indexer_lambda/README.md">elasticgraph-indexer_lambda</a>: Provides an AWS Lambda interface for an elasticgraph API</li>
+  <li><a href="elasticgraph-lambda_support/README.md">elasticgraph-lambda_support</a>: ElasticGraph gem that supports running ElasticGraph using AWS Lambda.</li>
+</ul>
+
+<h4 id="dependency-diagram-1">Dependency Diagram</h4>
+
+<p><img src="./README-2.svg" alt="diagram" /></p>
+
+<h3 id="extensions-4-gems">Extensions (4 gems)</h3>
+
+<p>These libraries extend ElasticGraph to provide optional but commonly needed functionality.</p>
+
+<ul>
+  <li><a href="elasticgraph-apollo/README.md">elasticgraph-apollo</a>: An ElasticGraph extension that implements the Apollo federation spec.</li>
+  <li><a href="elasticgraph-health_check/README.md">elasticgraph-health_check</a>: An ElasticGraph extension that provides a health check for high availability deployments.</li>
+  <li><a href="elasticgraph-query_interceptor/README.md">elasticgraph-query_interceptor</a>: An ElasticGraph extension for intercepting datastore queries.</li>
+  <li><a href="elasticgraph-query_registry/README.md">elasticgraph-query_registry</a>: An ElasticGraph extension that supports safer schema evolution by limiting GraphQL queries based on a registry and validating registered queries against the schema.</li>
+</ul>
+
+<h4 id="dependency-diagram-2">Dependency Diagram</h4>
+
+<p><img src="./README-3.svg" alt="diagram" /></p>
+
+<h3 id="datastore-adapters-2-gems">Datastore Adapters (2 gems)</h3>
+
+<p>These libraries adapt ElasticGraph to your choice of datastore (Elasticsearch or OpenSearch).</p>
+
+<ul>
+  <li><a href="elasticgraph-elasticsearch/README.md">elasticgraph-elasticsearch</a>: Wraps the Elasticsearch client for use by ElasticGraph.</li>
+  <li><a href="elasticgraph-opensearch/README.md">elasticgraph-opensearch</a>: Wraps the OpenSearch client for use by ElasticGraph.</li>
+</ul>
+
+<h4 id="dependency-diagram-3">Dependency Diagram</h4>
+
+<p><img src="./README-4.svg" alt="diagram" /></p>
+
+<h3 id="local-development-libraries-3-gems">Local Development Libraries (3 gems)</h3>
+
+<p>These libraries are used for local development of ElasticGraph applications, but are not intended to be deployed to production (except for <code>elasticgraph-rack</code>).
+<code>elasticgraph-rack</code> is used to boot ElasticGraph locally but can also be used to run ElasticGraph in any rack-compatible server (including a Rails application).</p>
+
+<ul>
+  <li><a href="elasticgraph-local/README.md">elasticgraph-local</a>: Provides support for developing and running ElasticGraph applications locally.</li>
+  <li><a href="elasticgraph-rack/README.md">elasticgraph-rack</a>: ElasticGraph gem for serving an ElasticGraph GraphQL endpoint using rack.</li>
+  <li><a href="elasticgraph-schema_definition/README.md">elasticgraph-schema_definition</a>: ElasticGraph gem that provides the schema definition API and generates schema artifacts.</li>
+</ul>
+
+<h4 id="dependency-diagram-4">Dependency Diagram</h4>
+
+<p><img src="./README-5.svg" alt="diagram" /></p>
+
+<h2 id="versioning-policy">Versioning Policy</h2>
+
+<p>ElasticGraph does <em>not</em> strictly follow the <a href="https://semver.org/">SemVer</a> spec. We followed that early in the project’s life
+cycle and realized that it obscures some important compatibility information.</p>
+
+<p>ElasticGraph’s versioning policy is designed to communicate compatibility information related to the following stakeholders:</p>
+
+<ul>
+  <li><strong>Application maintainers</strong>: engineers that define an ElasticGraph schema, maintain project configuration, and perform upgrades.</li>
+  <li><strong>Data publishers</strong>: systems that publish data into an ElasticGraph application for ingestion by an ElasticGraph indexer.</li>
+  <li><strong>GraphQL clients</strong>: clients of the GraphQL API of an ElasticGraph application.</li>
+</ul>
+
+<p>We use the following versioning scheme:</p>
+
+<ul>
+  <li>Version numbers are in a <code>0.MAJOR.MINOR.PATCH</code> format. (The <code>0.</code> prefix is there in order to reserve <code>1.0.0</code> and all later versions
+for after ElasticGraph has been open-sourced).</li>
+  <li>Increments to the PATCH version indicate that the new release contains no backwards incompatibilities for any stakeholders.
+It may contain bug fixes, new features, internal refactorings, and dependency upgrades, among other things. You can expect that
+PATCH level upgrades are always safe–just update the version in your bundle, generate new schema artifacts, and you should be done.</li>
+  <li>Increments to the MINOR version indicate that the new release contains some backwards incompatibilities that may impact the
+<strong>application maintainers</strong> of some ElasticGraph applications. MINOR releases may include renames to configuration settings,
+changes to the schema definition API, and new schema definition requirements, among other things. You can expect that MINOR
+level upgrades can usually be done in 30 minutes or less (usually in a single commit!), with release notes and clear errors
+from ElasticGraph command line tasks providing guidance on how to upgrade.</li>
+  <li>Increments to the MAJOR version indicate that the new release contains some backwards incompatibilities that may impact the
+<strong>data publishers</strong> or <strong>GraphQL clients</strong> of some ElasticGraph applications. MAJOR releases may include changes to the GraphQL
+schema that require careful migration of <strong>GraphQL clients</strong> or changes to how indexing is done that require a dataset to be
+re-indexed from scratch (e.g. by having <strong>data publishers</strong> republish their data into an ElasticGraph indexer running the new
+version). You can expect that the release notes will include detailed instructions on how to perform a MAJOR version upgrade.</li>
+</ul>
+
+<p>Deprecation warnings may be included at any of these levels–for example, a PATCH release may contain a deprecation warning
+for a breaking change that may impact <strong>application maintainers</strong> in an upcoming MINOR release, and a MINOR release may
+contain deprecation warnings for breaking changes that may impact <strong>data publishers</strong> or <strong>GraphQL clients</strong> in an upcoming
+MAJOR release.</p>
+
+<p>Each version level is cumulative over the prior levels. That is, a MINOR release may include PATCH-level changes in addition
+to backwards incompatibilities that may impact <strong>application maintainers</strong>. A MAJOR release may include PATCH-level or
+MINOR-level changes in addition to backwards incompatibilities that may impact <strong>data publishers</strong> or <strong>GraphQL clients</strong>.</p>
+
+<p>Note that this policy was first adopted in the <code>v0.15.1.0</code> release.  All prior releases aimed (with some occasional mistakes!)
+to follow SemVer with a <code>0.MAJOR.MINOR.PATCH</code> versioning scheme.</p>
+
+<p>Note that <em>all</em> gems in this repository share the same version number. Every time we cut a release, we increment the version
+for <em>all</em> gems and release <em>all</em> gems, even if a gem has had no changes since the last release. This is simpler to work with
+than the alternatives.</p>
+</div></div>
+
+      <div id="footer">
+  Generated on Thu Oct 24 23:36:33 2024 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.37 (ruby-3.3.5).
+</div>
+
+    </div>
+  </body>
+</html>

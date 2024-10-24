@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElasticGraph Query API: Pagination</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/" class="hover:underline capitalize">
+                ElasticGraph Query API
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Pagination
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>ElasticGraph Query API: Pagination</h2>
+
+        <p>To provide pagination, ElasticGraph implements the <a href="https://relay.dev/graphql/connections.htm">Relay GraphQL Cursor Connections
+Specification</a>. Here’s an example query showing
+pagination in action:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">PaginationExample</span><span class="p">(</span><span class="nv">$cursor</span><span class="p">:</span><span class="w"> </span><span class="n">Cursor</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">after</span><span class="p">:</span><span class="w"> </span><span class="nv">$cursor</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">pageInfo</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">hasNextPage</span><span class="w">
+      </span><span class="n">endCursor</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="n">edges</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">node</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+        </span><span class="n">albums</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">name</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>In addition, ElasticGraph offers some additional features beyond the Relay spec.</p>
+
+<h3 id="total-edge-count">Total Edge Count</h3>
+
+<p>As an extension to the Relay spec, ElasticGraph offers a <code class="language-plaintext highlighter-rouge">totalEdgeCount</code> field alongside <code class="language-plaintext highlighter-rouge">edges</code> and <code class="language-plaintext highlighter-rouge">pageInfo</code>.
+It can be used to get a total count of matching records:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">Count21stCenturyArtists</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">yearFormed</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">gte</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span><span class="p">}}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">totalEdgeCount</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>Note: <code class="language-plaintext highlighter-rouge">totalEdgeCount</code> is not available under an <a href="/query-api/aggregations/">aggregations</a> field.</p>
+
+<h3 id="nodes">Nodes</h3>
+
+<p>As an alternative to <code class="language-plaintext highlighter-rouge">edges.node</code>, ElasticGraph offers <code class="language-plaintext highlighter-rouge">nodes</code>. This is recommended over <code class="language-plaintext highlighter-rouge">edges</code> except when you need
+a per-node <code class="language-plaintext highlighter-rouge">cursor</code> (which is available under <code class="language-plaintext highlighter-rouge">edges</code>) since it removes an extra layer of nesting, providing a simpler
+response structure:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">PaginationNodes</span><span class="p">(</span><span class="nv">$cursor</span><span class="p">:</span><span class="w"> </span><span class="n">Cursor</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">first</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">after</span><span class="p">:</span><span class="w"> </span><span class="nv">$cursor</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">pageInfo</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">hasNextPage</span><span class="w">
+      </span><span class="n">endCursor</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">albums</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">name</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElasticGraph Query API: Aggregation Grouping</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/" class="hover:underline capitalize">
+                ElasticGraph Query API
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/aggregations/" class="hover:underline capitalize">
+                Aggregations
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Grouping
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>ElasticGraph Query API: Aggregation Grouping</h2>
+
+        <p>When aggregating documents, the groupings are defined by <code class="language-plaintext highlighter-rouge">groupedBy</code>. Here’s an example:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">ArtistCountsByYearFormedAndHomeCountry</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">yearFormed</span><span class="w">
+          </span><span class="n">homeCountry</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+
+      </span><span class="n">count</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>In this case, we’re grouping by multiple fields; a grouping will be returned for each
+combination of <code class="language-plaintext highlighter-rouge">Artist.bio.yearFormed</code> and <code class="language-plaintext highlighter-rouge">Artist.bio.homeCountry</code> found in the data.</p>
+
+<h3 id="date-grouping">Date Grouping</h3>
+
+<p>In the example above, the grouping was performed on the raw values of the <code class="language-plaintext highlighter-rouge">groupedBy</code> fields.
+However, for <code class="language-plaintext highlighter-rouge">Date</code> fields it’s generally more useful to group by <em>truncated</em> values.
+Here’s an example:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">AlbumSalesByReleaseYear</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">albums</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">releasedOn</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">asDate</span><span class="p">(</span><span class="n">truncationUnit</span><span class="p">:</span><span class="w"> </span><span class="n">YEAR</span><span class="p">)</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+
+            </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">soldUnits</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">exactSum</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>In this case, we’re truncating the <code class="language-plaintext highlighter-rouge">Album.releaseOn</code> dates to the year to give us one grouping per
+year rather than one grouping per distinct date. The <code class="language-plaintext highlighter-rouge">truncationUnit</code> argument supports <code class="language-plaintext highlighter-rouge">DAY</code>, <code class="language-plaintext highlighter-rouge">MONTH</code>,
+<code class="language-plaintext highlighter-rouge">QUARTER</code>, <code class="language-plaintext highlighter-rouge">WEEK</code> and <code class="language-plaintext highlighter-rouge">YEAR</code> values. In addition, an <code class="language-plaintext highlighter-rouge">offset</code> argument is supported, which can be used
+to shift what grouping a <code class="language-plaintext highlighter-rouge">Date</code> falls into. This is particularly useful when using <code class="language-plaintext highlighter-rouge">WEEK</code>:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">AlbumSalesByReleaseWeek</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">albums</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">releasedOn</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">asDate</span><span class="p">(</span><span class="n">truncationUnit</span><span class="p">:</span><span class="w"> </span><span class="n">WEEK</span><span class="p">,</span><span class="w"> </span><span class="n">offset</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">amount</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">unit</span><span class="p">:</span><span class="w"> </span><span class="n">DAY</span><span class="p">})</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+
+            </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">soldUnits</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">exactSum</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>With no offset, grouped weeks run Monday to Sunday, but we can shift it using <code class="language-plaintext highlighter-rouge">offset</code>. In this case, the weeks have been
+shifted to run Sunday to Saturday.</p>
+
+<p>Finally, we can also group <code class="language-plaintext highlighter-rouge">Date</code> fields by what day of week they fall into using <code class="language-plaintext highlighter-rouge">asDayOfWeek</code> instead of <code class="language-plaintext highlighter-rouge">asDate</code>:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">AlbumSalesByReleaseDayOfWeek</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">albums</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">releasedOn</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">asDayOfWeek</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+
+            </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">soldUnits</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">exactSum</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<h3 id="datetime-grouping">DateTime Grouping</h3>
+
+<p><code class="language-plaintext highlighter-rouge">DateTime</code> fields offer a similar grouping API. <code class="language-plaintext highlighter-rouge">asDate</code> and <code class="language-plaintext highlighter-rouge">asDayOfWeek</code> work the same, but they accept an optional <code class="language-plaintext highlighter-rouge">timeZone</code>
+argument (default is “UTC”):</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">TourAttendanceByYear</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">tours</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">shows</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="n">startedAt</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="n">asDate</span><span class="p">(</span><span class="w">
+                        </span><span class="n">truncationUnit</span><span class="p">:</span><span class="w"> </span><span class="n">YEAR</span><span class="w">
+                        </span><span class="n">timeZone</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/Los_Angeles"</span><span class="w">
+                      </span><span class="p">)</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+
+                  </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="n">attendance</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="n">exactSum</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>Sub-day granualarities (<code class="language-plaintext highlighter-rouge">HOUR</code>, <code class="language-plaintext highlighter-rouge">MINUTE</code>, <code class="language-plaintext highlighter-rouge">SECOND</code>) are supported when you use <code class="language-plaintext highlighter-rouge">asDateTime</code> instead of <code class="language-plaintext highlighter-rouge">asDate</code>:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">TourAttendanceByHour</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">tours</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">shows</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="n">startedAt</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="n">asDateTime</span><span class="p">(</span><span class="n">truncationUnit</span><span class="p">:</span><span class="w"> </span><span class="n">HOUR</span><span class="p">)</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+
+                  </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="n">attendance</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="n">exactSum</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>Finally, you can group by the time of day (while ignoring the date) by using <code class="language-plaintext highlighter-rouge">asTimeOfDay</code>:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">TourAttendanceByHourOfDay</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">tours</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">subAggregations</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="n">shows</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="n">startedAt</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="n">asTimeOfDay</span><span class="p">(</span><span class="n">truncationUnit</span><span class="p">:</span><span class="w"> </span><span class="n">HOUR</span><span class="p">)</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+
+                  </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="n">attendance</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="n">exactSum</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElasticGraph Query API: Aggregated Values</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/" class="hover:underline capitalize">
+                ElasticGraph Query API
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/aggregations/" class="hover:underline capitalize">
+                Aggregations
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Aggregated Values
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>ElasticGraph Query API: Aggregated Values</h2>
+
+        <p>Aggregated values can be computed from all values of a particular field from all documents backing an aggregation node.
+Here’s an example:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">BluegrassArtistLifetimeSales</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="p">(</span><span class="w">
+    </span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">description</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">matchesQuery</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">query</span><span class="p">:</span><span class="w"> </span><span class="s2">"bluegrass"</span><span class="p">}}}}</span><span class="w">
+  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">yearFormed</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+
+      </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">lifetimeSales</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">exactMin</span><span class="w">
+          </span><span class="n">exactMax</span><span class="w">
+
+          </span><span class="n">exactSum</span><span class="w">
+          </span><span class="n">approximateSum</span><span class="w">
+
+          </span><span class="n">approximateAvg</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>This example query aggregates the values of the <code class="language-plaintext highlighter-rouge">Artist.lifetimeSales</code> field using all 4 of the standard numeric
+aggregated values: <code class="language-plaintext highlighter-rouge">min</code>, <code class="language-plaintext highlighter-rouge">max</code>, <code class="language-plaintext highlighter-rouge">avg</code>, and <code class="language-plaintext highlighter-rouge">sum</code>. These are qualified with <code class="language-plaintext highlighter-rouge">approximate</code> or <code class="language-plaintext highlighter-rouge">exact</code> to indicate
+the level of precision they offer. The documentation for <code class="language-plaintext highlighter-rouge">approximateSum</code> and <code class="language-plaintext highlighter-rouge">exactSum</code> provide more detail:</p>
+
+<dl>
+  <dt><code class="language-plaintext highlighter-rouge">approximateSum</code></dt>
+  <dd>The (approximate) sum of the field values within this grouping.
+
+    <p>Sums of large <code class="language-plaintext highlighter-rouge">Int</code> values can result in overflow, where the exact sum cannot
+fit in a <code class="language-plaintext highlighter-rouge">JsonSafeLong</code> return value. This field, as a double-precision <code class="language-plaintext highlighter-rouge">Float</code>, can
+represent larger sums, but the value may only be approximate.</p>
+  </dd>
+  <dt><code class="language-plaintext highlighter-rouge">exactSum</code></dt>
+  <dd>The exact sum of the field values within this grouping, if it fits in a <code class="language-plaintext highlighter-rouge">JsonSafeLong</code>.
+
+    <p>Sums of large <code class="language-plaintext highlighter-rouge">Int</code> values can result in overflow, where the exact sum cannot
+fit in a <code class="language-plaintext highlighter-rouge">JsonSafeLong</code>. In that case, <code class="language-plaintext highlighter-rouge">null</code> will be returned, and <code class="language-plaintext highlighter-rouge">approximateSum</code>
+can be used to get an approximate value.</p>
+  </dd>
+</dl>
+
+<p>Besides these standard numeric aggregated values, ElasticGraph offers one more:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">SkaArtistHomeCountries</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artistAggregations</span><span class="p">(</span><span class="w">
+    </span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">description</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">matchesQuery</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">query</span><span class="p">:</span><span class="w"> </span><span class="s2">"ska"</span><span class="p">}}}}</span><span class="w">
+  </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">groupedBy</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">yearFormed</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+
+      </span><span class="n">aggregatedValues</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">homeCountry</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="n">approximateDistinctValueCount</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">approximateDistinctValueCount</code> field uses the <a href="https://research.google.com/pubs/archive/40671.pdf">HyperLogLog++ algorithm</a>
+to provide an approximate count of distinct values for the field. In this case, it can give us an idea of how many countries ska
+bands were formed in, in each year.</p>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

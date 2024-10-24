@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What is ElasticGraph?</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              What is ElasticGraph?
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>What is ElasticGraph?</h2>
+
+        <p>ElasticGraph is a general purpose, near real-time data query and search platform that is scalable and performant, serves rich interactive queries, and dramatically simplifies the creation of complex reports. The platform combines the power of indexing and search of Elasticsearch or OpenSearch with the query flexibility of GraphQL language. Optimized for AWS cloud, it also offers scale and reliability.</p>
+
+<p>ElasticGraph is a naturally flexible framework with many different possible applications. However, the main motivation we have for building it is to power various data APIs, UIs and reports. These modern reports require filtering and aggregations across a body of ever growing data sets. Modern APIs allow us to:</p>
+
+<ul>
+  <li>Minimize network trips to retrieve your data</li>
+  <li>Get exactly what you want in a single query. No over- or under-serving the data.</li>
+  <li>Push filtering complex calculations to the backend.</li>
+</ul>
+
+<h2 id="what-can-i-do-with-it">What can I do with it?</h2>
+
+<p>The ElasticGraph platform will allow you to query your data in many different configurations. To do so requires defining a schema which ElasticGraph will use to both index data and also query it. Besides all basic GraphQL query features, ElasticGraph also supports:</p>
+
+<ul>
+  <li>Real-time indexing and data querying</li>
+  <li>Filtering, sorting, pagination, grouping, aggregations, and sub-aggregations</li>
+  <li>Navigating across data sets in a single query</li>
+  <li>Robust, safe schema evolution support via Query Registry mechanism</li>
+  <li>Derived indexes to power commonly accessed queries and aggregations</li>
+  <li>Client and Publisher libraries</li>
+</ul>
+
+<h2 id="get-started">Get started</h2>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>elasticgraph
+</code></pre></div></div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>

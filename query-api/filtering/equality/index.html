@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElasticGraph Query API: Equality Filtering</title>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/" class="hover:underline capitalize">
+                ElasticGraph Query API
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              <a href="/query-api/filtering/" class="hover:underline capitalize">
+                Filtering
+              </a>
+            
+          </li>
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Equality Filtering
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>ElasticGraph Query API: Equality Filtering</h2>
+
+        <p>The most commonly used predicate supports equality filtering:</p>
+
+<dl>
+  <dt><a href="/query-api/filtering/equality/"><code class="language-plaintext highlighter-rouge">equalToAnyOf</code></a></dt>
+  <dd>Matches records where the field value is equal to any of the provided values.
+This works just like an <code class="language-plaintext highlighter-rouge">IN</code> operator in SQL.
+
+    <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> is passed.
+When an empty list is passed, will cause this part of the filter to match no documents.
+When <code class="language-plaintext highlighter-rouge">null</code> is passed in the list, will match records where the field value is <code class="language-plaintext highlighter-rouge">null</code>.</p>
+  </dd>
+</dl>
+
+<p>Here’s a basic example:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">EqualityFilter</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">equalToAnyOf</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"U2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Radiohead"</span><span class="p">]}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">yearFormed</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>Unlike the SQL <code class="language-plaintext highlighter-rouge">IN</code> operator, you can find records with <code class="language-plaintext highlighter-rouge">null</code> values if you put <code class="language-plaintext highlighter-rouge">null</code> in the list:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">EqualityFilterNull</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">equalToAnyOf</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kc">null</span><span class="p">]}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">yearFormed</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>
