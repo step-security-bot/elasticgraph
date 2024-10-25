@@ -126,9 +126,17 @@ module ElasticGraph
           end
         end
 
+        common_jekyll_args = [
+          "--source #{SITE_SOURCE_DIR}",
+          "--destination #{JEKYLL_SITE_DIR}",
+          "--baseUrl /elasticgraph",
+          "--strict-front-matter",
+          "--trace"
+        ].join(" ")
+
         desc "Build Jekyll site with freshly generated YARD documentation"
         task build: [:build_docs, :build_css, "examples:compile_queries"] do
-          sh "bundle exec jekyll build --source #{SITE_SOURCE_DIR} --destination #{JEKYLL_SITE_DIR}"
+          sh "bundle exec jekyll build #{common_jekyll_args}"
         end
 
         desc "Serve Jekyll site locally"
@@ -170,7 +178,7 @@ module ElasticGraph
             end
           end
 
-          sh "bundle exec jekyll serve --source #{SITE_SOURCE_DIR} --destination #{JEKYLL_SITE_DIR} --trace"
+          sh "bundle exec jekyll serve #{common_jekyll_args}"
         end
 
         desc "Perform validations of the website, including doc tests and doc coverage"
