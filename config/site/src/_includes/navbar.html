@@ -2,14 +2,14 @@
 <nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
   <div class="container mx-auto flex justify-between items-center px-4">
     <div class="text-xl flex items-center space-x-4">
-      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
-      <a href="/docs/main" class="{{ site.style.link }}">Docs</a>
-      <a href="/query-api" class="{{ site.style.link }}">Query API</a>
+      <a href="{{ '/' | relative_url }}" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="{{ '/docs/main' | relative_url }}" class="{{ site.style.link }}">Docs</a>
+      <a href="{{ '/query-api' | relative_url }}" class="{{ site.style.link }}">Query API</a>
     </div>
     <div>
       <a href="{{ site.github_url }}" target="_blank"
         class="{{ site.style.link }} mr-2">GitHub</a>
-      <a href="/about" class="{{ site.style.link }}">About</a>
+      <a href="{{ '/about' | relative_url }}" class="{{ site.style.link }}">About</a>
     </div>
   </div>
 
@@ -19,7 +19,7 @@
       <ol class="list-reset flex">
         {% if page.url != "/" %}
         <li>
-          <a href="/" class="hover:underline">Home</a>
+          <a href="{{ '/' | relative_url }}" class="hover:underline">Home</a>
         </li>
         {% endif %}
 
@@ -39,7 +39,7 @@
             {% if page.url == link %}
               {{ page_title }}
             {% else %}
-              <a href="{{ link }}" class="hover:underline capitalize">
+              <a href="{{ link | relative_url }}" class="hover:underline capitalize">
                 {{ page_title }}
               </a>
             {% endif %}
