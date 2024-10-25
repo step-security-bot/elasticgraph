@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ElasticGraph Query API: Aggregations</title>
-  <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/highlight.css">
+  <link rel="stylesheet" href="/elasticgraph/assets/css/main.css">
+  <link rel="stylesheet" href="/elasticgraph/assets/css/highlight.css">
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
@@ -14,14 +14,14 @@
 <nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
   <div class="container mx-auto flex justify-between items-center px-4">
     <div class="text-xl flex items-center space-x-4">
-      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
-      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
-      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+      <a href="/elasticgraph/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/elasticgraph/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/elasticgraph/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
     </div>
     <div>
       <a href="https://github.com/block/elasticgraph" target="_blank"
         class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
-      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+      <a href="/elasticgraph/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
     </div>
   </div>
 
@@ -31,7 +31,7 @@
       <ol class="list-reset flex">
         
         <li>
-          <a href="/" class="hover:underline">Home</a>
+          <a href="/elasticgraph/" class="hover:underline">Home</a>
         </li>
         
 
@@ -45,7 +45,7 @@
           <li>
             <span class="mx-2">/</span>
             
-              <a href="/query-api/" class="hover:underline capitalize">
+              <a href="/elasticgraph/query-api/" class="hover:underline capitalize">
                 ElasticGraph Query API
               </a>
             
@@ -116,9 +116,9 @@ Here’s a complete example:</p>
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
-<p>Aggregation fields support <a href="/query-api/filtering/">filtering</a> and <a href="/query-api/pagination/">pagination</a>
-but do <em>not</em> support client-specified <a href="/query-api/sorting/">sorting</a><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Under an aggregations field, each node
-represents a grouping of documents. When <a href="/query-api/aggregations/grouping/"><code class="language-plaintext highlighter-rouge">groupedBy</code> fields</a> have been requested,
+<p>Aggregation fields support <a href="/elasticgraph/query-api/filtering/">filtering</a> and <a href="/elasticgraph/query-api/pagination/">pagination</a>
+but do <em>not</em> support client-specified <a href="/elasticgraph/query-api/sorting/">sorting</a><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Under an aggregations field, each node
+represents a grouping of documents. When <a href="/elasticgraph/query-api/aggregations/grouping/"><code class="language-plaintext highlighter-rouge">groupedBy</code> fields</a> have been requested,
 each node represents the grouping of documents that have the <code class="language-plaintext highlighter-rouge">groupedBy</code> values. When no <code class="language-plaintext highlighter-rouge">groupedBy</code> fields have been requested,
 a single node will be returned containing a grouping for all documents matched by the filter.</p>
 
@@ -132,7 +132,7 @@ a single node will be returned containing a grouping for all documents matched b
       
       
         <li>
-          <a href="/query-api/aggregations/aggregated-values/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+          <a href="/elasticgraph/query-api/aggregations/aggregated-values/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
             Aggregated Values
           </a>
         </li>
@@ -141,7 +141,7 @@ a single node will be returned containing a grouping for all documents matched b
       
       
         <li>
-          <a href="/query-api/aggregations/counts/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+          <a href="/elasticgraph/query-api/aggregations/counts/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
             Counts
           </a>
         </li>
@@ -150,7 +150,7 @@ a single node will be returned containing a grouping for all documents matched b
       
       
         <li>
-          <a href="/query-api/aggregations/grouping/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+          <a href="/elasticgraph/query-api/aggregations/grouping/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
             Grouping
           </a>
         </li>
@@ -159,7 +159,7 @@ a single node will be returned containing a grouping for all documents matched b
       
       
         <li>
-          <a href="/query-api/aggregations/sub-aggregations/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
+          <a href="/elasticgraph/query-api/aggregations/sub-aggregations/" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors duration-300">
             Sub-Aggregations
           </a>
         </li>
@@ -171,7 +171,7 @@ a single node will be returned containing a grouping for all documents matched b
 <div class="footnotes" role="doc-endnotes">
   <ol>
     <li id="fn:1" role="doc-endnote">
-      <p>Aggregation sorting is implicitly controlled by the <a href="/query-api/aggregations/grouping/">groupings</a>–the
+      <p>Aggregation sorting is implicitly controlled by the <a href="/elasticgraph/query-api/aggregations/grouping/">groupings</a>–the
   nodes will sort ascending by each of the grouping fields. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>

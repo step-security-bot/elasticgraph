@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ElasticGraph Query API: Full Text Search</title>
-  <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/highlight.css">
+  <link rel="stylesheet" href="/elasticgraph/assets/css/main.css">
+  <link rel="stylesheet" href="/elasticgraph/assets/css/highlight.css">
 </head>
 
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
@@ -14,14 +14,14 @@
 <nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
   <div class="container mx-auto flex justify-between items-center px-4">
     <div class="text-xl flex items-center space-x-4">
-      <a href="/" class="font-bold hover:underline">ElasticGraph</a>
-      <a href="/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
-      <a href="/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+      <a href="/elasticgraph/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/elasticgraph/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+      <a href="/elasticgraph/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
     </div>
     <div>
       <a href="https://github.com/block/elasticgraph" target="_blank"
         class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
-      <a href="/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+      <a href="/elasticgraph/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
     </div>
   </div>
 
@@ -31,7 +31,7 @@
       <ol class="list-reset flex">
         
         <li>
-          <a href="/" class="hover:underline">Home</a>
+          <a href="/elasticgraph/" class="hover:underline">Home</a>
         </li>
         
 
@@ -45,7 +45,7 @@
           <li>
             <span class="mx-2">/</span>
             
-              <a href="/query-api/" class="hover:underline capitalize">
+              <a href="/elasticgraph/query-api/" class="hover:underline capitalize">
                 ElasticGraph Query API
               </a>
             
@@ -58,7 +58,7 @@
           <li>
             <span class="mx-2">/</span>
             
-              <a href="/query-api/filtering/" class="hover:underline capitalize">
+              <a href="/elasticgraph/query-api/filtering/" class="hover:underline capitalize">
                 Filtering
               </a>
             
@@ -89,14 +89,14 @@
         <p>ElasticGraph supports two full-text search filtering predicates:</p>
 
 <dl>
-  <dt><a href="/query-api/filtering/full-text-search/"><code class="language-plaintext highlighter-rouge">matchesPhrase</code></a></dt>
+  <dt><a href="/elasticgraph/query-api/filtering/full-text-search/"><code class="language-plaintext highlighter-rouge">matchesPhrase</code></a></dt>
   <dd>Matches records where the field value has a phrase matching the provided phrase using
 full text search. This is stricter than <code class="language-plaintext highlighter-rouge">matchesQuery</code>: all terms must match
 and be in the same order as the provided phrase.
 
     <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> is passed.</p>
   </dd>
-  <dt><a href="/query-api/filtering/full-text-search/"><code class="language-plaintext highlighter-rouge">matchesQuery</code></a></dt>
+  <dt><a href="/elasticgraph/query-api/filtering/full-text-search/"><code class="language-plaintext highlighter-rouge">matchesQuery</code></a></dt>
   <dd>Matches records where the field value matches the provided query using full text search.
 This is more lenient than <code class="language-plaintext highlighter-rouge">matchesPhrase</code>: the order of terms is ignored, and, by default,
 only one search term is required to be in the field value.
