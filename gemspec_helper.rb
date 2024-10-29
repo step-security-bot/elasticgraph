@@ -19,8 +19,20 @@ module ElasticGraphGemspecHelper
       spec.version = ElasticGraph::VERSION
       spec.authors = ["Myron Marston", "Ben VandenBos", "Block Engineering"]
       spec.email = ["myron@squareup.com"]
+      spec.homepage = "https://block.github.io/elasticgraph/"
       spec.license = "MIT"
       spec.metadata["gem_category"] = category.to_s
+
+      # See https://guides.rubygems.org/specification-reference/#metadata
+      # for metadata entries understood by rubygems.org.
+      spec.metadata = {
+        "bug_tracker_uri" => "https://github.com/block/elasticgraph/issues",
+        "changelog_uri" => "https://github.com/block/elasticgraph/releases/tag/v#{ElasticGraph::VERSION}",
+        "documentation_uri" => "https://block.github.io/elasticgraph/docs/main/", # TODO(#2): update this URL to link to the exact doc version
+        "homepage_uri" => "https://block.github.io/elasticgraph/",
+        "source_code_uri" => "https://github.com/block/elasticgraph/tree/v#{ElasticGraph::VERSION}/#{spec.name}",
+        "gem_category" => category.to_s # used by script/update_readme
+      }
 
       # Specify which files should be added to the gem when it is released.
       # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
