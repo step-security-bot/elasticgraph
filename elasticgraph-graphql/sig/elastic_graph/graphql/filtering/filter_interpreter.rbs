@@ -41,7 +41,8 @@ module ElasticGraph
         def process_sub_field_expression: (stringOrSymbolHash, stringHash, FieldPath) -> void
         def process_list_count_expression: (stringOrSymbolHash, stringHash, FieldPath) -> void
         def build_bool_hash: () { (stringOrSymbolHash) -> void } -> stringOrSymbolHash?
-        def excludes_zero?: (stringHash) -> bool
+        def filters_to_range_including_zero?: (stringHash) -> bool
+        def operator_excludes_zero?: (::String, untyped) -> bool
         def required_matching_clause_count: (stringOrSymbolHash) -> ::Integer
       end
     end
