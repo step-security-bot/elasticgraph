@@ -131,17 +131,24 @@
 
     <p>Define your schema in this file. Here’s a basic example:</p>
 
-    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">Schema</span>
-  <span class="k">module</span> <span class="nn">Customers</span>
-    <span class="kp">extend</span> <span class="no">ElasticGraph</span><span class="o">::</span><span class="no">Schema</span>
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="no">ElasticGraph</span><span class="p">.</span><span class="nf">define_schema</span> <span class="k">do</span> <span class="o">|</span><span class="n">schema</span><span class="o">|</span>
+   <span class="n">schema</span><span class="p">.</span><span class="nf">json_schema_version</span> <span class="mi">1</span>
 
-    <span class="n">type</span> <span class="ss">:customer</span> <span class="k">do</span>
-      <span class="n">field</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:string</span>
-      <span class="n">field</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:string</span>
-      <span class="n">field</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:string</span>
-    <span class="k">end</span>
-  <span class="k">end</span>
-<span class="k">end</span>
+   <span class="n">schema</span><span class="p">.</span><span class="nf">object_type</span> <span class="s2">"Artist"</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
+     <span class="n">t</span><span class="p">.</span><span class="nf">field</span> <span class="s2">"id"</span><span class="p">,</span> <span class="s2">"ID"</span>
+     <span class="n">t</span><span class="p">.</span><span class="nf">field</span> <span class="s2">"name"</span><span class="p">,</span> <span class="s2">"String"</span>
+     <span class="n">t</span><span class="p">.</span><span class="nf">field</span> <span class="s2">"lifetimeSales"</span><span class="p">,</span> <span class="s2">"Int"</span>
+     <span class="n">t</span><span class="p">.</span><span class="nf">field</span> <span class="s2">"bio"</span><span class="p">,</span> <span class="s2">"ArtistBio"</span>
+
+     <span class="n">t</span><span class="p">.</span><span class="nf">field</span> <span class="s2">"albums"</span><span class="p">,</span> <span class="s2">"[Album!]!"</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span>
+       <span class="n">f</span><span class="p">.</span><span class="nf">mapping</span> <span class="ss">type: </span><span class="s2">"nested"</span>
+     <span class="k">end</span>
+
+     <span class="n">t</span><span class="p">.</span><span class="nf">index</span> <span class="s2">"artists"</span>
+   <span class="k">end</span>
+ <span class="k">end</span>
+
+ <span class="c1"># ...</span>
 </code></pre></div>    </div>
   </li>
   <li>
@@ -367,8 +374,10 @@ GET /_cat/templates?v
         ElasticGraph
       </h3>
       <p class="text-gray-700 dark:text-gray-300">
-        ElasticGraph is an open-source framework for indexing, searching,
-        grouping, and aggregating data. Join our community and contribute on
+        Schema-driven, scalable, cloud-native, batteries-included GraphQL with superpowers.
+      </p>
+      <p class="text-gray-700 dark:text-gray-300">
+        Join our community and contribute on
         <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
       </p>
     </div>
