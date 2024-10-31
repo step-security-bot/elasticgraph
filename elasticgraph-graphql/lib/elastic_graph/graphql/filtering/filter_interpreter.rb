@@ -59,11 +59,6 @@ module ElasticGraph
 
         def process_filter_hash(bool_node, filter_hash, field_path)
           filter_hash.each do |field_or_op, expression|
-            # `nil` filter predicates should be ignored, so we can safely `compact` them out.
-            # It also is simpler to handle them once here instead of the different branches
-            # below having to be aware of possible `nil` predicates.
-            expression = expression.compact if expression.is_a?(::Hash)
-
             case filter_node_interpreter.identify_node_type(field_or_op, expression)
             when :empty
               # This is an "empty" filter predicate and we can ignore it.
@@ -313,7 +308,7 @@ module ElasticGraph
           # While we index an explicit count of 0, the count field will be missing from documents indexed before
           # the list field was defined on the ElasticGraph schema. To properly match those documents, we need to
           # convert this into an OR (using `any_of`) to also match documents that lack the field entirely.
-          unless excludes_zero?(expression)
+          if filters_to_range_including_zero?(expression)
             expression = {schema_names.any_of => [
               expression,
               {schema_names.equal_to_any_of => [nil]}
@@ -337,20 +332,28 @@ module ElasticGraph
           {bool: bool_node}
         end
 
-        # Determines if the given filter expression excludes the value `0`.
-        def excludes_zero?(expression)
-          expression.any? do |operator, operand|
-            case operator
-            when schema_names.equal_to_any_of then !operand.include?(0)
-            when schema_names.lt then operand <= 0
-            when schema_names.lte then operand < 0
-            when schema_names.gt then operand >= 0
-            when schema_names.gte then operand > 0
-            else
-              # :nocov: -- all operators are covered above. But simplecov complains about an implicit `else` branch being uncovered, so here we've defined it to wrap it with `:nocov:`.
-              false
-              # :nocov:
-            end
+        # Determines if the given expression filters to a range that includes `0`.
+        # If it does not do any filtering (e.g. an empty expression) it will return `false`.
+        def filters_to_range_including_zero?(expression)
+          expression = expression.compact
+
+          expression.size > 0 && expression.none? do |operator, operand|
+            operator_excludes_zero?(operator, operand)
+          end
+        end
+
+        # Determines if the given operator and operand exclude 0 as a matched value.
+        def operator_excludes_zero?(operator, operand)
+          case operator
+          when schema_names.equal_to_any_of then !operand.include?(0)
+          when schema_names.lt then operand <= 0
+          when schema_names.lte then operand < 0
+          when schema_names.gt then operand >= 0
+          when schema_names.gte then operand > 0
+          else
+            # :nocov: -- all operators are covered above. But simplecov complains about an implicit `else` branch being uncovered, so here we've defined it to wrap it with `:nocov:`.
+            false
+            # :nocov:
           end
         end
 
