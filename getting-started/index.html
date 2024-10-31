@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started with ElasticGraph</title>
+  <link rel="stylesheet" href="/elasticgraph/assets/css/main.css">
+  <link rel="stylesheet" href="/elasticgraph/assets/css/highlight.css">
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col h-screen">
+  <!-- Navbar -->
+<nav class="w-full py-4 bg-gray-200 dark:bg-gray-800 shadow">
+  <div class="container mx-auto flex justify-between items-center px-4">
+    <div class="text-xl flex items-center space-x-4">
+      <a href="/elasticgraph/" class="font-bold hover:underline">ElasticGraph</a>
+      <a href="/elasticgraph/getting-started" class="text-blue-600 dark:text-blue-400 hover:underline">Get Started</a>
+      <a href="/elasticgraph/query-api" class="text-blue-600 dark:text-blue-400 hover:underline">Query API</a>
+      <a href="/elasticgraph/docs/main" class="text-blue-600 dark:text-blue-400 hover:underline">Docs</a>
+
+    </div>
+    <div>
+      <a href="https://github.com/block/elasticgraph" target="_blank"
+        class="text-blue-600 dark:text-blue-400 hover:underline mr-2">GitHub</a>
+      <a href="/elasticgraph/about" class="text-blue-600 dark:text-blue-400 hover:underline">About</a>
+    </div>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <div class="container mx-auto px-4 mt-2">
+    <nav class="text-base text-gray-600 dark:text-gray-400" aria-label="Breadcrumb">
+      <ol class="list-reset flex">
+        
+        <li>
+          <a href="/elasticgraph/" class="hover:underline">Home</a>
+        </li>
+        
+
+        
+        
+        
+          
+          
+          
+
+          <li>
+            <span class="mx-2">/</span>
+            
+              Getting Started with ElasticGraph
+            
+          </li>
+        
+      </ol>
+    </nav>
+  </div>
+</nav>
+
+
+  <main class="flex-grow">
+    <div class="container mx-auto px-4 py-8 lg:py-20">
+      <article class="prose dark:prose-invert lg:prose-xl">
+        <h2>Getting Started with ElasticGraph</h2>
+
+        <p>Welcome to ElasticGraph! This guide will help you set up ElasticGraph locally, run queries using GraphiQL, and verify the datastore using the OpenSearch Dashboard. By the end of this tutorial, you’ll have a working ElasticGraph instance running on your machine.</p>
+
+<p><strong>Estimated Time to Complete</strong>: Approximately 2 hours</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>Before you begin, ensure you have the following installed on your system:</p>
+
+<ul>
+  <li><strong>Git</strong>: For cloning repositories.</li>
+  <li><strong>Docker</strong>: For running services locally.</li>
+  <li><strong>Ruby (version 3.2 or higher)</strong> and <strong>Bundler</strong>: For running ElasticGraph scripts.</li>
+  <li><strong>OpenSearch and Kibana</strong>: Included in the Docker setup.</li>
+</ul>
+
+<h2 id="step-1-clone-the-elasticgraph-repository">Step 1: Clone the ElasticGraph Repository</h2>
+
+<p>Begin by cloning the ElasticGraph project template from GitHub:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone &lt;COMING SOON&gt;!
+<span class="nb">cd </span>elasticgraph-project-template
+</code></pre></div></div>
+
+<h2 id="step-2-run-the-initialization-script">Step 2: Run the Initialization Script</h2>
+
+<p>We have an initialization script that sets up your ElasticGraph project with necessary configurations.</p>
+
+<p>Run the following command in your terminal:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-sL</span> https://raw.githubusercontent.com/&lt;COMING-SOON&gt;/elasticgraph-project-template/main/script/init_eg | bash <span class="nt">-s</span>
+</code></pre></div></div>
+
+<p>This script will prompt you for some inputs:</p>
+
+<ul>
+  <li><strong>Application Name</strong>: Choose a name for your ElasticGraph application.</li>
+  <li><strong>Dataset Name</strong>: Decide on a name for your dataset (e.g., <code class="language-plaintext highlighter-rouge">customers</code>).</li>
+</ul>
+
+<p>The script will:</p>
+
+<ul>
+  <li>Set up directory structures.</li>
+  <li>Copy templated files.</li>
+  <li>Install necessary dependencies.</li>
+</ul>
+
+<h2 id="step-3-define-your-schema">Step 3: Define Your Schema</h2>
+
+<p>ElasticGraph uses schemas to define the structure of your data.</p>
+
+<p>You can skip this part for now if you want to play with the sample schema. Otherwise, follow these steps to define your own schema:</p>
+
+<ol>
+  <li>
+    <p><strong>Remove Sample Schema</strong>:</p>
+
+    <p>Delete the sample schema file:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm </span>config/schema/people.rb
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Create Your Schema</strong>:</p>
+
+    <p>Create a new file in <code class="language-plaintext highlighter-rouge">config/schema/</code> named after your dataset, for example, <code class="language-plaintext highlighter-rouge">config/schema/customers.rb</code>.</p>
+
+    <p>Define your schema in this file. Here’s a basic example:</p>
+
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">Schema</span>
+  <span class="k">module</span> <span class="nn">Customers</span>
+    <span class="kp">extend</span> <span class="no">ElasticGraph</span><span class="o">::</span><span class="no">Schema</span>
+
+    <span class="n">type</span> <span class="ss">:customer</span> <span class="k">do</span>
+      <span class="n">field</span> <span class="ss">:id</span><span class="p">,</span> <span class="ss">:string</span>
+      <span class="n">field</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:string</span>
+      <span class="n">field</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:string</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Update Configuration</strong>:</p>
+
+    <p>Ensure that your dataset is correctly referenced in your configuration files.</p>
+
+    <ul>
+      <li>
+        <p><strong>config/settings/lambda.yaml</strong>:</p>
+
+        <p>Update or add your dataset name under the <code class="language-plaintext highlighter-rouge">datasets</code> section.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="step-4-build-and-test-your-project">Step 4: Build and Test Your Project</h2>
+
+<ol>
+  <li>
+    <p><strong>Install Dependencies</strong>:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">install</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Run Rake Tasks</strong>:</p>
+
+    <p>Test your setup by running:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">exec </span>rake
+</code></pre></div>    </div>
+
+    <p>This command runs all the default tasks to ensure everything is configured correctly.</p>
+  </li>
+  <li>
+    <p><strong>Fix Any Issues</strong>:</p>
+
+    <p>If you encounter errors, follow the error message prompts to fix anything that isn’t set up correctly.</p>
+  </li>
+</ol>
+
+<h2 id="step-5-start-elasticgraph-locally">Step 5: Start ElasticGraph Locally</h2>
+
+<p>With Docker running, start your local ElasticGraph instance:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">exec </span>rake boot_locally
+</code></pre></div></div>
+
+<p>This command will:</p>
+
+<ul>
+  <li>Build Docker images for ElasticGraph and OpenSearch.</li>
+  <li>Start the services using Docker Compose.</li>
+  <li>Populate your dataset with fake data.</li>
+  <li>Launch GraphiQL in your default web browser.</li>
+</ul>
+
+<h2 id="step-6-use-graphiql-to-run-queries">Step 6: Use GraphiQL to Run Queries</h2>
+
+<p>GraphiQL is a graphical interactive in-browser GraphQL IDE.</p>
+
+<p>Once GraphiQL opens in your browser, you can start running queries against your local ElasticGraph instance.</p>
+
+<h3 id="example-query">Example Query</h3>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">customers</code> and fields with those relevant to your schema.</p>
+
+<div class="language-graphql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">query</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">customers</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">totalEdgeCount</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">id</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">email</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Explanation</strong>:</p>
+
+<ul>
+  <li><strong>customers</strong>: The dataset you defined.</li>
+  <li><strong>totalEdgeCount</strong>: Returns the total number of records.</li>
+  <li><strong>nodes</strong>: An array of data nodes.</li>
+  <li><strong>fields inside nodes</strong>: The fields you’ve defined in your schema.</li>
+</ul>
+
+<p>Learn more about ElasticGraph queries in the <a href="/elasticgraph/query-api">Query API documentation</a>.</p>
+
+<h2 id="step-7-access-the-opensearch-dashboard-aka-elasticsearch-kibana">Step 7: Access the OpenSearch Dashboard (aka Elasticsearch Kibana)</h2>
+
+<p>With <code class="language-plaintext highlighter-rouge">bundle exec rake boot_locally</code> still running:</p>
+
+<ol>
+  <li>
+    <p><strong>Open Dashboard</strong>:</p>
+
+    <p>Navigate to <a href="http://localhost:5601">http://localhost:5601</a> in your web browser.</p>
+  </li>
+  <li>
+    <p><strong>Explore Your Data</strong>:</p>
+
+    <ul>
+      <li>Click on <strong>“Dev Tools”</strong> in the Kibana sidebar.</li>
+      <li>
+        <p>Run the following commands to explore your indices:</p>
+
+        <pre><code class="language-elasticsearch">GET /_cat/indices?v
+GET /_cat/shards?v
+GET /_cat/templates?v
+</code></pre>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Search Your Data</strong>:</p>
+
+    <p>Replace <code class="language-plaintext highlighter-rouge">your-index-name</code> with the name of your index (usually your dataset name).</p>
+
+    <pre><code class="language-elasticsearch">GET /your-index-name/_search
+</code></pre>
+
+    <p>This will return all documents in your index. Normally you’ll query via GraphiQL, but this is useful for debugging.</p>
+  </li>
+</ol>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<ul>
+  <li>
+    <p><strong>Docker Issues</strong>:</p>
+
+    <ul>
+      <li>Ensure Docker is running.</li>
+      <li>If ports are already in use, stop other services or adjust the port settings in <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>GraphiQL Not Loading</strong>:</p>
+
+    <ul>
+      <li>Verify that the local server is running.</li>
+      <li>Check for errors in the terminal where <code class="language-plaintext highlighter-rouge">boot_locally</code> is running.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Schema Errors</strong>:</p>
+
+    <ul>
+      <li>Ensure your schema files are correctly formatted.</li>
+      <li>Check for typos in field names and types.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Kibana Not Accessible</strong>:</p>
+
+    <ul>
+      <li>Confirm that Kibana is running (<code class="language-plaintext highlighter-rouge">docker ps</code> to see running containers).</li>
+      <li>Check if another service is using port <code class="language-plaintext highlighter-rouge">5601</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>Congratulations! You’ve set up ElasticGraph locally and run your first queries.</p>
+
+<ul>
+  <li>
+    <p><strong>Explore Advanced Features</strong>:</p>
+
+    <ul>
+      <li>Learn about custom resolvers.</li>
+      <li>Implement complex queries and mutations.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Connect to Real Data Sources</strong>:</p>
+
+    <ul>
+      <li>Replace fake data with real data ingestion pipelines.</li>
+      <li>Integrate with databases or APIs.</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Contribute to ElasticGraph</strong>:</p>
+
+    <ul>
+      <li>Report issues or suggest features on GitHub.</li>
+      <li>Submit pull requests to improve the project.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><strong>ElasticGraph Documentation</strong>: <a href="/elasticgraph/docs/main">/elasticgraph/docs/main</a></li>
+  <li><strong>GraphQL Introduction</strong>: <a href="https://graphql.org/learn/">https://graphql.org/learn/</a></li>
+  <li><strong>OpenSearch Documentation</strong>: <a href="https://opensearch.org/docs/latest/">https://opensearch.org/docs/latest/</a></li>
+</ul>
+
+<h2 id="feedback">Feedback</h2>
+
+<p>We’d love to hear your feedback. If you encounter any issues or have suggestions, please open an issue on our GitHub repository.</p>
+
+<hr />
+
+<p><em>Happy coding with ElasticGraph!</em></p>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer class="bg-gray-200 dark:bg-gray-900 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+        ElasticGraph
+      </h3>
+      <p class="text-gray-700 dark:text-gray-300">
+        ElasticGraph is an open-source framework for indexing, searching,
+        grouping, and aggregating data. Join our community and contribute on
+        <a href="https://github.com/block/elasticgraph" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+</html>
