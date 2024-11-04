@@ -16,8 +16,9 @@ ElasticGraphGemspecHelper.define_elasticgraph_gem(gemspec_file: __FILE__, catego
   spec.add_dependency "elasticgraph-indexer", eg_version
   spec.add_dependency "elasticgraph-rack", eg_version
   spec.add_dependency "elasticgraph-schema_definition", eg_version
-  spec.add_dependency "rackup", "~> 2.1"
+  spec.add_dependency "rackup", "~> 2.2"
   spec.add_dependency "rake", "~> 13.2"
+  spec.add_dependency "webrick", "~> 1.9"
 
   spec.add_development_dependency "elasticgraph-elasticsearch", eg_version
   spec.add_development_dependency "elasticgraph-opensearch", eg_version

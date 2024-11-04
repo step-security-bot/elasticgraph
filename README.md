@@ -180,7 +180,7 @@ These libraries are used for local development of ElasticGraph applications, but
 
 ```mermaid
 graph LR;
-    elasticgraph-local --> elasticgraph-admin & elasticgraph-graphql & elasticgraph-indexer & elasticgraph-rack & elasticgraph-schema_definition & rackup & rake
+    elasticgraph-local --> elasticgraph-admin & elasticgraph-graphql & elasticgraph-indexer & elasticgraph-rack & elasticgraph-schema_definition & rackup & rake & webrick
     elasticgraph-rack --> elasticgraph-graphql & rack
     elasticgraph-schema_definition --> elasticgraph-graphql & elasticgraph-indexer & elasticgraph-json_schema & elasticgraph-schema_artifacts & elasticgraph-support & graphql & rake
     style elasticgraph-local color: DodgerBlue;
@@ -191,6 +191,7 @@ graph LR;
     style elasticgraph-indexer color: Green;
     style rackup color: Red;
     style rake color: Red;
+    style webrick color: Red;
     style rack color: Red;
     style elasticgraph-json_schema color: Green;
     style elasticgraph-schema_artifacts color: Green;
@@ -200,6 +201,7 @@ click graphql href "https://rubygems.org/gems/graphql"
 click rack href "https://rubygems.org/gems/rack"
 click rackup href "https://rubygems.org/gems/rackup"
 click rake href "https://rubygems.org/gems/rake"
+click webrick href "https://rubygems.org/gems/webrick"
 ```
 
 
