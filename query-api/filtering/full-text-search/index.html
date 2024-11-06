@@ -189,6 +189,29 @@ are supported to control both aspects to make matching stricter:</p>
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span></code></pre></figure>
 
+<h3 id="bypassing-matchesphrase-and-matchesquery">Bypassing matchesPhrase and matchesQuery</h3>
+
+<p>In order to make a <code class="language-plaintext highlighter-rouge">matchesPhrase</code> or <code class="language-plaintext highlighter-rouge">matchesQuery</code> filter optional, you can supply <code class="language-plaintext highlighter-rouge">null</code> to the <code class="language-plaintext highlighter-rouge">MatchesQueryFilterInput</code> parameter, like this:</p>
+
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">OptionalMatchingFilter</span><span class="p">(</span><span class="w">
+  </span><span class="nv">$optionalMatchQuery</span><span class="p">:</span><span class="w"> </span><span class="n">MatchesQueryFilterInput</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">description</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">matchesQuery</span><span class="p">:</span><span class="w"> </span><span class="nv">$optionalMatchQuery</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="n">nodes</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">name</span><span class="w">
+      </span><span class="n">bio</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">description</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
 
       </article>
     </div>
