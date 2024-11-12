@@ -62,4 +62,4 @@ The current GC members are:
 * Andrew Lee Rubinger
 * Nidhi Nahar
 
-Members are not to be contacted individually. The GC may be reached through `TODO Update this` and is an available resource in mediation or for sensitive cases beyond the scope of project maintainers. It operates as a "Self-appointing council or board" as defined by Red Hat: [Open Source Governance Models](https://www.redhat.com/en/blog/understanding-open-source-governance-models).
+Members are not to be contacted individually. The GC may be reached through `open-source-governance@block.xyz` and is an available resource in mediation or for sensitive cases beyond the scope of project maintainers. It operates as a "Self-appointing council or board" as defined by Red Hat: [Open Source Governance Models](https://www.redhat.com/en/blog/understanding-open-source-governance-models).
