@@ -12,16 +12,25 @@ module ElasticGraph
   class IndexerAutoscalerLambda
     # @private
     class ConcurrencyScaler
-      def initialize(datastore_core:, sqs_client:, lambda_client:)
+      def initialize(datastore_core:, sqs_client:, lambda_client:, cloudwatch_client:)
         @logger = datastore_core.logger
         @datastore_core = datastore_core
         @sqs_client = sqs_client
         @lambda_client = lambda_client
+        @cloudwatch_client = cloudwatch_client
       end
 
       MINIMUM_CONCURRENCY = 2
 
-      def tune_indexer_concurrency(queue_urls:, min_cpu_target:, max_cpu_target:, maximum_concurrency:, indexer_function_name:)
+      def tune_indexer_concurrency(
+        queue_urls:,
+        min_cpu_target:,
+        max_cpu_target:,
+        maximum_concurrency:,
+        required_free_storage_in_mb:,
+        indexer_function_name:,
+        cluster_name:
+      )
         queue_attributes = get_queue_attributes(queue_urls)
         queue_arns = queue_attributes.fetch(:queue_arns)
         num_messages = queue_attributes.fetch(:total_messages)
@@ -37,6 +46,8 @@ module ElasticGraph
 
         new_target_concurrency =
           if num_messages.positive?
+            lowest_node_free_storage_in_mb = get_lowest_node_free_storage_in_mb(cluster_name)
+
             cpu_utilization = get_max_cpu_utilization
             cpu_midpoint = (max_cpu_target + min_cpu_target) / 2.0
 
@@ -45,11 +56,19 @@ module ElasticGraph
             if current_concurrency.nil?
               details_logger.log_unset
               nil
+            elsif lowest_node_free_storage_in_mb < required_free_storage_in_mb
+              details_logger.log_pause(
+                lowest_node_free_storage_in_mb: lowest_node_free_storage_in_mb,
+                required_free_storage_in_mb: required_free_storage_in_mb
+              )
+              MINIMUM_CONCURRENCY
             elsif cpu_utilization < min_cpu_target
               increase_factor = (cpu_midpoint / cpu_utilization).clamp(0.0, 1.5)
               (current_concurrency * increase_factor).round.tap do |new_concurrency|
                 details_logger.log_increase(
                   cpu_utilization: cpu_utilization,
+                  lowest_node_free_storage_in_mb: lowest_node_free_storage_in_mb,
+                  required_free_storage_in_mb: required_free_storage_in_mb,
                   current_concurrency: current_concurrency,
                   new_concurrency: new_concurrency
                 )
@@ -59,6 +78,8 @@ module ElasticGraph
               (current_concurrency - (current_concurrency * decrease_factor)).round.tap do |new_concurrency|
                 details_logger.log_decrease(
                   cpu_utilization: cpu_utilization,
+                  lowest_node_free_storage_in_mb: lowest_node_free_storage_in_mb,
+                  required_free_storage_in_mb: required_free_storage_in_mb,
                   current_concurrency: current_concurrency,
                   new_concurrency: new_concurrency
                 )
@@ -66,13 +87,15 @@ module ElasticGraph
             else
               details_logger.log_no_change(
                 cpu_utilization: cpu_utilization,
+                lowest_node_free_storage_in_mb: lowest_node_free_storage_in_mb,
+                required_free_storage_in_mb: required_free_storage_in_mb,
                 current_concurrency: current_concurrency
               )
               current_concurrency
             end
           else
             details_logger.log_reset
-            0
+            MINIMUM_CONCURRENCY
           end
 
         if new_target_concurrency && new_target_concurrency != current_concurrency
@@ -92,6 +115,22 @@ module ElasticGraph
             node.dig("os", "cpu", "percent")
           end
         end.max.to_f
+      end
+
+      def get_lowest_node_free_storage_in_mb(cluster_name)
+        metric_response = @cloudwatch_client.get_metric_data({
+          start_time: ::Time.now - 1200, # past 20 minutes
+          end_time: ::Time.now,
+          metric_data_queries: [
+            {
+              id: "minFreeStorageAcrossNodes",
+              expression: "SEARCH('{AWS/ES,ClientId,DomainName} MetricName=\"FreeStorageSpace\" AND DomainName=\"#{cluster_name}\"', 'Minimum', 60)",
+              return_data: true
+            }
+          ]
+        })
+
+        metric_response.metric_data_results.first.values.first
       end
 
       def get_queue_attributes(queue_urls)

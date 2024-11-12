@@ -4,7 +4,8 @@ module ElasticGraph
       def initialize: (
         datastore_core: DatastoreCore,
         sqs_client: Aws::SQS::Client,
-        lambda_client: Aws::Lambda::Client
+        lambda_client: Aws::Lambda::Client,
+        cloudwatch_client: Aws::CloudWatch::Client
       ) -> void
 
       MINIMUM_CONCURRENCY: ::Integer
@@ -14,7 +15,9 @@ module ElasticGraph
         min_cpu_target: ::Integer,
         max_cpu_target: ::Integer,
         maximum_concurrency: ::Integer,
-        indexer_function_name: ::String
+        required_free_storage_in_mb: ::Integer,
+        indexer_function_name: ::String,
+        cluster_name: ::String
       ) -> void
 
       private
@@ -23,8 +26,10 @@ module ElasticGraph
       @datastore_core: DatastoreCore
       @sqs_client: Aws::SQS::Client
       @lambda_client: Aws::Lambda::Client
+      @cloudwatch_client: Aws::CloudWatch::Client
 
       def get_max_cpu_utilization: () -> ::Float
+      def get_lowest_node_free_storage_in_mb: (::String) -> ::Float
       def get_queue_attributes: (::Array[::String]) -> { total_messages: ::Integer, queue_arns: ::Array[::String] }
       def get_concurrency: (::String) -> ::Integer?
 
