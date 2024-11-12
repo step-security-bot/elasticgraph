@@ -106,7 +106,11 @@ module ElasticGraph
 
       # The list of user-defined types that are indexed document types. (Indexed aggregation types will not be included in this.)
       def indexed_document_types
-        @indexed_document_types ||= @types_by_name.values.select(&:indexed_document?)
+        @indexed_document_types ||= defined_types.select(&:indexed_document?)
+      end
+
+      def defined_types
+        @defined_types ||= @types_by_name.except(*BUILT_IN_TYPE_NAMES).values
       end
 
       def to_s
