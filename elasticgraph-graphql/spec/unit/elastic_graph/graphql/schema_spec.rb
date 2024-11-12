@@ -70,21 +70,6 @@ module ElasticGraph
         end
       end
 
-      describe "#defined_types" do
-        it "returns a list containing all explicitly defined types (excluding built-ins)" do
-          schema = define_schema do |s|
-            s.enum_type "Options" do |t|
-              t.value "firstOption"
-            end
-            s.object_type "Color"
-          end
-
-          expect(schema.defined_types).to all be_a Schema::Type
-          expect(schema.defined_types.map(&:name)).to include(:Options, :Color, :Query)
-            .and exclude(:Int, :Float, :Boolean, :String, :ID)
-        end
-      end
-
       describe "#indexed_document_types" do
         it "returns a list containing all types defined as indexed types" do
           schema = define_schema do |s|
