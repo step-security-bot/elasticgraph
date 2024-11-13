@@ -1,10 +1,25 @@
 # Contribution Guide 
 
+## Notice for Project Leads
+---
+___***THIS IS A TEMPLATE; SECTIONS FLAGGED LIKE THIS are for project leads to fill out***___
+This is a template and offers suggestions for orienting your community to:
+* Build
+* Install Build Prereqs
+* Contribute
+
+It's likely that you'll customize this to your project's needs, and the areas of focus here are a starting point for you to fill out, remove, expand -- whatever serves project success.
+
+If you note an area where this template itself could be improved - have at it! You may file an issue or PR in https://github.com/block/oss-project-template.
+
+---
+
 There are many ways to be an open source contributor, and we're here to help you on your way! You may:
 
 * Propose ideas in our 
-  [discord](https://discord.gg/tbd)
-* Raise an issue or feature request in our [issue tracker](LINK_HERE)  ___***FIX LINK AND REMOVE THIS NOTICE***___
+  [Discord](https://discord.gg/SOMETHING)  ___***DETERMINE IF APPLICABLE, UPDATE LINK AND REMOVE THIS NOTICE***___
+* Raise an issue or feature request in our [issue tracker](LINK_HERE)  ___***UPDATE LINK AND REMOVE THIS NOTICE***___
+* Raise an issue or feature request in our [discussions](LINK_HERE)  ___***DETERMINE IF APPLICABLE, UPDATE LINK AND REMOVE THIS NOTICE***___
 * Help another contributor with one of their questions, or a code review
 * Suggest improvements to our Getting Started documentation by supplying a Pull Request
 * Evangelize our work together in conferences, podcasts, and social media spaces.
@@ -169,13 +184,13 @@ Anyone from the community is welcome (and encouraged!) to raise issues via
 
 ### Discussions
 
-Design discussions and proposals take place in our [discord](https://discord.gg/tbd).
+Design discussions and proposals take place in our [Discord](https://discord.gg/SOMETHING). ___***DETERMINE IF APPLICABLE, FIX LINK AND REMOVE THIS NOTICE***___.
 
 We advocate an asynchronous, written debate model - so write up your thoughts and invite the community to join in!
 
 ### Continuous Integration
 
-Build and Test cycles are run on every commit to every branch on [CircleCI](LINK_HERE).
+Build and Test cycles are run on every commit to every branch on [GitHub Actions](LINK_HERE).
 
  ___***FIX LINK ABOVE AND REMOVE THIS NOTICE***___
 
