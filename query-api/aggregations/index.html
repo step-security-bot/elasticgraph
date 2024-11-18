@@ -119,7 +119,7 @@ Here’s a complete example:</p>
 </span><span class="p">}</span></code></pre></figure>
 
 <p>Aggregation fields support <a href="/elasticgraph/query-api/filtering/">filtering</a> and <a href="/elasticgraph/query-api/pagination/">pagination</a>
-but do <em>not</em> support client-specified <a href="/elasticgraph/query-api/sorting/">sorting</a><sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup>. Under an aggregations field, each node
+but do <em>not</em> support client-specified <a href="/elasticgraph/query-api/sorting/">sorting</a><sup id="fnref:1"><a href="#fn:1" class="footnote" rel="footnote" role="doc-noteref">1</a></sup>. Under an aggregations field, each node
 represents a grouping of documents. When <a href="/elasticgraph/query-api/aggregations/grouping/"><code class="language-plaintext highlighter-rouge">groupedBy</code> fields</a> have been requested,
 each node represents the grouping of documents that have the <code class="language-plaintext highlighter-rouge">groupedBy</code> values. When no <code class="language-plaintext highlighter-rouge">groupedBy</code> fields have been requested,
 a single node will be returned containing a grouping for all documents matched by the filter.</p>
@@ -172,7 +172,7 @@ a single node will be returned containing a grouping for all documents matched b
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1" role="doc-endnote">
+    <li id="fn:1">
       <p>Aggregation sorting is implicitly controlled by the <a href="/elasticgraph/query-api/aggregations/grouping/">groupings</a>–the
   nodes will sort ascending by each of the grouping fields. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
