@@ -45,6 +45,7 @@ module ElasticGraph
         def self.of_all_except: (::Enumerable[routingValue]) -> RoutingValueSet
 
         ALL: RoutingValueSet
+        EMPTY: RoutingValueSet
         INVERTED_TYPES: ::Hash[routingValueSetType, routingValueSetType]
 
         def inclusive?: () -> bool

@@ -58,7 +58,7 @@ module ElasticGraph
         })).to search_shards_identified_by "abc", "def"
       end
 
-      it "ignores `nil` among other values in `equal_to_any_of` filter for a single `route_with_field_paths` field" do
+      it "treats `nil` among other values in `equal_to_any_of` filter as matching nothing for a single `route_with_field_paths` field" do
         expect(shard_routing_for(["name"], {
           "name" => {"equal_to_any_of" => ["abc", nil, "def"]}
         })).to search_shards_identified_by "abc", "def"
@@ -88,14 +88,14 @@ module ElasticGraph
         }})).to search_shards_identified_by "def"
       end
 
-      it "ignores filters on other fields so long as they are not in an `any_of` clause (for multiple filters in one hash)" do
+      it "treats filters on other fields as matching everything so long as they are not in an `any_of` clause (for multiple filters in one hash)" do
         expect(shard_routing_for(["name"], {
           "name" => {"equal_to_any_of" => ["abc", "def"]},
           "cost" => {"gt" => 10}
         })).to search_shards_identified_by "abc", "def"
       end
 
-      it "ignores filters on other fields so long as they are not in an `any_of` clause (for multiple filters in an array of hashes)" do
+      it "treats filters on other fields as matching everything so long as they are not in an `any_of` clause (for multiple filters in an array of hashes)" do
         expect(shard_routing_for(["name"], [
           {"name" => {"equal_to_any_of" => ["abc", "def"]}},
           {"cost" => {"gt" => 10}}
@@ -162,7 +162,7 @@ module ElasticGraph
         end
       end
 
-      it "searches all shards when the query filters with `equal_to_any_of: nil` on a single `route_with_field_paths` field because our current filter logic ignores that filter and we must search all shards" do
+      it "searches all shards when the query filters with `equal_to_any_of: nil` on a single `route_with_field_paths` field because our current filter logic treats that filter as matching everything and we must search all shards" do
         expect(shard_routing_for(["name"], {
           "name" => {"equal_to_any_of" => nil}
         })).to search_all_shards
@@ -253,20 +253,35 @@ module ElasticGraph
         ]})).to search_all_shards
       end
 
-      # TODO: Change behaviour so no shards are matched when given `anyOf => []`.
-      #       Updated references of ignore and prune to use language such as "treated ... as `true`"
       it "searches no shards when we have an `any_of: []` filter because that will match no results" do
         expect(shard_routing_for(["name"], {
           "any_of" => []
-        })).to search_all_shards
+        })).to search_no_shards
       end
 
-      # TODO: Change behaviour so no shards are matched when given `anyOf => {anyOf => []}`
-      #       Updated references of ignore and prune to use language such as "treated ... as `true`"
       it "searches no shards when we have an `any_of: [{anyof: []}]` filter because that will match no results" do
         expect(shard_routing_for(["name"], {
           "any_of" => [{"any_of" => []}]
-        })).to search_all_shards
+        })).to search_no_shards
+      end
+
+      it "searches no shards when we have an `any_of: []` AND `equal_to_any_of: ['abc']` filter because that will match no results" do
+        expect(shard_routing_for(["name"], {
+          "any_of" => [],
+          "name" => {"equal_to_any_of" => ["abc"]}
+        })).to search_no_shards
+      end
+
+      it "searches the same shards for `any_of: [predicate]` and `predicate` since they are equivalent" do
+        predicate = {"name" => {"equal_to_any_of" => ["abc"]}}
+        expect(shard_routing_for(["name"], predicate)).to search_shards_identified_by "abc"
+        expect(shard_routing_for(["name"], {"any_of" => [predicate]})).to search_shards_identified_by "abc"
+      end
+
+      it "searches the same shards for `any_of: [{any_of: []}, predicate]` and `predicate` since they are equivalent" do
+        predicate = {"name" => {"equal_to_any_of" => ["abc"]}}
+        expect(shard_routing_for(["name"], predicate)).to search_shards_identified_by "abc"
+        expect(shard_routing_for(["name"], {"any_of" => [{"any_of" => []}, predicate]})).to search_shards_identified_by "abc"
       end
 
       it "searches all shards when we have an `any_of: [{field: nil}]` filter because that will match all results" do
@@ -366,14 +381,14 @@ module ElasticGraph
           }})).to search_shards_identified_by "def"
         end
 
-        it "ignores filters on other fields so long as they are not in an `any_of` clause (for multiple filters in one hash)" do
+        it "treats filters on other fields as matching everything so long as they are not in an `any_of` clause (for multiple filters in one hash)" do
           expect(shard_routing_for(["name"], {
             "name" => {"not" => {"equal_to_any_of" => ["abc", "def"]}},
             "cost" => {"gt" => 10}
           })).to search_all_shards
         end
 
-        it "ignores filters on other fields so long as they are not in an `any_of` clause (for multiple filters in an array of hashes)" do
+        it "treats filters on other fields as matching everything so long as they are not in an `any_of` clause (for multiple filters in an array of hashes)" do
           expect(shard_routing_for(["name"], [
             {"name" => {"not" => {"equal_to_any_of" => ["abc", "def"]}}},
             {"cost" => {"gt" => 10}}

@@ -364,18 +364,16 @@ module ElasticGraph
               expect(parts).to target_all_widget_indices
             end
 
-            # TODO: Change behaviour so no indices are matched when given `anyOf => []`
             it "excludes all indices when we have an `any_of: []` filter because that will match no results" do
               parts = search_index_expression_parts_for({"any_of" => []})
 
-              expect(parts).to target_all_widget_indices
+              expect(parts).to target_no_indices
             end
 
-            # TODO: Change behaviour so no indices are matched when given `anyOf => {anyOf => []}`
             it "excludes all indices when we have an `any_of: [{anyof: []}]` filter because that will match no results" do
               parts = search_index_expression_parts_for({"any_of" => [{"any_of" => []}]})
 
-              expect(parts).to target_all_widget_indices
+              expect(parts).to target_no_indices
             end
 
             it "excludes no indices when we have an `any_of: [{field: nil}]` filter because that will match all results" do
@@ -454,6 +452,10 @@ module ElasticGraph
 
         def target_all_widget_indices
           contain_exactly("widgets_rollover__*")
+        end
+
+        def target_no_indices
+          eq []
         end
 
         def target_widget_indices_excluding_2021_months(*month_num_strings)

@@ -16,8 +16,9 @@ module ElasticGraph
         def initialize(schema_names:)
           # @type var all_values_set: _RoutingValueSet
           all_values_set = RoutingValueSet::ALL
+          empty_set = RoutingValueSet::EMPTY
 
-          @filter_value_set_extractor = Filtering::FilterValueSetExtractor.new(schema_names, all_values_set) do |operator, filter_value|
+          @filter_value_set_extractor = Filtering::FilterValueSetExtractor.new(schema_names, all_values_set, empty_set) do |operator, filter_value|
             if operator == :equal_to_any_of
               # This calls `.compact` to remove `nil` filter_value values
               RoutingValueSet.of(filter_value.compact)
@@ -70,6 +71,7 @@ module ElasticGraph
         end
 
         ALL = of_all_except([])
+        EMPTY = of([])
 
         def intersection(other_set)
           # Here we return `self` to preserve the commutative property of `intersection`. Returning `self`

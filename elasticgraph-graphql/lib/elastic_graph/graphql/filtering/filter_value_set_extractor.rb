@@ -12,9 +12,10 @@ module ElasticGraph
       # Responsible for extracting a set of values from query filters, based on a using a custom
       # set type that is able to efficiently model the "all values" case.
       class FilterValueSetExtractor
-        def initialize(schema_names, all_values_set, &build_set_for_filter)
+        def initialize(schema_names, all_values_set, empty_set, &build_set_for_filter)
           @schema_names = schema_names
           @all_values_set = all_values_set
+          @empty_set = empty_set
           @build_set_for_filter = build_set_for_filter
         end
 
@@ -55,7 +56,7 @@ module ElasticGraph
           # outside the `map_reduce_sets` block below so we only do it once instead of N times.
           target_field_path_parts = target_field_path.split(".")
 
-          # Here we intersect the filter value setbecause when we have multiple `filter_hashes`,
+          # Here we intersect the filter value set, because when we have multiple `filter_hashes`,
           # the filters are ANDed together. Only documents that match ALL the filters will be
           # returned. Therefore, we want the intersection of filter value sets.
           map_reduce_sets(filter_hashes, :intersection, negate: false) do |filter_hash|
@@ -105,6 +106,11 @@ module ElasticGraph
 
         # Determines the set of filter values for an `any_of` clause, which is used for ORing multiple filters together.
         def filter_value_set_for_any_of(filter_hashes, target_field_path_parts, traversed_field_path_parts, negate:)
+          # Here we treat `any_of: []` as matching no values.
+          if filter_hashes.empty?
+            return negate ? @all_values_set : @empty_set
+          end
+
           # Here we union the filter value sets because `any_of` represents an OR. If we can determine specific
           # filter values for all `any_of` clauses, we will OR them together. Alternately, if we cannot
           # determine specific filter values for any clauses, we will union `@all_values_set`,
