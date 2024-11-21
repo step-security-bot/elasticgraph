@@ -15,7 +15,7 @@ module ElasticGraph
       # Responsible for building a search index expression for a specific query based on the filters.
       class IndexExpressionBuilder
         def initialize(schema_names:)
-          @filter_value_set_extractor = Filtering::FilterValueSetExtractor.new(schema_names, Support::TimeSet::ALL) do |operator, filter_value|
+          @filter_value_set_extractor = Filtering::FilterValueSetExtractor.new(schema_names, Support::TimeSet::ALL, Support::TimeSet::EMPTY) do |operator, filter_value|
             case operator
             when :gt, :gte, :lt, :lte
               if date_string?(filter_value)
