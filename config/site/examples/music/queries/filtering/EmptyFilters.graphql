@@ -1,4 +1,4 @@
-query NullOrEmptyFilters {
+query EmptyFilters {
   artists(filter: {
     name: {equalToAnyOf: null}
     bio: {yearFormed: {}}
