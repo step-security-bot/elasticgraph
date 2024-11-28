@@ -99,14 +99,14 @@ This works just like an <code class="language-plaintext highlighter-rouge">AND</
 filters that can’t be provided on a single filter input because of collisions between key names.
 For example, if you want to provide multiple <code class="language-plaintext highlighter-rouge">anySatisfy: ...</code> filters, you could do <code class="language-plaintext highlighter-rouge">allOf: [{anySatisfy: ...}, {anySatisfy: ...}]</code>.</p>
 
-    <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> or an empty list is passed.</p>
+    <p>When <code class="language-plaintext highlighter-rouge">null</code> or an empty list is passed, matches all documents.</p>
   </dd>
   <dt><a href="/elasticgraph/query-api/filtering/conjunctions/"><code class="language-plaintext highlighter-rouge">anyOf</code></a></dt>
   <dd>Matches records where any of the provided sub-filters evaluate to true.
 This works just like an <code class="language-plaintext highlighter-rouge">OR</code> operator in SQL.
 
-    <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> is passed. When an empty list is passed, will
-cause this part of the filter to match no documents.</p>
+    <p>When <code class="language-plaintext highlighter-rouge">null</code> is passed, matches all documents.
+When an empty list is passed, this part of the filter matches no documents.</p>
   </dd>
 </dl>
 

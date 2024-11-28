@@ -856,33 +856,33 @@ common scalar types (e.g. <code>Date</code> and <code>DateTime</code>), but it i
 <span class='tstring_content'>    Matches records where the field value is equal to any of the provided values.
 </span><span class='tstring_content'>    This works just like an IN operator in SQL.
 </span><span class='tstring_content'>
-</span><span class='tstring_content'>    Will be ignored when `null` is passed. When an empty list is passed, will cause this
-</span><span class='tstring_content'>    part of the filter to match no documents. When `null` is passed in the list, will
-</span><span class='tstring_content'>    match records where the field value is `null`.
+</span><span class='tstring_content'>    When `null` is passed, matches all documents. When an empty list is passed,
+</span><span class='tstring_content'>    this part of the filter matches no documents. When `null` is passed in the
+</span><span class='tstring_content'>    list, this part of the filter matches records where the field value is `null`.
 </span><span class='heredoc_end'>  EOS
 </span>
   <span class='const'>GT_DOC</span> <span class='op'>=</span> <span class='heredoc_beg'>&lt;&lt;~EOS</span>
 <span class='tstring_content'>    Matches records where the field value is greater than (&gt;) the provided value.
 </span><span class='tstring_content'>
-</span><span class='tstring_content'>    Will be ignored when `null` is passed.
+</span><span class='tstring_content'>    When `null` is passed, matches all documents.
 </span><span class='heredoc_end'>  EOS
 </span>
   <span class='const'>GTE_DOC</span> <span class='op'>=</span> <span class='heredoc_beg'>&lt;&lt;~EOS</span>
 <span class='tstring_content'>    Matches records where the field value is greater than or equal to (&gt;=) the provided value.
 </span><span class='tstring_content'>
-</span><span class='tstring_content'>    Will be ignored when `null` is passed.
+</span><span class='tstring_content'>    When `null` is passed, matches all documents.
 </span><span class='heredoc_end'>  EOS
 </span>
   <span class='const'>LT_DOC</span> <span class='op'>=</span> <span class='heredoc_beg'>&lt;&lt;~EOS</span>
 <span class='tstring_content'>    Matches records where the field value is less than (&lt;) the provided value.
 </span><span class='tstring_content'>
-</span><span class='tstring_content'>    Will be ignored when `null` is passed.
+</span><span class='tstring_content'>    When `null` is passed, matches all documents.
 </span><span class='heredoc_end'>  EOS
 </span>
   <span class='const'>LTE_DOC</span> <span class='op'>=</span> <span class='heredoc_beg'>&lt;&lt;~EOS</span>
 <span class='tstring_content'>    Matches records where the field value is less than or equal to (&lt;=) the provided value.
 </span><span class='tstring_content'>
-</span><span class='tstring_content'>    Will be ignored when `null` is passed.
+</span><span class='tstring_content'>    When `null` is passed, matches all documents.
 </span><span class='heredoc_end'>  EOS
 </span>
   <span class='kw'>def</span> <span class='id identifier rubyid_to_input_filters'>to_input_filters</span>
@@ -1446,7 +1446,7 @@ scalar values before indexing them, performing any desired formatting or normali
 </div>
 
       <div id="footer">
-  Generated on Thu Nov 21 21:38:03 2024 by
+  Generated on Thu Nov 28 17:19:36 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.3.6).
 </div>

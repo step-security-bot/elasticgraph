@@ -96,14 +96,14 @@
 full text search. This is stricter than <code class="language-plaintext highlighter-rouge">matchesQuery</code>: all terms must match
 and be in the same order as the provided phrase.
 
-    <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> is passed.</p>
+    <p>When <code class="language-plaintext highlighter-rouge">null</code> is passed, matches all documents.</p>
   </dd>
   <dt><a href="/elasticgraph/query-api/filtering/full-text-search/"><code class="language-plaintext highlighter-rouge">matchesQuery</code></a></dt>
   <dd>Matches records where the field value matches the provided query using full text search.
 This is more lenient than <code class="language-plaintext highlighter-rouge">matchesPhrase</code>: the order of terms is ignored, and, by default,
 only one search term is required to be in the field value.
 
-    <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> is passed.</p>
+    <p>When <code class="language-plaintext highlighter-rouge">null</code> is passed, matches all documents.</p>
   </dd>
 </dl>
 

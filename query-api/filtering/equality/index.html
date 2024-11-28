@@ -95,9 +95,9 @@
   <dd>Matches records where the field value is equal to any of the provided values.
 This works just like an <code class="language-plaintext highlighter-rouge">IN</code> operator in SQL.
 
-    <p>Will be ignored when <code class="language-plaintext highlighter-rouge">null</code> is passed.
-When an empty list is passed, will cause this part of the filter to match no documents.
-When <code class="language-plaintext highlighter-rouge">null</code> is passed in the list, will match records where the field value is <code class="language-plaintext highlighter-rouge">null</code>.</p>
+    <p>When <code class="language-plaintext highlighter-rouge">null</code> is passed, matches all documents.
+When an empty list is passed, this part of the filter matches no documents.
+When <code class="language-plaintext highlighter-rouge">null</code> is passed in the list, this part of the filter matches records where the field value is <code class="language-plaintext highlighter-rouge">null</code>.</p>
   </dd>
 </dl>
 
