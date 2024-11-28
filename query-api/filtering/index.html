@@ -114,7 +114,7 @@ you’ll need to provide a nested object matching the field structure.</li>
 <p>Filters with a value of <code class="language-plaintext highlighter-rouge">null</code> or empty object (<code class="language-plaintext highlighter-rouge">{}</code>) match all documents. When negated with <code class="language-plaintext highlighter-rouge">not</code>, no documents are matched.
 The filters in this query match all documents:</p>
 
-<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">NullOrEmptyFilters</span><span class="w"> </span><span class="p">{</span><span class="w">
+<figure class="highlight"><pre><code class="language-graphql" data-lang="graphql"><span class="k">query</span><span class="w"> </span><span class="n">EmptyFilters</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="n">artists</span><span class="p">(</span><span class="n">filter</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">equalToAnyOf</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">}</span><span class="w">
     </span><span class="n">bio</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="n">yearFormed</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span><span class="w">
