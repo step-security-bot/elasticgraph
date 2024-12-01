@@ -130,6 +130,10 @@ module ElasticGraph
         # Ignore an empty string operationName.
         params = params.merge("operationName" => nil) if params["operationName"] && params["operationName"].empty?
 
+        if (variables = params["variables"]) && !variables.is_a?(::Hash)
+          return HTTPResponse.error(400, "`variables` must be a JSON object but was not.")
+        end
+
         yield params
       end
 

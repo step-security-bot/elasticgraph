@@ -189,6 +189,13 @@ module ElasticGraph
             expect(datastore_queries.size).to eq(1)
             expect(datastore_queries.first.filters.to_a).to eq [filter]
           end
+
+          it "returns a 400 response when the variables are not a JSON object" do
+            query = "query Multiply($operands: Operands!) { multiply(operands: $operands) }"
+            response = process_graphql_expecting(400, query: query, variables: "not a JSON object")
+
+            expect(response).to eq error_with("`variables` must be a JSON object but was not.")
+          end
         end
 
         def submitted_value_for(option_name, ...)
