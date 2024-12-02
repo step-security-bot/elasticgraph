@@ -6,7 +6,7 @@
 #
 # frozen_string_literal: true
 
-require "graphql/dataloader/source"
+require "graphql"
 
 module ElasticGraph
   class GraphQL

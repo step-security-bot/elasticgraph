@@ -250,6 +250,9 @@ module ElasticGraph
     # at boot time instead of deferring dependency loading until we handle the first query. In other environments (such as tests),
     # it's nice to load dependencies when needed.
     def load_dependencies_eagerly
+      require "graphql"
+      ::GraphQL.eager_load!
+
       # run a simple GraphQL query to force load any dependencies needed to handle GraphQL queries
       graphql_query_executor.execute(EAGER_LOAD_QUERY, client: Client::ELASTICGRAPH_INTERNAL)
       graphql_http_endpoint # force load this too.

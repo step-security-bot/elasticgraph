@@ -2,6 +2,8 @@ module GraphQL
   class CoercionError < StandardError
   end
 
+  def self.eager_load!: () -> void
+
   class Dataloader
     class Source
       def load_all: [Req, Res] (::Array[Req]) -> ::Array[Res]

@@ -8,7 +8,7 @@
 
 require "elastic_graph/graphql/query_details_tracker"
 require "elastic_graph/graphql/resolvers/query_source"
-require "graphql/dataloader"
+require "graphql"
 
 module ElasticGraph
   class GraphQL
