@@ -118,6 +118,8 @@ module ElasticGraph
         return if failures.empty?
 
         formatted_failures = failures.map do |(query, response), index|
+          raise_execution_exception_for_known_public_error(response)
+
           # Note: we intentionally omit the body of the request here, because it could contain PII
           # or other sensitive values that we don't want logged.
           <<~ERROR
@@ -128,6 +130,21 @@ module ElasticGraph
         end.join("\n\n")
 
         raise Errors::SearchFailedError, "Got #{failures.size} search failure(s):\n\n#{formatted_failures}"
+      end
+
+      # In general, when we receive a datastore response indicating a search failed, we raise
+      # `Errors::SearchFailedError` which translates into a `500 Internal Server Error`. That's
+      # appropriate for transient errors (particularly when there's nothing the client can do about
+      # it) but for non-transient errors that the client can do something about, we'd like to provide
+      # a friendlier error. This method handles those cases.
+      #
+      # GraphQL::ExecutionError is automatically translated into a nice error response.
+      def raise_execution_exception_for_known_public_error(response)
+        if response.dig("error", "caused_by", "type") == "too_many_buckets_exception"
+          max_buckets = response.dig("error", "caused_by", "max_buckets")
+          raise ::GraphQL::ExecutionError, "Aggregation query produces too many groupings. " \
+            "Reduce the grouping cardinality to less than #{max_buckets} and try again."
+        end
       end
 
       # Examine successful query responses and log any shard failure they encounter
