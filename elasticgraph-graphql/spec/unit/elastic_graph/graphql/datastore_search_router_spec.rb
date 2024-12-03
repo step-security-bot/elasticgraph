@@ -143,7 +143,7 @@ module ElasticGraph
           ]
         end
 
-        it "raises `Errors::SearchFailedError` if a search fails for any reason" do
+        it "raises `Errors::SearchFailedError` if a search fails for a transient reason" do
           allow(main_datastore_client).to receive(:msearch).and_return("took" => 10, "responses" => [
             empty_response,
             {"took" => 5, "error" => {"bad stuff" => "happened"}, "status" => 400}
@@ -157,6 +157,32 @@ module ElasticGraph
             # These are parts of the body of the request, which we don't want included because it could contain PII!.
             "track_total_hits", "size"
           )))
+        end
+
+        it "raises `::GraphQL::ExecutionError` if a search fails for a non-transient `too_many_buckets_exception` reason" do
+          allow(main_datastore_client).to receive(:msearch).and_return("took" => 10, "responses" => [
+            empty_response,
+            {
+              "status" => 400,
+              "error" => {
+                "root_cause" => [],
+                "type" => "search_phase_execution_exception",
+                "reason" => "",
+                "grouped" => true,
+                "caused_by" => {
+                  "type" => "too_many_buckets_exception",
+                  "reason" => "Trying to create too many buckets. Must be less than or equal to: [65535] but was [2056004]. This limit can be set by changing the [search.max_buckets] cluster level setting.",
+                  "max_buckets" => 65535
+                }
+              }
+            }
+          ])
+
+          expect {
+            router.msearch([query1, query2])
+          }.to raise_error ::GraphQL::ExecutionError, a_string_including(
+            "Aggregation query produces too many groupings. Reduce the grouping cardinality to less than 65535 and try again."
+          )
         end
 
         it "logs warning if a query has failed shards" do
