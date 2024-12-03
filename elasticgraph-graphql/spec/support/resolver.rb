@@ -9,7 +9,7 @@
 require "elastic_graph/graphql/query_details_tracker"
 require "elastic_graph/graphql/resolvers/query_adapter"
 require "elastic_graph/graphql/resolvers/query_source"
-require "graphql/dataloader"
+require "graphql"
 
 module ResolverHelperMethods
   def resolve(type_name, field_name, document = nil, **options)

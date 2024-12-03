@@ -11,7 +11,6 @@ require "elastic_graph/constants"
 require "elastic_graph/schema_definition/rake_tasks"
 require "elastic_graph/schema_definition/schema_elements/type_namer"
 require "graphql"
-require "graphql/language/block_string"
 require "yaml"
 
 module ElasticGraph

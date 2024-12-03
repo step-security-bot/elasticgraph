@@ -8,7 +8,7 @@
 
 require "elastic_graph/graphql/query_executor"
 require "elastic_graph/query_registry/registry"
-require "graphql/query/result"
+require "graphql"
 require "pathname"
 
 module ElasticGraph
