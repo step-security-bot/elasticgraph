@@ -12,7 +12,7 @@ ElasticGraphGemspecHelper.define_elasticgraph_gem(gemspec_file: __FILE__, catego
   spec.summary = "Wraps the Elasticsearch client for use by ElasticGraph."
 
   spec.add_dependency "elasticgraph-support", eg_version
-  spec.add_dependency "elasticsearch", "~> 8.15"
+  spec.add_dependency "elasticsearch", "~> 8.16"
   spec.add_dependency "faraday", "~> 2.12"
   spec.add_dependency "faraday-retry", "~> 2.2"
 
