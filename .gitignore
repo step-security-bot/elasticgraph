@@ -25,6 +25,7 @@ Gemfile-custom
 # Ignore artifacts from building the gems.
 /pkg/
 /*/pkg/
+/*/*.gem.sigstore.json
 
 # Ignore Byebug command history file.
 .byebug_history
