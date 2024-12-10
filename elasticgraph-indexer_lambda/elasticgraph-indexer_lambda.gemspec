@@ -13,7 +13,7 @@ ElasticGraphGemspecHelper.define_elasticgraph_gem(gemspec_file: __FILE__, catego
 
   spec.add_dependency "elasticgraph-indexer", eg_version
   spec.add_dependency "elasticgraph-lambda_support", eg_version
-  spec.add_dependency "aws-sdk-s3", "~> 1.146"
+  spec.add_dependency "aws-sdk-s3", "~> 1.176"
 
   # aws-sdk-s3 requires an XML library be available. On Ruby < 3 it'll use rexml from the standard library but on Ruby 3.0+
   # we have to add an explicit dependency. It supports ox, oga, libxml, nokogiri or rexml, and of those, ox seems to be the

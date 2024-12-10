@@ -16,7 +16,7 @@ ElasticGraphGemspecHelper.define_elasticgraph_gem(gemspec_file: __FILE__, catego
   #
   # Note: Logger 1.6.0 has an issue that impacts our ElasticGraph lambdas, but 1.6.1 avoids the issue:
   # https://github.com/aws/aws-lambda-ruby-runtime-interface-client/issues/33
-  spec.add_dependency "logger", "~> 1.6", ">= 1.6.1"
+  spec.add_dependency "logger", "~> 1.6", ">= 1.6.2"
 
   spec.add_development_dependency "faraday", "~> 2.12"
   spec.add_development_dependency "rake", "~> 13.2"
