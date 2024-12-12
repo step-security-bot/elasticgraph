@@ -14,14 +14,14 @@ within the overall `Artist` type:
   * `Artist.tours[].shows`
 
 ElasticGraph supports aggregations on these nested fields via `subAggregations`. This can be used
-to aggregation directly on the data of one of these fields. For example, this query returns the
+to aggregate directly on the data of one of these fields. For example, this query returns the
 total sales for all albums of all artists:
 
 {% highlight graphql %}
 {{ site.data.music_queries.aggregations.TotalAlbumSales }}
 {% endhighlight %}
 
-Sub-aggregations can also be performed under the groupings of an outer aggregations. For example,
+Sub-aggregations can also be performed under the groupings of an outer aggregation. For example,
 this query returns the total album sales grouped by the home country of the artist:
 
 {% highlight graphql %}
