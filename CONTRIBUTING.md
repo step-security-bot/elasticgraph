@@ -111,6 +111,30 @@ bundle exec rspec --only-failures
 bundle exec rspec --next-failure
 ```
 
+## Project Website
+
+The source code for https://block.github.io/elasticgraph/ lives in [config/site](config/site). To serve it locally, run:
+
+```bash
+bundle exec rake site:serve
+```
+
+Then visit http://localhost:4000/elasticgraph/ in your browser. Local edits to the site will be reflected when you reload a page.
+
+### API Documentation
+
+ElasticGraph's Ruby code is documented using [YARD](https://yardoc.org/). You can view the rendered API docs in the context of the
+project website using the same `site:serve` rake task (just visit http://localhost:4000/elasticgraph/docs/main/). However, that task
+fully regenerates the documentation from scratch and it's not very quick. If you're working on multiple changes to the API documentation,
+you'll get a faster feedback loop using the `site:preview_docs:[gem name]` tasks. For example, to preview the docs of
+[elasticgraph-schema_definition](elasticgraph-schema_definition), run:
+
+```bash
+bundle exec rake site:preview_docs:elasticgraph-schema_definition
+```
+
+Then visit http://localhost:8808/. The preview task will rebuild the parts of the generated docs impacted by your edits, and is quite fast.
+
 ---
 
 ## Communications
@@ -122,13 +146,15 @@ Anyone from the community is welcome (and encouraged!) to raise issues via
 
 ### Discussions
 
-Design discussions and proposals take place in our [discord](https://discord.gg/8m9FqJ7a7F).
+Design discussions and proposals take place on [GitHub discussions](https://github.com/block/elasticgraph/discussions).
+We advocate an asynchronous, written discussion model - so write up your thoughts and invite the community to join in!
 
-We advocate an asynchronous, written debate model - so write up your thoughts and invite the community to join in!
+In addition, we have a [discord channel](https://discord.gg/8m9FqJ7a7F) for synchronous communication. Discord is best
+for questions and general conversation.
 
 ### Continuous Integration
 
-Build and Test cycles are run on every commit to every branch on [GitHub Actions](https://github.com/block/elasticgraph/actions).
+Build and test cycles are run on every commit to every branch on [GitHub Actions](https://github.com/block/elasticgraph/actions).
 
 ## Contribution
 
@@ -136,7 +162,7 @@ We review contributions to the codebase via GitHub's Pull Request mechanism. We 
 the following guidelines to ease your experience and help our leads respond quickly
 to your valuable work:
 
-* Start by proposing a change either in Issues (most appropriate for small
+* Start by proposing a change either on Discord (most appropriate for small
   change requests or bug fixes) or in Discussions (most appropriate for design
   and architecture considerations, proposing a new feature, or where you'd
   like insight and feedback)
