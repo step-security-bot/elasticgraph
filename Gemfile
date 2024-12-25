@@ -99,6 +99,3 @@ group :site do
   gem "yard", "~> 0.9", ">= 0.9.36"
   gem "yard-doctest", "~> 0.1", ">= 0.1.17"
 end
-
-custom_gem_file = ::File.join(repo_root, "Gemfile-custom")
-eval_gemfile(custom_gem_file) if ::File.exist?(custom_gem_file)

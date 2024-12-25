@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# Run this script via: `source script/enable_custom_gemfile`
+#
+# This script:
+#   1. Ensures tmp/Gemfile-local exists and references Gemfile and Gemfile-custom
+#   2. Copies Gemfile.lock to tmp/Gemfile-local.lock if needed
+#   3. Sets environment variables to use tmp/Gemfile-local and tmp/Gemfile-local.lock
+#   4. Installs gems in a "conservative" mode (i.e., doesn’t update existing versions)
+
+# Check if the script is being run or sourced
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  echo "Error: This script must be sourced, not executed directly."
+  echo "Usage: source script/enable_custom_gemfile"
+  exit 1
+fi
+
+# 1. Ensure Gemfile-local exists
+if [[ ! -f "tmp/Gemfile-local" ]]; then
+  echo "Creating tmp/Gemfile-local..."
+  cat <<EOF > tmp/Gemfile-local
+eval_gemfile("../Gemfile")
+eval_gemfile("../Gemfile-custom")
+EOF
+fi
+
+# 2. Copy Gemfile.lock to Gemfile-local.lock if it doesn't exist
+if [[ -f "Gemfile.lock" ]]; then
+  echo "Copying Gemfile.lock to tmp/Gemfile-local.lock..."
+  cp Gemfile.lock tmp/Gemfile-local.lock
+else
+  echo "No Gemfile.lock found. You might need to run 'bundle install' using the main Gemfile first."
+  return 1
+fi
+
+# 3. Set environment variables so Bundler uses Gemfile-local and Gemfile-local.lock
+export BUNDLE_GEMFILE=tmp/Gemfile-local
+export BUNDLE_LOCKFILE=tmp/Gemfile-local.lock
+
+# 4. Run bundle install in a conservative mode (does not upgrade existing gems)
+echo "Installing gems using tmp/Gemfile-local and tmp/Gemfile-local.lock..."
+bundle update --conservative
+
+echo "Done! Your local environment is set to use tmp/Gemfile-local and tmp/Gemfile-local.lock."
