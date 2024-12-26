@@ -1,0 +1,4 @@
+# Work around for https://github.com/ruby/rbs/issues/2205.
+class Time
+  def iso8601: (?Integer fraction_digits) -> String | ...
+end
