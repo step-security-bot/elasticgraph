@@ -129,14 +129,19 @@ jobs:
             datastore: "<%= primary_datastore_version %>"
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
 
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: ruby/setup-ruby@bfefad842bb982ff05b233bcbc1571d97a87e69f # v1.206.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - uses: KengoTODA/actions-setup-docker-compose@main
+      - uses: KengoTODA/actions-setup-docker-compose@a25fb82c577d314635e25bac72995718b9296dd2 # main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -156,6 +161,11 @@ jobs:
     name: All CI Checks Passed
     needs: [ci-check]
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
       - run: |
           result="${{ needs.ci-check.result }}"
           if [[ $result == "success" || $result == "skipped" ]]; then
