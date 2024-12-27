@@ -1,3 +1,6 @@
-# Make a copy of this at `Gemfile-custom` and edit as needed to include whatever local development gems you want.
+# To customize the development environment:
+#
+# 1. Make a copy of this at `Gemfile-custom` and edit as needed to include whatever local development gems you want.
+# 2. Run `source script/enable_custom_gemfile`.
 gem "debug"
 gem "solargraph"

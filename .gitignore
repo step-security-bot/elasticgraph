@@ -5,8 +5,6 @@
 /bin/
 /bundle/
 /.bundle
-Gemfile.lock
-rbs_collection.lock.yaml
 /*/bin/
 /*/bundle/
 /*/.bundle

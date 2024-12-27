@@ -17,7 +17,6 @@ set -o pipefail
 # Verbose form of `set -x`.
 set -o xtrace
 
-bundle exec rbs collection update
 # Unfortunately, one of steep's dependencies crashes when you use frozen string literals,
 # so we disable that flag when running it here.
 RUBYOPT=--disable-frozen-string-literal bundle exec steep check

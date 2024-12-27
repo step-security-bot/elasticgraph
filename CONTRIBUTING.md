@@ -24,7 +24,7 @@ This project is written in Ruby, a dynamic, open source programming language wit
 
 You may verify your `ruby` installation via the terminal:
 
-```
+```bash
 $ ruby -v
 ruby 3.3.4 (2024-07-09 revision be1089c8ec) [arm64-darwin23]
 ```
@@ -36,7 +36,16 @@ If you do not have Ruby, we recommend installing it using one of the following:
 * [rbenv](https://rbenv.org/)
 * [ruby-install](https://github.com/postmodern/ruby-install)
 
-Once you have Ruby installed, install the development dependencies by running `bundle install`.
+### Ruby Dependencies
+
+Ruby dependencies are managed using [bundler](https://bundler.io/), which comes installed with Ruby.
+To install Ruby dependencies, run:
+
+```bash
+$ bundle install
+```
+
+Once that is done, prefix Ruby commands with `bundle exec` in order to run them in the context of the project bundle.
 
 ### Docker and Docker Compose
 
@@ -45,8 +54,22 @@ This project uses Docker Engine and Docker Compose to run Elasticsearch and Open
 
 ## Customizing the Development Environment
 
-Additional gems can be included in the bundle by defining `Gemfile-custom`.
-See [Gemfile-custom.example](Gemfile-custom.example) for an example.
+The project bundle only contains the gems necessary for what runs on CI.
+For local development, you may want to use some additional gems, such as:
+
+* [debug](https://github.com/ruby/debug) for debugging
+* [vernier](https://github.com/jhawthorn/vernier) for profiling
+* [solargraph](https://solargraph.org/) for an LSP implementation used by an IDE
+
+Different engineers have different preferences around what gems to include, so the standard project bundle
+does not include gems like these. However, support is included to customize the development environment:
+
+* Make a `Gemfile-custom` file listing the additional gems you want to include.
+  See [Gemfile-custom.example](Gemfile-custom.example) for an example.
+* Run `source script/enable_custom_gemfile`.
+
+This will set the `BUNDLE_GEMFILE` and `BUNDLE_LOCKFILE` environment variables in your shell session
+so that `bundle exec` will run in the context of your custom bundle.
 
 ## Codebase Overview
 
