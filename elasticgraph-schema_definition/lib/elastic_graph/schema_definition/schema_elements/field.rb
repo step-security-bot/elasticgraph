@@ -475,7 +475,7 @@ module ElasticGraph
             parent_type.name,
             from: old_name,
             to: name,
-            defined_at: caller_locations(1, 1).first, # : ::Thread::Backtrace::Location
+            defined_at: caller_locations(1, 1).to_a.first, # : ::Thread::Backtrace::Location
             defined_via: %(field.renamed_from "#{old_name}")
           )
         end

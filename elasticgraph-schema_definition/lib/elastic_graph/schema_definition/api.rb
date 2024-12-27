@@ -261,7 +261,7 @@ module ElasticGraph
       def deleted_type(name)
         @state.register_deleted_type(
           name,
-          defined_at: caller_locations(1, 1).first, # : ::Thread::Backtrace::Location
+          defined_at: caller_locations(1, 1).to_a.first, # : ::Thread::Backtrace::Location
           defined_via: %(schema.deleted_type "#{name}")
         )
         nil

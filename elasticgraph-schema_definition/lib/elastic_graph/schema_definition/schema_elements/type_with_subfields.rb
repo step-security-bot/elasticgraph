@@ -239,7 +239,7 @@ module ElasticGraph
           schema_def_state.register_deleted_field(
             name,
             field_name,
-            defined_at: caller_locations(2, 1).first, # : ::Thread::Backtrace::Location
+            defined_at: caller_locations(2, 1).to_a.first, # : ::Thread::Backtrace::Location
             defined_via: %(type.deleted_field "#{field_name}")
           )
         end
@@ -263,7 +263,7 @@ module ElasticGraph
           schema_def_state.register_renamed_type(
             name,
             from: old_name,
-            defined_at: caller_locations(2, 1).first, # : ::Thread::Backtrace::Location
+            defined_at: caller_locations(2, 1).to_a.first, # : ::Thread::Backtrace::Location
             defined_via: %(type.renamed_from "#{old_name}")
           )
         end
